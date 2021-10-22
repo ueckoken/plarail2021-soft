@@ -10,7 +10,7 @@ message RequestSync {
 }
 
 message ResponseSync {
-  enum Respose {
+  enum Response {
     UNKNOWN = 0;
     SUCCESS = 1;
     FAILED = 2;
