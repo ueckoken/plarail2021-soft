@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+message RequestSync {
+  string name = 1;
+  enum State {
+    UNKNOWN = 0;
+    ON = 1;
+    OFF = 2;
+  }
+}
+
+message ResponseSync {
+  enum Respose {
+    UNKNOWN = 0;
+    SUCCESS = 1;
+    FAILED = 2;
+  }
+}
