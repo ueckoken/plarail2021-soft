@@ -21,7 +21,7 @@ jobs:
 
       - name: run protoc
         run: |-
-          curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.19.0/protoc-3.19.0-linux-x86_64.zip -O $RUNNER_TEMP/protoc.zip
+          curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.19.0/protoc-3.19.0-linux-x86_64.zip -o $RUNNER_TEMP/protoc.zip
           unzip -d $RUNNER_TEMP/protoc $RUNNER_TEMP/protoc.zip
           echo "$RUNNER_TEMP/protoc/bin" >> $GITHUB_PATH
           go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
