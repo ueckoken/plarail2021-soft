@@ -2,21 +2,19 @@ package internal
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	pb "ueckoken/plarail2021-soft-external/spec"
-
-	"github.com/gorilla/mux"
 )
 
 type HttpServer struct{
-	ClientHandler2syncController chan StationKV
-	SyncController2clientHandler chan StationKV
+	ClientHandler2syncController chan StationState
+	SyncController2clientHandler chan StationState
 }
 
 func (h HttpServer)StartServer() {
 	clients := []clientChannel{}
-	clientCommand := make(chan pb.RequestSync, 16)
+	clientCommand := make(chan StationState, 16)
 	clientChannelSend := make(chan clientChannel, 16)
 	go func() {
 		r := mux.NewRouter()
@@ -53,9 +51,9 @@ func (h HttpServer)StartServer() {
 		fmt.Println(clients)
 		for d := range h.SyncController2clientHandler {
 			for _, c := range clients {
-				c.clientSync <- pb.RequestSync{
-					Station: &pb.Stations{StationId: pb.Stations_StationId(d.StationID)},
-					State:   pb.RequestSync_State(d.State),
+				c.clientSync <- StationState{
+					StationID: d.StationID,
+					State:   d.State,
 				}
 			}
 		}
