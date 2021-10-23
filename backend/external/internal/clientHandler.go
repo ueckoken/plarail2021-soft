@@ -3,12 +3,11 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"time"
 	pb "ueckoken/plarail2021-soft-external/spec"
-
-	"github.com/gorilla/websocket"
 )
 
 type clientHandler struct {
@@ -42,7 +41,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var cChannel = clientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
 	go func() {
-		r, _ := unpackClientSendData(w, r)
+		r, _ := unpackClientSendData(w, c)
 		m.ClientCommand <- *r
 	}()
 
@@ -61,15 +60,14 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func unpackClientSendData(w http.ResponseWriter, r *http.Request) (*pb.RequestSync, error) {
-	var buf []byte
-	_, err := r.Body.Read(buf)
+func unpackClientSendData(w http.ResponseWriter, c *websocket.Conn) (*pb.RequestSync, error) {
+	_, msg, err := c.ReadMessage()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		return nil, fmt.Errorf("body read failed: %e", err)
+		return nil, fmt.Errorf("websocket read failed: %e", err)
 	}
 	var ud clientSendData
-	err = json.Unmarshal(buf, &ud)
+	err = json.Unmarshal(msg, &ud)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return nil, fmt.Errorf("bad json format: %e", err)
