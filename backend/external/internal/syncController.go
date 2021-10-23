@@ -44,7 +44,7 @@ type SyncController struct{
 	SyncController2clientHandler chan StationState
 }
 
-func (s SyncController)StartSyncController(){
+func (s *SyncController)StartSyncController(){
 	var kvs stationKVS
 	for c := range s.ClientHandler2syncController{
 		kvs.update(c)
