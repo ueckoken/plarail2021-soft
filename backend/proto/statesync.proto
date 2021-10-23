@@ -12,6 +12,7 @@ message RequestSync {
     ON = 1;
     OFF = 2;
   }
+  State state = 2;
 }
 
 message ResponseSync {
@@ -20,4 +21,5 @@ message ResponseSync {
     SUCCESS = 1;
     FAILED = 2;
   }
+  Response response = 1;
 }
