@@ -37,7 +37,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var cChannel = clientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
 	go func() {
-		r, err := unpackClientSendData(w, c)
+		r, err := unpackClientSendData(c)
 		if err != nil {
 			log.Println(err)
 			return
@@ -59,7 +59,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func unpackClientSendData(w http.ResponseWriter, c *websocket.Conn) (*StationState, error) {
+func unpackClientSendData(c *websocket.Conn) (*StationState, error) {
 	_, msg, err := c.ReadMessage()
 	if err != nil {
 		return nil, fmt.Errorf("websocket read failed: %e", err)
