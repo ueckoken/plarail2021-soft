@@ -5,6 +5,9 @@ on:
     paths:
       - 'backend/proto/*'
       - '.github/workflows/compile-protocol-buffer.yml'
+    branches:
+      - '!main'
+      - '!deployment'
 
 jobs:
   build:
