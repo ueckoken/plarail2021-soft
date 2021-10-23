@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "spec";
+option go_package = "ueckoken/plarail2021";
 
 service Control {
   rpc Command2Internal(RequestSync) returns (ResponseSync){}
