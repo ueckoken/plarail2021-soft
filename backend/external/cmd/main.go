@@ -1,9 +1,9 @@
 package main
 
 import (
-  "ueckoken/plarail2021-soft-external/internal"
+	"ueckoken/plarail2021-soft-external/internal"
 )
 
 func main() {
-  internal.StartServer()
+	internal.StartServer()
 }
