@@ -5,17 +5,17 @@ import (
 	"sync"
 )
 
-type StationKV struct{
+type StationState struct{
 	StationID int32
 	State int32
 }
 
 type stationKVS struct{
-	stations []StationKV
+	stations []StationState
 	mtx sync.Mutex
 }
 
-func (skvs *stationKVS) update(u StationKV){
+func (skvs *stationKVS) update(u StationState){
 	skvs.mtx.Lock()
 	for _,s := range skvs.stations {
 		if s.StationID == u.StationID {
@@ -28,7 +28,7 @@ func (skvs *stationKVS) update(u StationKV){
 	skvs.mtx.Unlock()
 	return
 }
-func (skvs *stationKVS) get(stationID int32) (station StationKV, err error){
+func (skvs *stationKVS) get(stationID int32) (station StationState, err error){
 	skvs.mtx.Lock()
 	for _,s := range skvs.stations{
 		if s.StationID == stationID {
@@ -37,14 +37,14 @@ func (skvs *stationKVS) get(stationID int32) (station StationKV, err error){
 		}
 	}
 	skvs.mtx.Unlock()
-	return StationKV{}, errors.New("Not found")
+	return StationState{}, errors.New("Not found")
 }
 type SyncController struct{
-	ClientHandler2syncController chan StationKV
-	SyncController2clientHandler chan StationKV
+	ClientHandler2syncController chan StationState
+	SyncController2clientHandler chan StationState
 }
 
-func (s SyncController)StartSyncController(){
+func (s *SyncController)StartSyncController(){
 	var kvs stationKVS
 	for c := range s.ClientHandler2syncController{
 		kvs.update(c)

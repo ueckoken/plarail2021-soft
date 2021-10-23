@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
@@ -12,12 +11,12 @@ import (
 
 type clientHandler struct {
 	upgrader          websocket.Upgrader
-	ClientCommand     chan pb.RequestSync
+	ClientCommand     chan StationState
 	ClientChannelSend chan clientChannel
 }
 
 type clientChannel struct {
-	clientSync chan pb.RequestSync
+	clientSync chan StationState
 	Done       chan bool
 }
 type clientSendData struct {
@@ -35,7 +34,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer c.Close()
-	var cSync = make(chan pb.RequestSync, 16)
+	var cSync = make(chan StationState, 16)
 	var cDone = make(chan bool)
 	defer func() { cDone <- true }()
 	var cChannel = clientChannel{cSync, cDone}
