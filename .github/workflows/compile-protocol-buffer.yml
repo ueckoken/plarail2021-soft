@@ -25,7 +25,7 @@ jobs:
       - name: add path
         run: |-
           echo "$RUNNER_TEMP/protoc/bin" >> $GITHUB_PATH
-          go env GOPATH >> $GITHUB_PATH
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
       - name: run protoc
         run: |-
