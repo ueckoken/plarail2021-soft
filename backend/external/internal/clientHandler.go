@@ -6,7 +6,6 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
-	"time"
 	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
@@ -53,7 +52,6 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			close(cSync)
 			break
 		}
-		time.Sleep(1 * time.Second)
 	}
 }
 
