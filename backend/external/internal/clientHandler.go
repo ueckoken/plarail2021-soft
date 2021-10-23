@@ -5,19 +5,19 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"ueckoken/plarail2021-soft-external/pkg/clientSync"
+	pb "ueckoken/plarail2021-soft-external/spec"
 
 	"github.com/gorilla/websocket"
 )
 
 type clientHandler struct {
 	upgrader          websocket.Upgrader
-	ClientCommand     chan clientSync.SingleState
+	ClientCommand     chan pb.RequestSync
 	ClientChannelSend chan clientChannel
 }
 
 type clientChannel struct {
-	clientSync chan clientSync.ClientSync
+	clientSync chan pb.RequestSync
 	Done       chan bool
 }
 
@@ -32,7 +32,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer c.Close()
-	var cSync = make(chan clientSync.ClientSync, 16)
+	var cSync = make(chan pb.RequestSync, 16)
 	var cDone = make(chan bool)
 	defer func() { cDone <- true }()
 	var cChannel = clientChannel{cSync, cDone}

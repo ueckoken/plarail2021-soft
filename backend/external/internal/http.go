@@ -5,14 +5,14 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"ueckoken/plarail2021-soft-external/pkg/clientSync"
+	pb "ueckoken/plarail2021-soft-external/spec"
 
 	"github.com/gorilla/mux"
 )
 
 func StartServer() {
 	clients := []clientChannel{}
-	clientCommand := make(chan clientSync.SingleState, 16)
+	clientCommand := make(chan pb.RequestSync, 16)
 	clientChannelSend := make(chan clientChannel, 16)
 	go func() {
 		r := mux.NewRouter()
@@ -48,7 +48,7 @@ func StartServer() {
 	for {
 		fmt.Println(clients)
 		for _, c := range clients {
-			c.clientSync <- clientSync.ClientSync{State: []clientSync.SingleState{clientSync.SingleState{Name: "id", OnOff: false}}}
+			c.clientSync <- pb.RequestSync{Name: "id", State: pb.RequestSync_ON}
 		}
 		time.Sleep(1 * time.Second)
 	}
