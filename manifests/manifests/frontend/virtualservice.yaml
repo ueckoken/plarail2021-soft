@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: plarail2021-soft-frontend
-  namespace: plarail2021
+  namespace: istio-system
 spec:
   gateways:
   - g8s-gateway
