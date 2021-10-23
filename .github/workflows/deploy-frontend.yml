@@ -22,7 +22,9 @@ jobs:
           cache: 'npm'
 
       - name: npm build
+        working-directory: ./frontend
         run: |-
+          pwd
           npm install
           npx webpack
 
