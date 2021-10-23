@@ -51,7 +51,7 @@ func TestSyncController_get(t *testing.T) {
 	}
 	if err == nil {
 		t.Errorf("expect err but return nil")
-	} else if err.Error() != "Not found" {
+	} else if err.Error() == "Not found" {
 		t.Errorf("err.Error() expect 'Not found' but return %e", err)
 	}
 }
