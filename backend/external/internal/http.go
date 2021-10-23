@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 	pb "ueckoken/plarail2021-soft-external/spec"
 
 	"github.com/gorilla/mux"
@@ -59,7 +58,6 @@ func (h HttpServer)StartServer() {
 					State:   pb.RequestSync_State(d.State),
 				}
 			}
-			time.Sleep(1 * time.Second)
 		}
 	}
 }
