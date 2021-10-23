@@ -12,6 +12,7 @@
     "webpack-dev-server": "^4.3.1"
   },
   "scripts": {
+    "install": "npx webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -1,6 +1,14 @@
 const remoteVideo = document.getElementById("remote_video");
+const localVideo = document.getElementById("local_video");
 const roomIdInput = document.getElementById("room_id");
+async function getDeviceStream(option) {
+  console.log("wrap navigator.getUserMadia with Promise");
+  return new Promise(function (resolve, reject) {
+    navigator.getUserMedia(option, resolve, reject);
+  });
+}
 remoteVideo.controls = true;
+localVideo.controls = true;
 class MoMoConnecter {
   constructor() {
     this.peerConnection = null;
@@ -14,10 +22,8 @@ class MoMoConnecter {
     this.peerConnectionConfig = {
       iceServers: this.iceServers,
     };
-    console.log("書き換え");
 
-    const wsUrl = "ws://127.0.0.1:8080/ws";
-    this.ws = new WebSocket(wsUrl);
+    this.ws = new WebSocket(MOMO_WSURL);
     this.ws.onopen = this.onWsOpen.bind(this);
     this.ws.onerror = this.onWsError.bind(this);
     this.ws.onmessage = this.onWsMessage.bind(this);
@@ -90,7 +96,7 @@ class MoMoConnecter {
           this.ws.send(message);
         }
         console.log("sending close message");
-        cleanupVideoElement(remoteVideo);
+        stopVideo(remoteVideo);
         return;
       }
     }
@@ -301,14 +307,11 @@ function isSafari() {
   return browser() === "safari";
 }
 
-function cleanupVideoElement(element) {
+function stopVideo(element) {
   element.pause();
   element.srcObject = null;
 }
 
-function play() {
-  remoteVideo.play();
-}
 function removeCodec(orgsdp, codec) {
   const internalFunc = (sdp) => {
     const codecre = new RegExp("(a=rtpmap:(\\d*) " + codec + "/90000\\r\\n)");
@@ -361,7 +364,7 @@ const momoConnecter = new MoMoConnecter();
 window.connectMomo = momoConnecter.connect;
 window.disconnectMomo = momoConnecter.disconnect;
 const SkywayPeer = require("skyway-js");
-const webSocket = new WebSocket("wss://127.0.0.1:8081/");
+const webSocket = new WebSocket(SW_WSURL);
 
 let skywayPeer = null;
 let roomId = null;
@@ -383,7 +386,15 @@ window.connectReceiver = () => {
   });
 
   skywayPeer.on("call", (mediaConnection) => {
-    const stream = momoConnecter.getStream();
+    const selector = document.getElementById("select_source");
+    const selectedIdx = selector.selectedIndex;
+    const selected = selector.options[selectedIdx].value;
+    console.log(selected);
+    if (selected == "momo") {
+      stream = momoConnecter.getStream();
+    } else {
+      stream = cameraStream;
+    }
     console.log(stream);
     console.log("on call");
     mediaConnection.answer(stream);
@@ -400,12 +411,14 @@ window.disconnectReceiver = () => {
   );
 };
 
-const cameraStream = null;
-window.openCamera = () => {
+let cameraStream = null;
+window.connectCamera = async () => {
   cameraStream = await getDeviceStream({ video: true, audio: false });
+  playVideo(localVideo, cameraStream);
 };
-window.closeCamera = () => {
+window.disconnectCamera = () => {
   if (cameraStream) {
     cameraStream.destroy();
   }
+  stopVideo(localVideo);
 };
