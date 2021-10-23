@@ -31,7 +31,7 @@ func (skvs *stationKVS) update(u StationKV){
 func (skvs *stationKVS) get(stationID int32) (station StationKV, err error){
 	skvs.mtx.Lock()
 	for _,s := range skvs.stations{
-		if s.StationID == station.StationID {
+		if s.StationID == stationID {
 			skvs.mtx.Unlock()
 			return s,nil
 		}
