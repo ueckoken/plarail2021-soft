@@ -5,10 +5,9 @@ import asyncio
 import websockets
 import json
 import ssl
-import pathlib
 address = "127.0.0.1"
-cert = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.cert.pem"
-key = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.key.pem"
+# cert = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.cert.pem"
+# key = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.key.pem"
 
 
 port = 8081
@@ -96,7 +95,6 @@ async def server(websocket, path):
         print("{}: {}".format(path, dictionary))
         for p in promises:
             a = await p
-            print(a)
 
     # 接続が切れたらその接続を削除
     for room_id, room in rooms.items():
@@ -112,10 +110,10 @@ async def server(websocket, path):
     connections.remove(websocket)
 
 
-ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-ssl_context.load_cert_chain(cert, keyfile=key)
+#ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+#ssl_context.load_cert_chain(cert, keyfile=key)
 
-start_server = websockets.serve(server, address, port, ssl=ssl_context)
+start_server = websockets.serve(server, address, port)  # , ssl=ssl_context)
 # サーバー立ち上げ
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
