@@ -1,0 +1,5 @@
+FROM python:3.10-buster
+
+COPY ./one_to_multiple_cast_skyway.py /app.py
+
+RUN ["python3", "/app.py"]
