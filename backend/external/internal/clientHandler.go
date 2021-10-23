@@ -37,7 +37,10 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var cChannel = clientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
 	go func() {
-		r, _ := unpackClientSendData(w, c)
+		r, err := unpackClientSendData(w, c)
+		if err != nil {
+			return
+		}
 		m.ClientCommand <- *r
 	}()
 
