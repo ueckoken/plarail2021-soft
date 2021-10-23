@@ -17,14 +17,23 @@
       <input type="button" onclick="connectMomo();" value="Connect momo">
       <input type="button" onclick="disconnectMomo();" value="Disconnect momo">
 
+      <input type="button" onclick="connectCamera();" value="Connect camera">
+      <input type="button" onclick="disconnectCamera();" value="Disconnect camera">
+
       <input type="button" onclick="connectReceiver();" value="Connect receiver">
       <input type="button" onclick="disconnectReceiver();" value="Disconnect receiver">
 
       ルームid
       <input type="text" id="room_id">
+      ソース選択
+      <select id="select_source">
+        <option value="momo">momo</option>
+        <option value="camera">camera</option>
+      </select>
     </div>
     <div>
-      <video id="remote_video" autoplay style="border: 3px solid gray;"></video>
+      <video id="local_video" autoplay style="width: 160px; height: 120px; border: 1px solid black;"></video>
+      <video id="remote_video" autoplay style="width: 160px; height: 120px; border: 1px solid black;"></video>
     </div>
     <script type='text/javascript' src='./momo_sender_.js'></script>
   </body>
