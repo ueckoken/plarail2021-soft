@@ -6,7 +6,7 @@ service Control {
 }
 
 message RequestSync {
-  string name = 1;
+ Stations station = 1;
   enum State {
     UNKNOWN = 0;
     ON = 1;
