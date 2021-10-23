@@ -27,8 +27,8 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), timeoutSec*time.Second)
 	defer cancel()
 	r, err := c.Command2Internal(ctx, &pb.RequestSync{
-		Name:  "sasazuka",
-		State: pb.RequestSync_ON,
+		Station: &pb.Stations{StationId: pb.Stations_chofu_b1},
+		State:   pb.RequestSync_ON,
 	})
 	if err != nil {
 		log.Fatalf("something err: %v", err)
