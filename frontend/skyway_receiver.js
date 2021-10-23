@@ -31,7 +31,7 @@ function stopVideo(element) {
     element.src = null;
   }
 }
-const webSocket = new WebSocket("wss://127.0.0.1:8081/");
+const webSocket = new WebSocket(SW_WSURL);
 let sendFuncs = [];
 const rooms = {};
 
