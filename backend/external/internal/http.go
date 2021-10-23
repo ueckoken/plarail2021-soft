@@ -48,7 +48,7 @@ func StartServer() {
 	for {
 		fmt.Println(clients)
 		for _, c := range clients {
-			c.clientSync <- pb.RequestSync{Name: "id", State: pb.RequestSync_ON}
+			c.clientSync <- pb.RequestSync{Station: &pb.Stations{StationId: pb.Stations_chofu_b1}, State: pb.RequestSync_ON}
 		}
 		time.Sleep(1 * time.Second)
 	}
