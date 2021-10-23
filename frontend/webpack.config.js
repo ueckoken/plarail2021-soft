@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
   entry: {
@@ -9,4 +10,10 @@ module.exports = {
     filename: "[name]_.js",
     path: path.resolve(__dirname),
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      MOMO_WSURL: '"ws://127.0.0.1:8080/ws"',
+      SW_WSURL: '"ws://127.0.0.1:8081"',
+    }),
+  ],
 };
