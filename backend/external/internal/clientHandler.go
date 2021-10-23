@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
@@ -22,9 +23,6 @@ type clientChannel struct {
 type clientSendData struct {
 	StationName string `json:"station_name"`
 	State       string `json:"state"`
-}
-type data struct {
-	Data string `json:"data"`
 }
 
 func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +57,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func unpackClientSendData(w http.ResponseWriter, c *websocket.Conn) (*pb.RequestSync, error) {
+func unpackClientSendData(w http.ResponseWriter, c *websocket.Conn) (*StationState, error) {
 	_, msg, err := c.ReadMessage()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -83,10 +81,9 @@ func unpackClientSendData(w http.ResponseWriter, c *websocket.Conn) (*pb.Request
 		w.WriteHeader(http.StatusBadRequest)
 		return nil, fmt.Errorf("bad state format: %s", ud.State)
 	}
-
-	return &pb.RequestSync{
-		Station: &pb.Stations{StationId: pb.Stations_StationId(station)},
-		State:   pb.RequestSync_State(state),
+	return &StationState{
+		StationID: station,
+		State:     state,
 	}, nil
 }
 
