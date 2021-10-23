@@ -42,7 +42,8 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("sent")
 		err := c.WriteJSON(cChan)
 		if err != nil {
-			log.Println(err)
+			fmt.Println("err", err)
+			cDone <- true
 		}
 		time.Sleep(1 * time.Second)
 	}
@@ -71,6 +72,7 @@ const page = `
               data = data["State"][0].name;
               console.log(data);
               update();
+              sock.send("ping");
           };
       };
       </script>
