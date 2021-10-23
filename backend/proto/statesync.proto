@@ -1,4 +1,5 @@
 syntax = "proto3";
+option go_package = "spec";
 
 service Control {
   rpc Command2Internal(RequestSync) returns (ResponseSync){}
