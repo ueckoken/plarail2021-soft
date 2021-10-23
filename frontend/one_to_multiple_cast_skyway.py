@@ -5,7 +5,7 @@ import asyncio
 import websockets
 import json
 import ssl
-address = "127.0.0.1"
+address = "0.0.0.0"
 # cert = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.cert.pem"
 # key = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.key.pem"
 
@@ -13,7 +13,7 @@ address = "127.0.0.1"
 port = 8081
 connection_num = 0
 connections = []
-sender_addresses = ["127.0.0.1"]
+sender_addresses = None  # ["127.0.0.1"]
 
 rooms = {}
 # keyが部屋id, valueが{"sender_socket", "peer_id", "connections"}
@@ -58,7 +58,7 @@ async def server(websocket, path):
         # 現在の通信のwebsocketが入ったroom_idのroomが存在することを保証
 
         if msg_type == "connect_sender":
-            if websocket.remote_address[0] in sender_addresses:
+            if sender_addresses is None or websocket.remote_address[0] in sender_addresses:
                 if room["sender_socket"] is None:
                     print("sender_connect")
                     room["sender_socket"] = websocket
