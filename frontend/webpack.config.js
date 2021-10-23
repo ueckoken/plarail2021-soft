@@ -12,8 +12,8 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      MOMO_WSURL: '"ws://127.0.0.1:8080/ws"',
-      SW_WSURL: '"ws://127.0.0.1:8081"',
+      MOMO_WSURL: '"ws://192.168.2.5:8080/ws"',
+      SW_WSURL: '"wss://plarail2021-py.gotti.dev/"',
     }),
   ],
 };
