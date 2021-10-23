@@ -37,6 +37,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer func() { cDone <- true }()
 	var cChannel = clientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
+	//todo; write receiver
 	for cChan := range cChannel.clientSync {
 		fmt.Println(cChan)
 		fmt.Println("sent")
@@ -44,6 +45,9 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println("err", err)
 			cDone <- true
+			close(cDone)
+			close(cSync)
+			break
 		}
 		time.Sleep(1 * time.Second)
 	}

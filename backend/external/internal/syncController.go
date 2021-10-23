@@ -1,8 +1,5 @@
 package internal
 
-import(
-)
-
-
-func StartSyncController(){
+// StartSyncController store state in this method
+func StartSyncController() {
 }
