@@ -2,7 +2,7 @@ name: Deploy external
 
 defaults:
   run:
-    working-directory: ./backend/internal
+    working-directory: ./backend/external
 
 on:
   push:
