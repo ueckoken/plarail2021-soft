@@ -29,4 +29,4 @@ jobs:
           file: Dockerfile.python
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/ueckoken/plarail2021-soft-frontend:latest
+          tags: ghcr.io/ueckoken/plarail2021-soft-frontend-python:latest
