@@ -25,7 +25,7 @@ type clientSendData struct {
 	State       string `json:"state"`
 }
 
-func (m *clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c, err := m.upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
