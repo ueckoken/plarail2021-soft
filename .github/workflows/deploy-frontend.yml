@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./frontend
-          file: Dockerfile.nginx
+          file: ./frontend/Dockerfile.nginx
           platforms: linux/amd64
           push: true
           tags: ghcr.io/ueckoken/plarail2021-soft-frontend:latest
