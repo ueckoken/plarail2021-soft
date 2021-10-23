@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+  "ueckoken/plarail2021-soft-external/internal"
 )
 
 func main() {
-	fmt.Println("hello world!")
+  internal.StartServer()
 }
