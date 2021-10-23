@@ -5,5 +5,8 @@ import (
 )
 
 func main() {
-	internal.StartServer()
+	go internal.StartServer()
+	go internal.StartSyncController()
+	for {
+	}
 }
