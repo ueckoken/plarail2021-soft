@@ -22,3 +22,6 @@ jobs:
       - name: Build Go binary
         run: |-
           make build
+      - name: Run Go Test
+        run: |-
+          make test
