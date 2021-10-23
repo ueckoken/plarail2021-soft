@@ -5,6 +5,6 @@ type ClientSync struct {
 }
 
 type SingleState struct {
-	name  string
-	onOff bool
+	Name  string `json:"name"`
+	OnOff bool   `json:"onOff"`
 }
