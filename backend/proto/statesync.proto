@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+service Control {
+  rpc Command2Internal (RequestSync) returns (ResponseSync);
+}
+
 message RequestSync {
   string name = 1;
   enum State {
