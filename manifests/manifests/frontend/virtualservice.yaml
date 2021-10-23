@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: plarail2021-soft-frontend
+  namespace: plarail2021
+spec:
+  gateways:
+  - g8s-gateway
+  hosts:
+  - plarail2021.gotti.dev
+  http:
+  - route:
+    - destination:
+        host: plarail2021-soft-frontend.plarail2021.svc.cluster.local
+        port:
+          number: 80

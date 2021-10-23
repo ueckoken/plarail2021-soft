@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plarail2021-soft-frontend
+  namespace: plarail2021
+spec:
+  selector:
+    matchLabels:
+      app: plarail2021-soft-frontend
+  template:
+    metadata:
+      labels:
+        app: plarail2021-soft-frontend
+    spec:
+      containers:
+      - name: plarail2021-soft-frontend
+        image: ghcr.io/koken/plarail2021-soft-frontend
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
