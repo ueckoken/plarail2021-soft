@@ -6,7 +6,7 @@ service Control {
 }
 
 message RequestSync {
-  string name = 1;
+ Stations station = 1;
   enum State {
     UNKNOWN = 0;
     ON = 1;
@@ -22,4 +22,31 @@ message ResponseSync {
     FAILED = 2;
   }
   Response response = 1;
+}
+
+message Stations {
+  enum StationId {
+    unknown = 0;
+
+    chofu_b1 = 1;
+    chofu_b2 = 2;
+    chofu_b3 = 3;
+    chofu_s1 = 4;
+    chofu_s2 = 5;
+    chofu_s3 = 6;
+    chofu_s4 = 7;
+
+    meidaimae_s1 = 8;
+    meidaimae_s2 = 9;
+
+    sasazuka_b1 = 10;
+    sasazuka_s1 = 11;
+    sasazuka_s2 = 12;
+    sasazuka_s4 = 13;
+
+    kitano_b1 = 14;
+    kitano_s2 = 15;
+    kitano_s3 = 16;
+  }
+  StationId stationId = 1;
 }
