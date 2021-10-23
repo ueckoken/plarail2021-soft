@@ -16,7 +16,7 @@ func StartServer() {
 	clientChannelSend := make(chan clientChannel, 16)
 	go func() {
 		r := mux.NewRouter()
-    r.HandleFunc("/", handleStatic)
+		r.HandleFunc("/", handleStatic)
 		r.Handle("/ws", clientHandler{ClientCommand: clientCommand, ClientChannelSend: clientChannelSend})
 		srv := &http.Server{
 			Handler: r,
@@ -39,8 +39,8 @@ func StartServer() {
 					if b {
 						continue
 					}
-        default:
-          //nop
+				default:
+					//nop
 				}
 				nextClients = append(nextClients, c)
 			}
@@ -49,9 +49,9 @@ func StartServer() {
 	}()
 	for {
 		fmt.Println(clients)
-    for _,c := range clients{
-      c.clientSync <- clientSync.ClientSync{State: []clientSync.SingleState{clientSync.SingleState{Name: "id", OnOff: false}}}
-    }
+		for _, c := range clients {
+			c.clientSync <- clientSync.ClientSync{State: []clientSync.SingleState{clientSync.SingleState{Name: "id", OnOff: false}}}
+		}
 		time.Sleep(1 * time.Second)
 	}
 }

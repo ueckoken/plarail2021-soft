@@ -21,8 +21,8 @@ type clientChannel struct {
 	Done       chan bool
 }
 
-type data struct{
-  Data string `json:"data"`
+type data struct {
+	Data string `json:"data"`
 }
 
 func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -34,22 +34,22 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 	var cSync = make(chan clientSync.ClientSync, 16)
 	var cDone = make(chan bool)
-  defer func(){cDone <- true}()
+	defer func() { cDone <- true }()
 	var cChannel = clientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
-  for cChan := range cChannel.clientSync{
-    fmt.Println(cChan)
-    fmt.Println("sent")
-    err := c.WriteJSON(cChan)
-    if err != nil {
-      log.Println(err)
-    }
-    time.Sleep(1*time.Second)
+	for cChan := range cChannel.clientSync {
+		fmt.Println(cChan)
+		fmt.Println("sent")
+		err := c.WriteJSON(cChan)
+		if err != nil {
+			log.Println(err)
+		}
+		time.Sleep(1 * time.Second)
 	}
 }
 
-func handleStatic(w http.ResponseWriter, r *http.Request){
-  fmt.Fprintf(w, page)
+func handleStatic(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, page)
 }
 
 const page = `
