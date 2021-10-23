@@ -37,7 +37,11 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var cChannel = clientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
 	go func() {
-		r, _ := unpackClientSendData(w, c)
+		r, err := unpackClientSendData(c)
+		if err != nil {
+			log.Println(err)
+			return
+		}
 		m.ClientCommand <- *r
 	}()
 
@@ -55,28 +59,24 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func unpackClientSendData(w http.ResponseWriter, c *websocket.Conn) (*StationState, error) {
+func unpackClientSendData(c *websocket.Conn) (*StationState, error) {
 	_, msg, err := c.ReadMessage()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
 		return nil, fmt.Errorf("websocket read failed: %e", err)
 	}
 	var ud clientSendData
 	err = json.Unmarshal(msg, &ud)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
 		return nil, fmt.Errorf("bad json format: %e", err)
 	}
 
 	station, ok := pb.Stations_StationId_value[ud.StationName]
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
 		return nil, fmt.Errorf("bad station format: %s", ud.StationName)
 	}
 
 	state, ok := pb.RequestSync_State_value[ud.State]
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
 		return nil, fmt.Errorf("bad state format: %s", ud.State)
 	}
 	return &StationState{
