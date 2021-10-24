@@ -24,9 +24,6 @@ func TestSyncController_update(t *testing.T) {
 	if !kvs.contain(station1) {
 		t.Errorf("append failed")
 	}
-	if kvs.stations[0] != station1 {
-		t.Errorf("station append position error")
-	}
 
 	// new station append
 	kvs.update(station2)
