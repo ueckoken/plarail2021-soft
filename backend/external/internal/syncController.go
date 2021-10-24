@@ -50,5 +50,6 @@ func (s *SyncController) StartSyncController() {
 	for c := range s.ClientHandler2syncController {
 		kvs.update(c)
 		s.SyncController2clientHandler <- c
+		//  someErrorHandleChannel <- NewCommand2Internal(c).Send()
 	}
 }

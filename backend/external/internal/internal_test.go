@@ -13,6 +13,7 @@ func (kvs *stationKVS) contain(ss StationState) bool {
 	}
 	return false
 }
+
 func TestSyncController_update(t *testing.T) {
 	station1 := StationState{StationID: 1, State: 1}
 	station2 := StationState{StationID: 2, State: 1}
@@ -100,4 +101,8 @@ func TestSyncController_get(t *testing.T) {
 	} else if err.Error() != "Not found" {
 		t.Errorf("err.Error() expect 'Not found' but return %e", err)
 	}
+}
+
+func TestCommand2Internal_trapErr(t *testing.T) {
+
 }
