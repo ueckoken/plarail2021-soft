@@ -33,8 +33,11 @@ func TestSyncController_update(t *testing.T) {
 	if len(kvs.stations) != 2 {
 		t.Errorf("append failed")
 	}
-	if kvs.stations[0] != station1 && kvs.stations[1] != station2 {
-		t.Errorf("station append position error")
+	if !kvs.contain(station1) {
+		t.Errorf("stations before update are not keeping")
+	}
+	if !kvs.contain(station1) && !kvs.contain(station2) {
+		t.Errorf("station2 is not append with `update` method")
 	}
 
 	// update exist station data
