@@ -5,21 +5,21 @@ import (
 	"sync"
 )
 
-type StationState struct{
+type StationState struct {
 	StationID int32
-	State int32
+	State     int32
 }
 
-type stationKVS struct{
+type stationKVS struct {
 	stations []StationState
-	mtx sync.Mutex
+	mtx      sync.Mutex
 }
 
-func (skvs *stationKVS) update(u StationState){
+func (skvs *stationKVS) update(u StationState) {
 	skvs.mtx.Lock()
-	for _,s := range skvs.stations {
+	for i, s := range skvs.stations {
 		if s.StationID == u.StationID {
-			s.State = u.State
+			skvs.stations[i].State = u.State
 			skvs.mtx.Unlock()
 			return
 		}
@@ -28,25 +28,26 @@ func (skvs *stationKVS) update(u StationState){
 	skvs.mtx.Unlock()
 	return
 }
-func (skvs *stationKVS) get(stationID int32) (station StationState, err error){
+func (skvs *stationKVS) get(stationID int32) (station StationState, err error) {
 	skvs.mtx.Lock()
-	for _,s := range skvs.stations{
+	for _, s := range skvs.stations {
 		if s.StationID == stationID {
 			skvs.mtx.Unlock()
-			return s,nil
+			return s, nil
 		}
 	}
 	skvs.mtx.Unlock()
 	return StationState{}, errors.New("Not found")
 }
-type SyncController struct{
+
+type SyncController struct {
 	ClientHandler2syncController chan StationState
 	SyncController2clientHandler chan StationState
 }
 
-func (s *SyncController)StartSyncController(){
+func (s *SyncController) StartSyncController() {
 	var kvs stationKVS
-	for c := range s.ClientHandler2syncController{
+	for c := range s.ClientHandler2syncController {
 		kvs.update(c)
 		s.SyncController2clientHandler <- c
 	}
