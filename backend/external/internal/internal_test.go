@@ -5,15 +5,61 @@ import (
 	"testing"
 )
 
+func (kvs *stationKVS) contain(ss StationState) bool {
+	for _, s := range kvs.stations {
+		if s == ss {
+			return true
+		}
+	}
+	return false
+}
+func TestSyncController_update(t *testing.T) {
+	station1 := StationState{StationID: 1, State: 1}
+	station2 := StationState{StationID: 2, State: 1}
+	kvs := stationKVS{
+		stations: nil,
+		mtx:      sync.Mutex{},
+	}
+	kvs.update(station1)
+	if !kvs.contain(station1) {
+		t.Errorf("append failed")
+	}
+	if kvs.stations[0] != station1 {
+		t.Errorf("station append position error")
+	}
+
+	// new station append
+	kvs.update(station2)
+	if !kvs.contain(station2) {
+		t.Errorf("station add failed")
+	}
+	if len(kvs.stations) != 2 {
+		t.Errorf("append failed")
+	}
+	if kvs.stations[0] != station1 && kvs.stations[1] != station2 {
+		t.Errorf("station append position error")
+	}
+
+	// update exist station data
+	station1 = StationState{StationID: 1, State: 0}
+	kvs.update(station1)
+	if len(kvs.stations) != 2 {
+		t.Errorf("append failed")
+	}
+	if !kvs.contain(station1) {
+		t.Errorf("not update station data")
+	}
+}
+
 func TestSyncController_get(t *testing.T) {
 	station1 := StationState{StationID: 1, State: 1}
 	station2 := StationState{StationID: 2, State: 1}
-	skvsNil := stationKVS{
+	skvs := stationKVS{
 		stations: nil,
 		mtx:      sync.Mutex{},
 	}
 	// member is not exist
-	station, err := skvsNil.get(0)
+	station, err := skvs.get(0)
 	if station != (StationState{}) {
 		t.Errorf("'station' is expect for empty but not empty")
 	}
@@ -24,7 +70,7 @@ func TestSyncController_get(t *testing.T) {
 		t.Errorf("err.Error() expect 'Not found' but return %e", err)
 	}
 
-	skvs := stationKVS{
+	skvs = stationKVS{
 		stations: []StationState{station1, station2},
 		mtx:      sync.Mutex{},
 	}
