@@ -24,6 +24,9 @@ func NewCommand2Internal(state StationState) *Command2Internal {
 	return &Command2Internal{station: &state}
 }
 
+// sendRaw is make a connection to internal server and talk with internal server.
+// This method will return gRPC response and gRPC error val.
+// If you want join gRPC response Status Code and gRPC error msg, please use Command2Internal.trapErr method.
 func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
