@@ -8,7 +8,8 @@
   <body>
     <h3>Momo P2P</h3>
     <div>
-      <select id="codec">
+      <select id="video_codec" onchange="onChangeVideoCodec()">
+        <option value="none">none</option>
         <option value="H264">H264</option>
         <option value="VP8">VP8</option>
         <option value="VP9">VP9</option>
