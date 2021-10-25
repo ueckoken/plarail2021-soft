@@ -99,3 +99,121 @@ var Control_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "proto/statesync.proto",
 }
+
+// BiDirectClient is the client API for BiDirect service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type BiDirectClient interface {
+	Talk(ctx context.Context, opts ...grpc.CallOption) (BiDirect_TalkClient, error)
+}
+
+type biDirectClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBiDirectClient(cc grpc.ClientConnInterface) BiDirectClient {
+	return &biDirectClient{cc}
+}
+
+func (c *biDirectClient) Talk(ctx context.Context, opts ...grpc.CallOption) (BiDirect_TalkClient, error) {
+	stream, err := c.cc.NewStream(ctx, &BiDirect_ServiceDesc.Streams[0], "/BiDirect/Talk", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &biDirectTalkClient{stream}
+	return x, nil
+}
+
+type BiDirect_TalkClient interface {
+	Send(*ResponseSync) error
+	Recv() (*RequestSync, error)
+	grpc.ClientStream
+}
+
+type biDirectTalkClient struct {
+	grpc.ClientStream
+}
+
+func (x *biDirectTalkClient) Send(m *ResponseSync) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *biDirectTalkClient) Recv() (*RequestSync, error) {
+	m := new(RequestSync)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// BiDirectServer is the server API for BiDirect service.
+// All implementations must embed UnimplementedBiDirectServer
+// for forward compatibility
+type BiDirectServer interface {
+	Talk(BiDirect_TalkServer) error
+	mustEmbedUnimplementedBiDirectServer()
+}
+
+// UnimplementedBiDirectServer must be embedded to have forward compatible implementations.
+type UnimplementedBiDirectServer struct {
+}
+
+func (UnimplementedBiDirectServer) Talk(BiDirect_TalkServer) error {
+	return status.Errorf(codes.Unimplemented, "method Talk not implemented")
+}
+func (UnimplementedBiDirectServer) mustEmbedUnimplementedBiDirectServer() {}
+
+// UnsafeBiDirectServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BiDirectServer will
+// result in compilation errors.
+type UnsafeBiDirectServer interface {
+	mustEmbedUnimplementedBiDirectServer()
+}
+
+func RegisterBiDirectServer(s grpc.ServiceRegistrar, srv BiDirectServer) {
+	s.RegisterService(&BiDirect_ServiceDesc, srv)
+}
+
+func _BiDirect_Talk_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(BiDirectServer).Talk(&biDirectTalkServer{stream})
+}
+
+type BiDirect_TalkServer interface {
+	Send(*RequestSync) error
+	Recv() (*ResponseSync, error)
+	grpc.ServerStream
+}
+
+type biDirectTalkServer struct {
+	grpc.ServerStream
+}
+
+func (x *biDirectTalkServer) Send(m *RequestSync) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *biDirectTalkServer) Recv() (*ResponseSync, error) {
+	m := new(ResponseSync)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// BiDirect_ServiceDesc is the grpc.ServiceDesc for BiDirect service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var BiDirect_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "BiDirect",
+	HandlerType: (*BiDirectServer)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Talk",
+			Handler:       _BiDirect_Talk_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
+	Metadata: "proto/statesync.proto",
+}
