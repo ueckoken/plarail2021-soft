@@ -4,6 +4,9 @@ option go_package = "./spec";
 service Control {
   rpc Command2Internal(RequestSync) returns (ResponseSync){}
 }
+service BiDirect {
+ rpc Talk(stream ResponseSync) returns (stream RequestSync) {}
+}
 
 message RequestSync {
  Stations station = 1;
