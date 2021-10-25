@@ -26,7 +26,7 @@ func NewCommand2Internal(state StationState) *Command2Internal {
 
 // sendRaw is make a connection to internal server and talk with internal server.
 // This method will return gRPC response and gRPC error val.
-// If you want join gRPC response Status Code and gRPC error msg, please use Command2Internal.trapErr method.
+// If you want join gRPC response Status Code and gRPC error msg, please use Command2Internal.trapResponseGrpcErr method.
 func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
@@ -46,30 +46,34 @@ func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	return r, nil
 }
 
-func (c2i *Command2Internal) trapErr(rs *pb.ResponseSync, grpcErr error) error {
-	if rs == nil { // gRPC error occur
-		return fmt.Errorf("gRPC Err: %w", grpcErr)
-	} else { // check Response Status
-		switch rs.Response.String() {
-		case UNKNOWN:
-			return fmt.Errorf("%w; gRPC Response Error. Status is %s", grpcErr, UNKNOWN)
-		case SUCCESS:
-			return nil
-		case FAILED:
-			return fmt.Errorf("%w; gRPC Response Error. Status is %s", grpcErr, FAILED)
-		default:
-			return fmt.Errorf("%w; Unknown error is occured", grpcErr)
-		}
-	}
-}
-
 func (c2i *Command2Internal) Send() error {
-	return c2i.trapErr(c2i.sendRaw())
+	return trapResponseGrpcErr(c2i.sendRaw())
 }
 
 func (c2i *Command2Internal) convert2pb() *pb.RequestSync {
 	return &pb.RequestSync{
 		Station: &pb.Stations{StationId: pb.Stations_StationId(c2i.station.StationID)},
 		State:   pb.RequestSync_State(c2i.station.State),
+	}
+}
+
+func trapResponseGrpcErr(rs *pb.ResponseSync, grpcErr error) error {
+	if rs == nil { // gRPC error occur
+		return fmt.Errorf("gRPC Err: %w", grpcErr)
+	} else { // check Response Status
+		switch rs.Response.String() {
+		case UNKNOWN:
+			return fmt.Errorf("gRPC Err: %w; gRPC Response status is %s", grpcErr, UNKNOWN)
+		case SUCCESS:
+			if grpcErr != nil {
+				return fmt.Errorf("gRPC Err: %w; gRPC Response status is %s", grpcErr, SUCCESS)
+			} else {
+				return nil
+			}
+		case FAILED:
+			return fmt.Errorf("gRPC Err: %w; gRPC Response status is %s", grpcErr, FAILED)
+		default:
+			return fmt.Errorf("gRPC Err: %w; Unknown error is occured", grpcErr)
+		}
 	}
 }

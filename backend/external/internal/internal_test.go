@@ -1,12 +1,14 @@
 package internal
 
 import (
+	"errors"
 	"sync"
 	"testing"
+	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
-func (kvs *stationKVS) contain(ss StationState) bool {
-	for _, s := range kvs.stations {
+func (skvs *stationKVS) contain(ss StationState) bool {
+	for _, s := range skvs.stations {
 		if s == ss {
 			return true
 		}
@@ -103,6 +105,64 @@ func TestSyncController_get(t *testing.T) {
 	}
 }
 
-func TestCommand2Internal_trapErr(t *testing.T) {
+func TestCommand2Internal_trapResponseGrpcErr(t *testing.T) {
+	// status 0 UNKNOWN; 1 SUCCESS; 2 FAILED
+	rs := &pb.ResponseSync{Response: pb.ResponseSync_Response(0)}
+	grpcErr := errors.New("TEST ERROR")
 
+	// gRPC Error occur.
+	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(0)}
+	err := trapResponseGrpcErr(rs, grpcErr)
+	expectErrMsg := "gRPC Err: TEST ERROR; gRPC Response status is UNKNOWN"
+	if err == nil {
+		t.Errorf("Expect err occured, but not occured.")
+	} else if err.Error() != expectErrMsg {
+		t.Errorf("err format failed. Actual err is: %e", err)
+	}
+
+	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(1)}
+	err = trapResponseGrpcErr(rs, grpcErr)
+	expectErrMsg = "gRPC Err: TEST ERROR; gRPC Response status is SUCCESS"
+	if err == nil {
+		t.Errorf("Expect err occured, but not occured.")
+	} else if err.Error() != expectErrMsg {
+		t.Errorf("err format failed. Actual err is: %e", err)
+	}
+
+	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(2)}
+	err = trapResponseGrpcErr(rs, grpcErr)
+	expectErrMsg = "gRPC Err: TEST ERROR; gRPC Response status is FAILED"
+	if err == nil {
+		t.Errorf("Expect err occured, but not occured.")
+	} else if err.Error() != expectErrMsg {
+		t.Errorf("err format failed. Actual err is: %e", err)
+	}
+
+	// gRPC Err is not occurred.
+	grpcErr = nil
+
+	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(0)}
+	err = trapResponseGrpcErr(rs, grpcErr)
+	expectErrMsg = "gRPC Err: %!w(<nil>); gRPC Response status is UNKNOWN"
+	if err == nil {
+		t.Errorf("Expect err occured, but not occured.")
+	} else if err.Error() != expectErrMsg {
+		t.Errorf("err format failed. Actual err is: %e", err)
+	}
+
+	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(2)}
+	err = trapResponseGrpcErr(rs, grpcErr)
+	expectErrMsg = "gRPC Err: %!w(<nil>); gRPC Response status is FAILED"
+	if err == nil {
+		t.Errorf("Expect err occured, but not occured.")
+	} else if err.Error() != expectErrMsg {
+		t.Errorf("err format failed. Actual err is: %e", err)
+	}
+
+	// Normal
+	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(1)}
+	err = trapResponseGrpcErr(rs, grpcErr)
+	if err != nil {
+		t.Errorf("Expect err is NOT occured, but occured. : %e", err)
+	}
 }
