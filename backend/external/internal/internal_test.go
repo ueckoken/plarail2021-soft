@@ -107,61 +107,51 @@ func TestSyncController_get(t *testing.T) {
 
 func TestCommand2Internal_trapResponseGrpcErr(t *testing.T) {
 	// status 0 UNKNOWN; 1 SUCCESS; 2 FAILED
-	rs := &pb.ResponseSync{Response: pb.ResponseSync_Response(0)}
-	grpcErr := errors.New("TEST ERROR")
-
-	// gRPC Error occur.
-	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(0)}
-	err := trapResponseGrpcErr(rs, grpcErr)
-	expectErrMsg := "gRPC Err: TEST ERROR; gRPC Response status is UNKNOWN"
-	if err == nil {
-		t.Errorf("Expect err occured, but not occured.")
-	} else if err.Error() != expectErrMsg {
-		t.Errorf("err format failed. Actual err is: %e", err)
+	testPatterns := []struct {
+		grpcErr        error
+		inResponseSync *pb.ResponseSync
+		expectErrMsg   string
+	}{
+		{
+			grpcErr:        errors.New("TEST ERROR"),
+			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(0)},
+			expectErrMsg:   "gRPC Err: TEST ERROR; gRPC Response status is UNKNOWN",
+		}, {
+			grpcErr:        errors.New("TEST ERROR"),
+			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(1)},
+			expectErrMsg:   "gRPC Err: TEST ERROR; gRPC Response status is SUCCESS",
+		}, {
+			grpcErr:        errors.New("TEST ERROR"),
+			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(2)},
+			expectErrMsg:   "gRPC Err: TEST ERROR; gRPC Response status is FAILED",
+		}, {
+			grpcErr:        nil,
+			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(0)},
+			expectErrMsg:   "gRPC Err: %!w(<nil>); gRPC Response status is UNKNOWN",
+		}, {
+			grpcErr:        nil,
+			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(2)},
+			expectErrMsg:   "gRPC Err: %!w(<nil>); gRPC Response status is FAILED",
+		},
 	}
 
-	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(1)}
-	err = trapResponseGrpcErr(rs, grpcErr)
-	expectErrMsg = "gRPC Err: TEST ERROR; gRPC Response status is SUCCESS"
-	if err == nil {
-		t.Errorf("Expect err occured, but not occured.")
-	} else if err.Error() != expectErrMsg {
-		t.Errorf("err format failed. Actual err is: %e", err)
-	}
-
-	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(2)}
-	err = trapResponseGrpcErr(rs, grpcErr)
-	expectErrMsg = "gRPC Err: TEST ERROR; gRPC Response status is FAILED"
-	if err == nil {
-		t.Errorf("Expect err occured, but not occured.")
-	} else if err.Error() != expectErrMsg {
-		t.Errorf("err format failed. Actual err is: %e", err)
-	}
-
-	// gRPC Err is not occurred.
-	grpcErr = nil
-
-	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(0)}
-	err = trapResponseGrpcErr(rs, grpcErr)
-	expectErrMsg = "gRPC Err: %!w(<nil>); gRPC Response status is UNKNOWN"
-	if err == nil {
-		t.Errorf("Expect err occured, but not occured.")
-	} else if err.Error() != expectErrMsg {
-		t.Errorf("err format failed. Actual err is: %e", err)
-	}
-
-	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(2)}
-	err = trapResponseGrpcErr(rs, grpcErr)
-	expectErrMsg = "gRPC Err: %!w(<nil>); gRPC Response status is FAILED"
-	if err == nil {
-		t.Errorf("Expect err occured, but not occured.")
-	} else if err.Error() != expectErrMsg {
-		t.Errorf("err format failed. Actual err is: %e", err)
+	for _, tp := range testPatterns {
+		t.Run(tp.expectErrMsg,
+			func(t *testing.T) {
+				err := trapResponseGrpcErr(tp.inResponseSync, tp.grpcErr)
+				if err == nil {
+					t.Errorf("Expect err occured, but not occured.")
+				} else if err.Error() != tp.expectErrMsg {
+					t.Errorf("err format failed. Actual err is: %e", err)
+				}
+			},
+		)
 	}
 
 	// Normal
-	rs = &pb.ResponseSync{Response: pb.ResponseSync_Response(1)}
-	err = trapResponseGrpcErr(rs, grpcErr)
+	var grpcErr error = nil
+	rs := &pb.ResponseSync{Response: pb.ResponseSync_Response(1)}
+	err := trapResponseGrpcErr(rs, grpcErr)
 	if err != nil {
 		t.Errorf("Expect err is NOT occured, but occured. : %e", err)
 	}
