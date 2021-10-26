@@ -65,14 +65,14 @@ func (h HttpServer) StartServer() {
 		fmt.Println("goroutine:", runtime.NumGoroutine())
 		clients.mtx.Lock()
     for d := range h.SyncController2clientHandler {
-		  for _, c := range clients.Clients {
-        select {
-			  case c.clientSync <- StationState{
-				  c.clientSync <- StationState{
-				  	StationID: d.StationID,
-					  State:     d.State,
-			  default:
-				  continue
+		for _, c := range clients.Clients {
+			select {
+				case c.clientSync <- StationState{
+					c.clientSync <- StationState{
+						StationID: d.StationID,
+						State:     d.State,
+			  	default:
+					continue
 				}
 			}
 		}
