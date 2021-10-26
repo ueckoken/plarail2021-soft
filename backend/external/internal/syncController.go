@@ -18,9 +18,9 @@ type stationKVS struct {
 
 func (skvs *stationKVS) update(u StationState) {
 	skvs.mtx.Lock()
-	for _, s := range skvs.stations {
+	for i, s := range skvs.stations {
 		if s.StationID == u.StationID {
-			s.State = u.State
+			skvs.stations[i].State = u.State
 			skvs.mtx.Unlock()
 			return
 		}
@@ -58,8 +58,10 @@ func (s *SyncController) StartSyncController() {
 			kvs.mtx.Unlock()
 		}
 	}()
-	for c := range s.ClientHandler2syncController {
-		kvs.update(c)
-		s.SyncController2clientHandler <- c
+  go func(){
+    for c := range s.ClientHandler2syncController {
+		  kvs.update(c)
+		  s.SyncController2clientHandler <- c
+    }
 	}
 }
