@@ -41,6 +41,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var cDone = make(chan struct{})
 	var cChannel = clientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
+	fmt.Println("added")
 	c.SetPongHandler(func(string) error {
 		c.SetReadDeadline(time.Now().Add(20 * time.Second))
 		cancel()
@@ -59,6 +60,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		err := c.WriteJSON(cChan)
 		if err != nil {
 			fmt.Println("err", err)
+			cDone <- struct{}{}
 			cancel()
 			break
 		}
