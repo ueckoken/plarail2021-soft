@@ -3,6 +3,7 @@ package internal
 import (
 	"errors"
 	"sync"
+	"time"
 )
 
 type StationState struct {
@@ -48,8 +49,20 @@ type SyncController struct {
 
 func (s *SyncController) StartSyncController() {
 	var kvs stationKVS
-	for c := range s.ClientHandler2syncController {
-		kvs.update(c)
-		s.SyncController2clientHandler <- c
-	}
+	go func() {
+		ch := time.Tick(2 * time.Second)
+		for _ = range ch {
+			kvs.mtx.Lock()
+			for _, st := range kvs.stations {
+				s.SyncController2clientHandler <- st
+			}
+			kvs.mtx.Unlock()
+		}
+	}()
+	go func(){
+		for c := range s.ClientHandler2syncController {
+			kvs.update(c)
+			s.SyncController2clientHandler <- c
+		}
+	}()
 }
