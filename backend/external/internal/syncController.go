@@ -58,10 +58,10 @@ func (s *SyncController) StartSyncController() {
 			kvs.mtx.Unlock()
 		}
 	}()
-  go func(){
-    for c := range s.ClientHandler2syncController {
-		  kvs.update(c)
-		  s.SyncController2clientHandler <- c
-    }
-	}
+	go func(){
+		for c := range s.ClientHandler2syncController {
+			kvs.update(c)
+			s.SyncController2clientHandler <- c
+		}
+	}()
 }
