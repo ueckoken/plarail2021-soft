@@ -4,7 +4,6 @@ import (
 	"context"
 	"google.golang.org/grpc"
 	"log"
-	"time"
 	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
@@ -24,7 +23,7 @@ func main() {
 	c := pb.NewControlClient(conn)
 
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), timeoutSec*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), timeoutSec)
 	defer cancel()
 	r, err := c.Command2Internal(ctx, &pb.RequestSync{
 		Station: &pb.Stations{StationId: pb.Stations_chofu_b1},

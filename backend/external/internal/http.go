@@ -7,12 +7,13 @@ import (
 	"net/http"
 )
 
-type HttpServer struct{
+type HttpServer struct {
 	ClientHandler2syncController chan StationState
 	SyncController2clientHandler chan StationState
+	Environment                  *Env
 }
 
-func (h HttpServer)StartServer() {
+func (h HttpServer) StartServer() {
 	clients := []clientChannel{}
 	clientCommand := make(chan StationState, 16)
 	clientChannelSend := make(chan clientChannel, 16)
@@ -22,7 +23,7 @@ func (h HttpServer)StartServer() {
 		r.Handle("/ws", clientHandler{ClientCommand: clientCommand, ClientChannelSend: clientChannelSend})
 		srv := &http.Server{
 			Handler: r,
-			Addr:    "127.0.0.1:8000",
+			Addr:    fmt.Sprintf("0.0.0.0:%d", h.Environment.ClientSideServer.Port),
 			// Good practice: enforce timeouts for servers you create!
 		}
 
@@ -53,7 +54,7 @@ func (h HttpServer)StartServer() {
 			for _, c := range clients {
 				c.clientSync <- StationState{
 					StationID: d.StationID,
-					State:   d.State,
+					State:     d.State,
 				}
 			}
 		}
