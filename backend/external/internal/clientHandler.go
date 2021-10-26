@@ -1,6 +1,7 @@
 package internal
 
 import (
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
@@ -85,44 +86,12 @@ func unpackClientSendData(c *websocket.Conn) (*StationState, error) {
 	}, nil
 }
 
+//go:embed embed/index.html
+var IndexHtml []byte
+
 func handleStatic(w http.ResponseWriter, r *http.Request) {
-	_, err := fmt.Fprintf(w, page)
+	_, err := w.Write(IndexHtml)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
-
-const page = `
-<html>
-  <head>
-      <title>Hello WebSocket</title>
-
-      <script type="text/javascript">
-      var sock = null;
-      var data = "";
-      function update() {
-          var p1 = document.getElementById("plot");
-          p1.innerHTML = data;
-      };
-      window.onload = function() {
-          sock = new WebSocket("ws://"+location.host+"/ws");
-          sock.onmessage = function(event) {
-              var data = JSON.parse(event.data);
-              data = data["State"][0].name;
-              console.log(data);
-              update();
-              sock.send("ping");
-          };
-      };
-      </script>
-  </head>
-  <body>
-      <div id="header">
-          <h1>Hello WebSocket</h1>
-      </div>
-      <div id="content">
-          <div id="plot"></div>
-      </div>
-  </body>
-</html>
-`
