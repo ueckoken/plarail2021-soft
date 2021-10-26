@@ -1,0 +1,9 @@
+internal:
+  - backend/internal/**/*
+external:
+  - backend/external/**/*
+frontend:
+  - frontend/**/*
+ci-cd:
+  - .github/**/*
+  - manifests/**/*
