@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"github.com/go-playground/validator"
+	"github.com/go-playground/validator/v10"
 	"github.com/vrischmann/envconfig"
 	"strconv"
 	"time"
@@ -12,10 +12,7 @@ type hostnamePort string
 type Port int32
 
 func (t *hostnamePort) Unmarshal(s string) error {
-	addr := struct {
-		Addr string `validate:"hostname_port"`
-	}{Addr: s}
-	err := validator.New().Struct(&addr)
+	err := validator.New().Var(s, "hostname_port")
 	if err != nil {
 		return err
 	}
@@ -39,11 +36,11 @@ func (p *Port) Unmarshal(s string) error {
 
 type Env struct {
 	ClientSideServer struct {
-		Port Port `default:"54321"`
+		Port Port `envconfig:"default=54321"`
 	}
 	InternalServer struct {
 		Addr       hostnamePort
-		TimeoutSec time.Duration `default:"1s"`
+		TimeoutSec time.Duration `envconfig:"default=1s"`
 		//SslCertPath string
 	}
 }
