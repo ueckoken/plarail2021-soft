@@ -2,27 +2,37 @@ package internal
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"runtime"
+	"sync"
+	"time"
+
+	"github.com/gorilla/mux"
 )
 
-type HttpServer struct{
+type HttpServer struct {
 	ClientHandler2syncController chan StationState
 	SyncController2clientHandler chan StationState
+	Environment                  *Env
 }
 
-func (h HttpServer)StartServer() {
-	clients := []clientChannel{}
+type clientsCollection struct {
+	Clients []clientChannel
+	mtx     sync.Mutex
+}
+
+func (h HttpServer) StartServer() {
+	clients := clientsCollection{}
 	clientCommand := make(chan StationState, 16)
-	clientChannelSend := make(chan clientChannel, 16)
+	clientChannelSend := make(chan clientChannel)
 	go func() {
 		r := mux.NewRouter()
 		r.HandleFunc("/", handleStatic)
 		r.Handle("/ws", clientHandler{ClientCommand: clientCommand, ClientChannelSend: clientChannelSend})
 		srv := &http.Server{
 			Handler: r,
-			Addr:    "127.0.0.1:8000",
+			Addr:    fmt.Sprintf("0.0.0.0:%d", h.Environment.ClientSideServer.Port),
 			// Good practice: enforce timeouts for servers you create!
 		}
 
@@ -30,32 +40,48 @@ func (h HttpServer)StartServer() {
 	}()
 	go func() {
 		for {
+			fmt.Println("waiting...")
 			cChannel := <-clientChannelSend
-			clients = append(clients, cChannel)
+			fmt.Println("##clients:", len(clients.Clients))
+			clients.Clients = append(clients.Clients, cChannel)
 			nextClients := []clientChannel{}
-			for _, c := range clients {
+			clients.mtx.Lock()
+			for _, c := range clients.Clients {
 				select {
-				case b := <-c.Done:
-					if b {
-						continue
-					}
+				case <-c.Done:
+					close(c.Done)
+					close(c.clientSync)
+					continue
 				default:
+					nextClients = append(nextClients, c)
 					//nop
 				}
-				nextClients = append(nextClients, c)
 			}
-			clients = nextClients
+			clients.Clients = nextClients
+			clients.mtx.Unlock()
+		}
+	}()
+	go func() {
+		for {
+			h.SyncController2clientHandler <- StationState{}
+			time.Sleep(1 * time.Second)
 		}
 	}()
 	for {
-		fmt.Println(clients)
+		fmt.Println(clients.Clients)
+		fmt.Println("goroutine:", runtime.NumGoroutine())
 		for d := range h.SyncController2clientHandler {
-			for _, c := range clients {
-				c.clientSync <- StationState{
-					StationID: d.StationID,
-					State:   d.State,
+			fmt.Println(clients.Clients)
+			clients.mtx.Lock()
+			for _, c := range clients.Clients {
+				select {
+				case c.clientSync <- d:
+				default:
+					continue
 				}
 			}
+			clients.mtx.Unlock()
 		}
+		time.Sleep(1 * time.Second)
 	}
 }

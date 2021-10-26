@@ -3,6 +3,7 @@ package internal
 import (
 	"errors"
 	"sync"
+	"time"
 )
 
 type StationState struct {
@@ -43,13 +44,25 @@ func (skvs *stationKVS) get(stationID int32) (station StationState, err error) {
 type SyncController struct {
 	ClientHandler2syncController chan StationState
 	SyncController2clientHandler chan StationState
+	Environment                  *Env
 }
 
 func (s *SyncController) StartSyncController() {
 	var kvs stationKVS
-	for c := range s.ClientHandler2syncController {
-		kvs.update(c)
-		s.SyncController2clientHandler <- c
-		//  someErrorHandleChannel <- NewCommand2Internal(c).Send()
-	}
+	go func() {
+		ch := time.Tick(2 * time.Second)
+		for _ = range ch {
+			kvs.mtx.Lock()
+			for _, st := range kvs.stations {
+				s.SyncController2clientHandler <- st
+			}
+			kvs.mtx.Unlock()
+		}
+	}()
+	go func() {
+		for c := range s.ClientHandler2syncController {
+			kvs.update(c)
+			s.SyncController2clientHandler <- c
+		}
+	}()
 }

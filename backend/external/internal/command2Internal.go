@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"google.golang.org/grpc"
-	"time"
 	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
@@ -37,7 +36,7 @@ func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	c := pb.NewControlClient(conn)
 
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), timeoutSec*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), timeoutSec)
 	defer cancel()
 	r, err := c.Command2Internal(ctx, c2i.convert2pb())
 	if err != nil {

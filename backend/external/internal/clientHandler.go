@@ -1,12 +1,16 @@
 package internal
 
 import (
+	"context"
+	_ "embed"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"time"
 	pb "ueckoken/plarail2021-soft-external/spec"
+
+	"github.com/gorilla/websocket"
 )
 
 type clientHandler struct {
@@ -17,7 +21,7 @@ type clientHandler struct {
 
 type clientChannel struct {
 	clientSync chan StationState
-	Done       chan bool
+	Done       chan struct{}
 }
 type clientSendData struct {
 	StationName string `json:"station_name"`
@@ -25,36 +29,72 @@ type clientSendData struct {
 }
 
 func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("responsing")
 	c, err := m.upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 	defer c.Close()
+	ctx, cancel := context.WithCancel(context.Background())
 	var cSync = make(chan StationState, 16)
-	var cDone = make(chan bool)
-	defer func() { cDone <- true }()
+	var cDone = make(chan struct{})
 	var cChannel = clientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
-	go func() {
-		r, err := unpackClientSendData(c)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		m.ClientCommand <- *r
-	}()
-
+	fmt.Println("added")
+	c.SetPongHandler(func(string) error {
+		c.SetReadDeadline(time.Now().Add(20 * time.Second))
+		cancel()
+		return nil
+	})
+	c.SetCloseHandler(func(code int, text string) error {
+		fmt.Println("connection closed")
+		cancel()
+		return nil
+	})
+	go handleClientCommand(ctx, c, &m)
+	go handleClientPing(ctx, c)
 	for cChan := range cChannel.clientSync {
 		fmt.Println(cChan)
 		fmt.Println("sent")
 		err := c.WriteJSON(cChan)
 		if err != nil {
 			fmt.Println("err", err)
-			cDone <- true
-			close(cDone)
-			close(cSync)
+			cDone <- struct{}{}
+			cancel()
 			break
+		}
+	}
+}
+
+func handleClientPing(ctx context.Context, c *websocket.Conn) {
+	ticker := time.NewTicker(10 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			if err := c.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(1*time.Second)); err != nil {
+				fmt.Println("ping:", err)
+			}
+		case <-ctx.Done():
+			ticker.Stop()
+			return
+		}
+	}
+}
+
+func handleClientCommand(ctx context.Context, c *websocket.Conn, m *clientHandler) {
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			r, err := unpackClientSendData(c)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			m.ClientCommand <- *r
 		}
 	}
 }
@@ -85,44 +125,12 @@ func unpackClientSendData(c *websocket.Conn) (*StationState, error) {
 	}, nil
 }
 
+//go:embed embed/index.html
+var IndexHtml []byte
+
 func handleStatic(w http.ResponseWriter, r *http.Request) {
-	_, err := fmt.Fprintf(w, page)
+	_, err := w.Write(IndexHtml)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
-
-const page = `
-<html>
-  <head>
-      <title>Hello WebSocket</title>
-
-      <script type="text/javascript">
-      var sock = null;
-      var data = "";
-      function update() {
-          var p1 = document.getElementById("plot");
-          p1.innerHTML = data;
-      };
-      window.onload = function() {
-          sock = new WebSocket("ws://"+location.host+"/ws");
-          sock.onmessage = function(event) {
-              var data = JSON.parse(event.data);
-              data = data["State"][0].name;
-              console.log(data);
-              update();
-              sock.send("ping");
-          };
-      };
-      </script>
-  </head>
-  <body>
-      <div id="header">
-          <h1>Hello WebSocket</h1>
-      </div>
-      <div id="content">
-          <div id="plot"></div>
-      </div>
-  </body>
-</html>
-`
