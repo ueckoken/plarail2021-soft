@@ -21,10 +21,11 @@ type clientsCollection struct {
 	Clients []clientChannel
 	mtx     sync.Mutex
 }
+
 func (h HttpServer) StartServer() {
 	clients := clientsCollection{}
 	clientCommand := make(chan StationState, 16)
-	clientChannelSend := make(chan clientChannel, 16)
+	clientChannelSend := make(chan clientChannel)
 	go func() {
 		r := mux.NewRouter()
 		r.HandleFunc("/", handleStatic)
@@ -60,24 +61,27 @@ func (h HttpServer) StartServer() {
 			clients.mtx.Unlock()
 		}
 	}()
+	go func() {
+		for {
+			h.SyncController2clientHandler <- StationState{}
+			time.Sleep(1 * time.Second)
+		}
+	}()
 	for {
 		fmt.Println(clients.Clients)
 		fmt.Println("goroutine:", runtime.NumGoroutine())
-		clients.mtx.Lock()
-    for d := range h.SyncController2clientHandler {
-		for _, c := range clients.Clients {
-			select {
-      case c.clientSync <- StationState{
-						StationID: d.StationID,
-						State:     d.State,
-          }:
-      default:
+		for d := range h.SyncController2clientHandler {
+			fmt.Println(clients.Clients)
+			clients.mtx.Lock()
+			for _, c := range clients.Clients {
+				select {
+				case c.clientSync <- d:
+				default:
 					continue
 				}
 			}
+			clients.mtx.Unlock()
 		}
-		clients.mtx.Unlock()
 		time.Sleep(1 * time.Second)
 	}
-	fmt.Println("@@@@@@@@@@@@end!!@@@@@@@@@@@@@")
 }
