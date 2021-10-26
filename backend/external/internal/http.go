@@ -2,18 +2,27 @@ package internal
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"runtime"
+	"sync"
+	"time"
+
+	"github.com/gorilla/mux"
 )
 
-type HttpServer struct{
+type HttpServer struct {
 	ClientHandler2syncController chan StationState
 	SyncController2clientHandler chan StationState
 }
 
-func (h HttpServer)StartServer() {
-	clients := []clientChannel{}
+type clientsCollection struct {
+	Clients []clientChannel
+	mtx     sync.Mutex
+}
+
+func (h HttpServer) StartServer() {
+	clients := clientsCollection{}
 	clientCommand := make(chan StationState, 16)
 	clientChannelSend := make(chan clientChannel, 16)
 	go func() {
@@ -30,32 +39,43 @@ func (h HttpServer)StartServer() {
 	}()
 	go func() {
 		for {
+			fmt.Println("waiting...")
 			cChannel := <-clientChannelSend
-			clients = append(clients, cChannel)
+			fmt.Println("##clients:", len(clients.Clients))
+			clients.Clients = append(clients.Clients, cChannel)
 			nextClients := []clientChannel{}
-			for _, c := range clients {
+			clients.mtx.Lock()
+			for _, c := range clients.Clients {
 				select {
-				case b := <-c.Done:
-					if b {
-						continue
-					}
+				case <-c.Done:
+					close(c.Done)
+					close(c.clientSync)
+					continue
 				default:
+					nextClients = append(nextClients, c)
 					//nop
 				}
-				nextClients = append(nextClients, c)
 			}
-			clients = nextClients
+			clients.Clients = nextClients
+			clients.mtx.Unlock()
 		}
 	}()
 	for {
-		fmt.Println(clients)
-		for d := range h.SyncController2clientHandler {
-			for _, c := range clients {
-				c.clientSync <- StationState{
-					StationID: d.StationID,
-					State:   d.State,
-				}
+		fmt.Println(clients.Clients)
+		fmt.Println("goroutine:", runtime.NumGoroutine())
+		clients.mtx.Lock()
+		for _, c := range clients.Clients {
+			select {
+			case c.clientSync <- StationState{
+				StationID: 0,
+				State:     0,
+			}:
+			default:
+				continue
 			}
 		}
+		clients.mtx.Unlock()
+		time.Sleep(1 * time.Second)
 	}
+	fmt.Println("@@@@@@@@@@@@end!!@@@@@@@@@@@@@")
 }
