@@ -14,15 +14,15 @@ import (
 type HttpServer struct {
 	ClientHandler2syncController chan StationState
 	SyncController2clientHandler chan StationState
+	Environment                  *Env
 }
 
 type clientsCollection struct {
 	Clients []clientChannel
 	mtx     sync.Mutex
 }
-
 func (h HttpServer) StartServer() {
-	clients := clientsCollection{}
+	clients := []clientChannel{}
 	clientCommand := make(chan StationState, 16)
 	clientChannelSend := make(chan clientChannel, 16)
 	go func() {
@@ -31,7 +31,7 @@ func (h HttpServer) StartServer() {
 		r.Handle("/ws", clientHandler{ClientCommand: clientCommand, ClientChannelSend: clientChannelSend})
 		srv := &http.Server{
 			Handler: r,
-			Addr:    "127.0.0.1:8000",
+			Addr:    fmt.Sprintf("0.0.0.0:%d", h.Environment.ClientSideServer.Port),
 			// Good practice: enforce timeouts for servers you create!
 		}
 
@@ -64,14 +64,16 @@ func (h HttpServer) StartServer() {
 		fmt.Println(clients.Clients)
 		fmt.Println("goroutine:", runtime.NumGoroutine())
 		clients.mtx.Lock()
-		for _, c := range clients.Clients {
-			select {
-			case c.clientSync <- StationState{
-				StationID: 0,
-				State:     0,
-			}:
-			default:
-				continue
+    for d := range h.SyncController2clientHandler {
+		  for _, c := range clients.Clients {
+        select {
+			  case c.clientSync <- StationState{
+				  c.clientSync <- StationState{
+				  	StationID: d.StationID,
+					  State:     d.State,
+			  default:
+				  continue
+				}
 			}
 		}
 		clients.mtx.Unlock()

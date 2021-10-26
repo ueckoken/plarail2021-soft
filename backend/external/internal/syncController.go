@@ -44,6 +44,7 @@ func (skvs *stationKVS) get(stationID int32) (station StationState, err error) {
 type SyncController struct {
 	ClientHandler2syncController chan StationState
 	SyncController2clientHandler chan StationState
+	Environment                  *Env
 }
 
 func (s *SyncController) StartSyncController() {
