@@ -23,7 +23,7 @@ func (h HttpServer) StartServer() {
 		r.Handle("/ws", clientHandler{ClientCommand: clientCommand, ClientChannelSend: clientChannelSend})
 		srv := &http.Server{
 			Handler: r,
-			Addr:    h.Environment.ClientSideServer.Addr.String(),
+			Addr:    fmt.Sprintf("0.0.0.0:%d", h.Environment.ClientSideServer.Port),
 			// Good practice: enforce timeouts for servers you create!
 		}
 

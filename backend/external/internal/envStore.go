@@ -1,12 +1,15 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/go-playground/validator"
 	"github.com/vrischmann/envconfig"
+	"strconv"
 	"time"
 )
 
 type hostnamePort string
+type Port int32
 
 func (t *hostnamePort) Unmarshal(s string) error {
 	addr := struct {
@@ -22,10 +25,21 @@ func (t *hostnamePort) Unmarshal(s string) error {
 func (t *hostnamePort) String() string {
 	return string(*t)
 }
+func (p *Port) Unmarshal(s string) error {
+	d, err := strconv.Atoi(s)
+	if err != nil {
+		return err
+	}
+	if !(0 < d && d <= 65535) {
+		return fmt.Errorf("Port range failed; Port: %d\n", d)
+	}
+	*p = Port(d)
+	return nil
+}
 
 type Env struct {
 	ClientSideServer struct {
-		Addr hostnamePort `default:"127.0.0.1:54321"`
+		Port Port `default:"54321"`
 	}
 	Grpc struct {
 		Addr       hostnamePort
