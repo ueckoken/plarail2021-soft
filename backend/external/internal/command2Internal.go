@@ -8,19 +8,18 @@ import (
 )
 
 const (
-	address    = "127.0.0.1:12345"
-	timeoutSec = 1
-	UNKNOWN    = "UNKNOWN"
-	SUCCESS    = "SUCCESS"
-	FAILED     = "FAILED"
+	UNKNOWN = "UNKNOWN"
+	SUCCESS = "SUCCESS"
+	FAILED  = "FAILED"
 )
 
 type Command2Internal struct {
 	station *StationState
+	env     *Env
 }
 
-func NewCommand2Internal(state StationState) *Command2Internal {
-	return &Command2Internal{station: &state}
+func NewCommand2Internal(state StationState, e *Env) *Command2Internal {
+	return &Command2Internal{station: &state, env: e}
 }
 
 // sendRaw is make a connection to internal server and talk with internal server.
@@ -28,7 +27,7 @@ func NewCommand2Internal(state StationState) *Command2Internal {
 // If you want join gRPC response Status Code and gRPC error msg, please use Command2Internal.trapResponseGrpcErr method.
 func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(c2i.env.InternalServer.Addr.String(), grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +35,7 @@ func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	c := pb.NewControlClient(conn)
 
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), timeoutSec)
+	ctx, cancel := context.WithTimeout(context.Background(), c2i.env.InternalServer.TimeoutSec)
 	defer cancel()
 	r, err := c.Command2Internal(ctx, c2i.convert2pb())
 	if err != nil {
