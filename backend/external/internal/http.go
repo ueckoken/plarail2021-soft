@@ -22,7 +22,7 @@ type clientsCollection struct {
 	mtx     sync.Mutex
 }
 func (h HttpServer) StartServer() {
-	clients := []clientChannel{}
+	clients := clientsCollection{}
 	clientCommand := make(chan StationState, 16)
 	clientChannelSend := make(chan clientChannel, 16)
 	go func() {
@@ -67,11 +67,11 @@ func (h HttpServer) StartServer() {
     for d := range h.SyncController2clientHandler {
 		for _, c := range clients.Clients {
 			select {
-				case c.clientSync <- StationState{
-					c.clientSync <- StationState{
+      case c.clientSync <- StationState{
 						StationID: d.StationID,
 						State:     d.State,
-			  	default:
+          }:
+      default:
 					continue
 				}
 			}
