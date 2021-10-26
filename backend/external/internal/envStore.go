@@ -41,7 +41,7 @@ type Env struct {
 	ClientSideServer struct {
 		Port Port `default:"54321"`
 	}
-	Grpc struct {
+	InternalServer struct {
 		Addr       hostnamePort
 		TimeoutSec time.Duration `default:"1s"`
 		//SslCertPath string
