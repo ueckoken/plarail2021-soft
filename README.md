@@ -12,3 +12,15 @@ GitHub Actions による CI/CD を走らせるために main ブランチへの�
 
 - [環境変数ドキュメント](./docs/environmentValList.md)に従って環境変数を設定する。
 
+## CI/CDパイプラインについて
+
+このリポジトリではCI/CDによるビルド、デプロイの自動化を行なっています。
+github actionsによりイメージのビルドを行い、fluxcdにより新しいイメージを自動でサーバに適用しています。
+
+### 使い方
+
+どんどんmainにマージしていってください。./manifests以下への変更は即時でfluxcdにより反映されます。
+
+dockerイメージの更新やるぞ!と思ったらmainからdeploymentにマージしてください。github actionsによるdocker imageのビルドが走ります。
+
+新しいイメージができたらfluxcdが検出してmainに更新commitを加えてデプロイ完了です。鯖への反映は2分ぐらいかかります。
