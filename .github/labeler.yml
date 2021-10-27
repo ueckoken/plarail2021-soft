@@ -7,6 +7,6 @@ frontend:
 ci-cd:
   - .github/**/*
   - manifests/**/*
-docs:
+documentation:
   - README.md
   - '**/docs/**/*.md'
