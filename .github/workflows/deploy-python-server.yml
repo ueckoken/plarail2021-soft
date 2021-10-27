@@ -42,4 +42,4 @@ jobs:
           file: ./frontend/Dockerfile.python
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/ueckoken/plarail2021-soft-frontend-python:${{ IMAGE_TAG }}
+          tags: ghcr.io/ueckoken/plarail2021-soft-frontend-python:${{ env.IMAGE_TAG }}

@@ -44,4 +44,4 @@ jobs:
           context: ./backend/external
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/ueckoken/plarail2021-soft-external:${{ IMAGE_TAG }}
+          tags: ghcr.io/ueckoken/plarail2021-soft-external:${{ env.IMAGE_TAG }}
