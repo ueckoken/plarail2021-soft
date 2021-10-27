@@ -1,0 +1,24 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: plarail2021
+  namespace: plarail2021
+spec:
+  interval: 1m0s
+  sourceRef:
+    kind: GitRepository
+    name: plarail2021
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@mail.gotti.dev #TODO: change this
+        name: fluxcdbot
+      messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
+    push:
+      branch: main
+  update:
+    path: ./manifests
+    strategy: Setters

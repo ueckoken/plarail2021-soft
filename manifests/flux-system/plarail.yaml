@@ -12,6 +12,8 @@ spec:
   interval: 1m0s
   ref:
     branch: main
+  secretRef:
+    name: plarail-repository
   url: https://github.com/ueckoken/plarail2021-soft
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
