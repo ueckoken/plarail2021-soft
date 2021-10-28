@@ -1,7 +1,17 @@
 package main
 
-import "ueckoken/plarail2021-soft-internal/internal"
+import (
+	"log"
+	"ueckoken/plarail2021-soft-internal/internal"
+	"ueckoken/plarail2021-soft-internal/pkg"
+)
 
 func main() {
-	internal.StartServer()
+	env := internal.GetEnv()
+	stations, err := pkg.NewStations()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	grpcServer := internal.GrpcServer{Stations: stations, Environment: env}
+	grpcServer.StartServer()
 }
