@@ -1,6 +1,6 @@
 all: statesync
 	
-statesync:statesync_internal statesync_external
+statesync: statesync_internal statesync_external
 
 statesync_internal:
 	protoc \
