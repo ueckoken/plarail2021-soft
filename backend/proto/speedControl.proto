@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "./spec";
+
+service Speed {
+  rpc ControlSpeed(SendSpeed) returns (StatusCode){}
+}
+
+message SendSpeed {
+  int32 Speed = 1;
+  enum Train {
+    UNKNOWN = 0;
+  }
+  Train train = 2;
+}
+
+message StatusCode {
+  enum Code {
+    UNKNOWN = 0;
+    SUCCESS = 1;
+    FAILED = 2;
+  }
+  Code code = 1;
+}
