@@ -9,6 +9,14 @@ message SendSpeed {
   int32 Speed = 1;
   enum Train {
     UNKNOWN = 0;
+    TAKAO = 1;
+    CHICHIBU = 2;
+    HAKONE = 3;
+    OKUTAMA = 4;
+    ENOSHIMA = 5;
+    KAMAKURA = 6;
+    YOKOSUKA = 7;
+    NIKKO = 8;
   }
   Train train = 2;
 }
