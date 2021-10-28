@@ -13,10 +13,10 @@ message SendSpeed {
     CHICHIBU = 2;
     HAKONE = 3;
     OKUTAMA = 4;
-    ENOSHIMA = 5;
-    KAMAKURA = 6;
-    YOKOSUKA = 7;
-    NIKKO = 8;
+    NIKKO = 5;
+    ENOSHIMA = 6;
+    KAMAKURA = 7;
+    YOKOSUKA = 8;
   }
   Train train = 2;
 }
