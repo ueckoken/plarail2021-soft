@@ -10,6 +10,7 @@ statesync_internal:
 	--go-grpc_opt=Mproto/statesync.proto=. \
 	-I./ \
 	proto/statesync.proto
+
 statesync_external:
 	protoc \
 	--go_out=external \
