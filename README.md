@@ -23,4 +23,4 @@ github actionsによりイメージのビルドを行い、fluxcdにより新し
 
 dockerイメージの更新やるぞ!と思ったらmainからdeploymentにマージしてください。github actionsによるdocker imageのビルドが走ります。
 
-新しいイメージができたらfluxcdが検出してmainに更新commitを加えてデプロイ完了です。鯖への反映は2分ぐらいかかります。
+新しいイメージができたらfluxcdが自動で検出してmainに更新commitを加えるところまでやります。鯖への反映は2分ぐらいかかります。
