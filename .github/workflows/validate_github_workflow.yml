@@ -1,6 +1,6 @@
 name: validate workflow def file
 on:
-  pull_request:
+  push:
     paths:
       - ./github/workflows/*
 
