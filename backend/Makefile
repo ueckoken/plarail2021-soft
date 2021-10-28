@@ -1,4 +1,4 @@
-all:statesync
+all: statesync
 	
 statesync:statesync_internal statesync_external
 
