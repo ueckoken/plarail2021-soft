@@ -14,7 +14,7 @@ spec:
         branch: main
     commit:
       author:
-        email: fluxcdbot@mail.gotti.dev #TODO: change this
+        email: fluxcdbot@mail.gotti.dev
         name: fluxcdbot
       messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
     push:

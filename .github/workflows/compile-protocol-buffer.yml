@@ -37,22 +37,9 @@ jobs:
           mkdir -p $GITHUB_WORKSPACE/backend/internal/spec
           mkdir -p $GITHUB_WORKSPACE/backend/external/spec
 
-          protoc \
-          --go_out=$GITHUB_WORKSPACE/backend/internal \
-          --go_opt=Mproto/statestnc.proto=. \
-          --go-grpc_out=$GITHUB_WORKSPACE/backend/internal \
-          --go-grpc_opt=Mproto/statesync.proto=. \
-          -I$GITHUB_WORKSPACE/backend/ \
-          $GITHUB_WORKSPACE/backend/proto/statesync.proto
+          cd $GITHUB_WORKSPACE/backend/
 
-          protoc \
-          --go_out=$GITHUB_WORKSPACE/backend/external \
-          --go_opt=Mproto/statestnc.proto=. \
-          --go-grpc_out=$GITHUB_WORKSPACE/backend/external \
-          --go-grpc_opt=Mproto/statesync.proto=. \
-          -I$GITHUB_WORKSPACE/backend/ \
-          $GITHUB_WORKSPACE/backend/proto/statesync.proto
-
+          make all
       - name: Count changes
         id: changes
         run: |
