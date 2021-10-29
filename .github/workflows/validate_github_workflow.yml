@@ -2,7 +2,7 @@ name: validate workflow def file
 on:
   push:
     paths:
-      - ./.github/workflows/*
+      - .github/workflows/*
 
 jobs:
   actionlint:
