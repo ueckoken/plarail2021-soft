@@ -24,9 +24,7 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	err = s2n.Send2Esp()
 
 	if err != nil {
-		return &pb.ResponseSync{
-			Response: pb.ResponseSync_FAILED,
-		}, status.Errorf(codes.Unavailable, "sender err %s; not connected to Node", err.Error())
+		return nil, status.Errorf(codes.Unavailable, "sender err %s; not connected to Node", err.Error())
 	}
 	return &pb.ResponseSync{Response: pb.ResponseSync_SUCCESS}, nil
 }
