@@ -22,7 +22,7 @@ func (p *Port) Unmarshal(s string) error {
 }
 
 func (p *Port) String() string {
-	return fmt.Sprintf("%d", p)
+	return fmt.Sprintf("%d", *p)
 }
 
 type Env struct {

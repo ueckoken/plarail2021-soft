@@ -3,6 +3,8 @@ package internal
 import (
 	"context"
 	"fmt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"ueckoken/plarail2021-soft-internal/pkg"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
@@ -24,7 +26,7 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	if err != nil {
 		return &pb.ResponseSync{
 			Response: pb.ResponseSync_FAILED,
-		}, err
+		}, status.Errorf(codes.Unavailable, "sender err %s; not connected to Node", err.Error())
 	}
 	return &pb.ResponseSync{Response: pb.ResponseSync_SUCCESS}, nil
 }
@@ -32,11 +34,11 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 func (c *ControlServer) unpackStations(req *pb.Stations) (*pkg.StationDetail, error) {
 	s, ok := pb.Stations_StationId_name[int32(req.GetStationId())]
 	if !ok {
-		return nil, fmt.Errorf("station: %s is not found in proto file\n", req.String())
+		return nil, fmt.Errorf("station: %s do not define in proto file\n", req.String())
 	}
 	sta, err := c.Stations.SearchStation(s)
 	if err != nil {
-		return nil, fmt.Errorf("station %s is not found in yaml file\n", s)
+		return nil, fmt.Errorf("station %s do not define in yaml file\n", s)
 	}
 	return sta, nil
 }
