@@ -53,7 +53,6 @@ func TestSyncController_update(t *testing.T) {
 		t.Errorf("not update station data")
 	}
 }
-
 func TestSyncController_get(t *testing.T) {
 	station1 := StationState{StationID: 1, State: 1}
 	station2 := StationState{StationID: 2, State: 1}
@@ -104,7 +103,6 @@ func TestSyncController_get(t *testing.T) {
 		t.Errorf("err.Error() expect 'Not found' but return %e", err)
 	}
 }
-
 func TestCommand2Internal_trapResponseGrpcErr(t *testing.T) {
 	// status 0 UNKNOWN; 1 SUCCESS; 2 FAILED
 	testPatterns := []struct {
