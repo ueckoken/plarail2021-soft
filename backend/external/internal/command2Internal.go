@@ -59,6 +59,7 @@ func (c2i *Command2Internal) convert2pb() *pb.RequestSync {
 }
 
 func trapResponseGrpcErr(rs *pb.ResponseSync, grpcErr error) error {
+	// From Error will return true in ok if err is occurred by gRPC or nil
 	sta, ok := status.FromError(grpcErr)
 	if (sta != nil && ok) || rs == nil { // gRPC error occur
 		return fmt.Errorf("gRPC Err: %w", grpcErr)
