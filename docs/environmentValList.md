@@ -16,7 +16,7 @@
 | 名前 | 例 |説明 | 指定しなかったときの挙動 |
 | ---- |---| ---- | ------------------------ |
 |`EXTERNALSIDESERVER_PORT`|12345|Externalサーバに提供するポートを指定します。|54321|
-|`NODECONNECTION_TIMEOUT`|1s|各制御用ESP32とのコネクションタイムアウト時間を指定します。|1s|
+|`NODECONNECTION_TIMEOUT`|1s|各制御用ESP32とのコネクションタイムアウト時間を指定します。golang の Time.Duration がサポートする形式を受け付けます|1s|
 
 ## [external server](/backend/external)
 
