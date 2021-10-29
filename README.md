@@ -24,3 +24,9 @@ github actionsによりイメージのビルドを行い、fluxcdにより新し
 dockerイメージの更新やるぞ!と思ったらmainからdeploymentにマージしてください。github actionsによるdocker imageのビルドが走ります。
 
 新しいイメージができたらfluxcdが自動で検出してmainに更新commitを加えるところまでやります。鯖への反映は2分ぐらいかかります。
+
+## 各種ドキュメント
+
+- [環境変数に関するドキュメント](./docs/environmentValList.md)
+- [ESP32に送信するJSONに関するドキュメント](./docs/api.md)
+- [External<->Internalで用いるプロトコルに関するドキュメント(未整備)](./docs/protocolBuf.md)
