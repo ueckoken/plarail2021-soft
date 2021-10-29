@@ -2,7 +2,7 @@ name: validate workflow def file
 on:
   push:
     paths:
-      - ./github/workflows/*
+      - .github/workflows/*
 
 jobs:
   actionlint:
@@ -14,4 +14,4 @@ jobs:
         shell: bash
         run: |
           bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          ./actionlint -color
+          ./actionlint -color -shellcheck=
