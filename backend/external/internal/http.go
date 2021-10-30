@@ -24,12 +24,11 @@ type clientsCollection struct {
 
 func (h HttpServer) StartServer() {
 	clients := clientsCollection{}
-	clientCommand := make(chan StationState, 16)
 	clientChannelSend := make(chan clientChannel)
 	go func() {
 		r := mux.NewRouter()
 		r.HandleFunc("/", handleStatic)
-		r.Handle("/ws", clientHandler{ClientCommand: clientCommand, ClientChannelSend: clientChannelSend})
+		r.Handle("/ws", clientHandler{ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
 		srv := &http.Server{
 			Handler: r,
 			Addr:    fmt.Sprintf("0.0.0.0:%d", h.Environment.ClientSideServer.Port),
