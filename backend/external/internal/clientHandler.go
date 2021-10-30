@@ -119,6 +119,7 @@ func unpackClientSendData(c *websocket.Conn) (*StationState, error) {
 	if !ok {
 		return nil, fmt.Errorf("bad state format: %s", ud.State)
 	}
+	fmt.Printf("Received: StationID:%d, State:%d\n", station, state)
 	return &StationState{
 		StationID: station,
 		State:     state,
