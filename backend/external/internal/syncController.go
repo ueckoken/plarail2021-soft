@@ -59,13 +59,10 @@ func (s *SyncController) StartSyncController() {
 }
 
 func (s *SyncController) triggeredSync(e *Env, kvs *stationKVS) {
-	fmt.Println("@@@@@@@@@@@@@1")
 	for c := range s.ClientHandler2syncController {
-		fmt.Println("@@@@@@@@@@@@@2")
 		kvs.update(c)
 		var c2i = NewCommand2Internal(c, e)
 		err := c2i.Send()
-		fmt.Println("@@@@@@@@@@@@@3")
 		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@:", err)
 		s.SyncController2clientHandler <- c
 	}
