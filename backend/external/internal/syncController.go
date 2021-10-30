@@ -18,27 +18,29 @@ type stationKVS struct {
 
 func (skvs *stationKVS) update(u StationState) {
 	skvs.mtx.Lock()
+	defer skvs.mtx.Unlock()
 	for i, s := range skvs.stations {
 		if s.StationID == u.StationID {
 			skvs.stations[i].State = u.State
-			skvs.mtx.Unlock()
 			return
 		}
 	}
 	skvs.stations = append(skvs.stations, u)
-	skvs.mtx.Unlock()
 	return
 }
 func (skvs *stationKVS) get(stationID int32) (station StationState, err error) {
 	skvs.mtx.Lock()
+	defer skvs.mtx.Unlock()
 	for _, s := range skvs.stations {
 		if s.StationID == stationID {
-			skvs.mtx.Unlock()
 			return s, nil
 		}
 	}
-	skvs.mtx.Unlock()
 	return StationState{}, errors.New("Not found")
+}
+
+func (skvs *stationKVS) retrieve() []StationState {
+	return skvs.stations
 }
 
 type SyncController struct {
@@ -53,7 +55,7 @@ func (s *SyncController) StartSyncController() {
 		ch := time.Tick(2 * time.Second)
 		for _ = range ch {
 			kvs.mtx.Lock()
-			for _, st := range kvs.stations {
+			for _, st := range kvs.retrieve() {
 				s.SyncController2clientHandler <- st
 			}
 			kvs.mtx.Unlock()
