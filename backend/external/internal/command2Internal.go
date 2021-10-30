@@ -3,14 +3,13 @@ package internal
 import (
 	"context"
 	"fmt"
-	"time"
-	pb "ueckoken/plarail2021-soft-external/spec"
 	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 	"log"
 	"net/http"
+	"time"
 	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
@@ -40,11 +39,11 @@ func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	ctx, cansel1 := context.WithTimeout(ctx, 1*time.Second)
 	defer cansel1()
 	conn, err := grpc.DialContext(
-    ctx,
-    c2i.env.InternalServer.Addr.String(),
-    grpc.WithInsecure(), grpc.WithBlock(),
-    grpc.WithUnaryInterceptor(grpcPrometheus.UnaryClientInterceptor),
-  )
+		ctx,
+		c2i.env.InternalServer.Addr.String(),
+		grpc.WithInsecure(), grpc.WithBlock(),
+		grpc.WithUnaryInterceptor(grpcPrometheus.UnaryClientInterceptor),
+	)
 	if err != nil {
 		return nil, err
 	}
