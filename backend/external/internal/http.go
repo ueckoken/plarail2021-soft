@@ -9,12 +9,15 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type HttpServer struct {
 	ClientHandler2syncController chan StationState
 	SyncController2clientHandler chan StationState
 	Environment                  *Env
+	NumberOfClientConnection     *prometheus.GaugeVec
 }
 
 type clientsCollection struct {
@@ -26,9 +29,17 @@ func (h HttpServer) StartServer() {
 	clients := clientsCollection{}
 	clientChannelSend := make(chan clientChannel)
 	go func() {
+		for {
+			h.NumberOfClientConnection.With(prometheus.Labels{"client": "hoge"}).Set(float64(time.Now().Unix()))
+			time.Sleep(1 * time.Second)
+		}
+	}()
+	go func() {
 		r := mux.NewRouter()
+		prometheus.MustRegister(h.NumberOfClientConnection)
 		r.HandleFunc("/", handleStatic)
 		r.Handle("/ws", clientHandler{ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
+		r.Handle("/metrics", promhttp.Handler())
 		srv := &http.Server{
 			Handler: r,
 			Addr:    fmt.Sprintf("0.0.0.0:%d", h.Environment.ClientSideServer.Port),
