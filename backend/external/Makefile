@@ -3,4 +3,5 @@ build:
 test:
 	go test -v ./...
 up: build
+	docker-compose build
 	docker-compose up
