@@ -15,8 +15,9 @@
 
 | 名前 | 例 |説明 | 指定しなかったときの挙動 |
 | ---- |---| ---- | ------------------------ |
-|`EXTERNALSIDESERVER_PORT`|12345|Externalサーバに提供するポートを指定します。|54321|
-|`NODECONNECTION_TIMEOUT`|1s|各制御用ESP32とのコネクションタイムアウト時間を指定します。golang の Time.Duration がサポートする形式を受け付けます|1s|
+|`EXTERNALSIDESERVER_PORT`|12345|Externalサーバに提供するポートを指定。|54321|
+|`EXTERNALSIDESERVER_METRICSPORT`|12121|Externalサーバとのコネクションに関するメトリクス情報を提供するポートを指定。|9100|
+|`NODECONNECTION_TIMEOUT`|1s|各制御用ESP32とのコネクションタイムアウト時間を指定。golang の Time.ParseDuration がサポートする形式を受け付ける。|1s|
 
 ## [external server](/backend/external)
 
@@ -24,4 +25,5 @@
 | --------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
 | `CLIENTSIDESERVER_PORT`     | 12345                                   | ブラウザ側に提供するポートを指定。                                                                                  | "54321"が指定されます    |
 | `INTERNALSERVER_ADDR`       | 192.168.0.1:12345<br> example.com:12345 | 学内サーバのアドレスとポートを指定。                                                                 | パニックを発生させます。 |
-| `INTERNALSERVER_TIMEOUTSEC` | 1s                                      | 学内サーバとの gRPC コネクションタイムアウトの時間を指定。 golang の Time.Duration がサポートする形式を受け付けます | "1s"                     |
+| `INTERNALSERVER_METRICSPORT`|12121|Internalサーバとのコネクションに関するメトリクス情報を提供するポートを指定。|9100|
+| `INTERNALSERVER_TIMEOUTSEC` | 1s                                      | 学内サーバとの gRPC コネクションタイムアウトの時間を指定。 golang の Time.ParseDuration がサポートする形式を受け付ける。 | "1s"                     |

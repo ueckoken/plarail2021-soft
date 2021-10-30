@@ -5,9 +5,13 @@ import (
 	"fmt"
 	"time"
 	pb "ueckoken/plarail2021-soft-external/spec"
-
+	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
+	"log"
+	"net/http"
+	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
 const (
@@ -35,12 +39,19 @@ func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	ctx := context.Background()
 	ctx, cansel1 := context.WithTimeout(ctx, 1*time.Second)
 	defer cansel1()
-	conn, err := grpc.DialContext(ctx, c2i.env.InternalServer.Addr.String(), grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.DialContext(
+    ctx,
+    c2i.env.InternalServer.Addr.String(),
+    grpc.WithInsecure(), grpc.WithBlock(),
+    grpc.WithUnaryInterceptor(grpcPrometheus.UnaryClientInterceptor),
+  )
 	if err != nil {
 		return nil, err
 	}
 	defer conn.Close()
 	c := pb.NewControlClient(conn)
+
+	c2i.runPrometheus()
 
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(ctx, c2i.env.InternalServer.TimeoutSec)
@@ -61,6 +72,19 @@ func (c2i *Command2Internal) convert2pb() *pb.RequestSync {
 		Station: &pb.Stations{StationId: pb.Stations_StationId(c2i.station.StationID)},
 		State:   pb.RequestSync_State(c2i.station.State),
 	}
+}
+
+// runPrometheus runs prometheus metrics server. This is non-blocking function.
+func (c2i *Command2Internal) runPrometheus() {
+	mux := http.NewServeMux()
+	// Enable histogram
+	grpcPrometheus.EnableHandlingTimeHistogram()
+	mux.Handle("/grpc/metrics/", promhttp.Handler())
+	go func() {
+		promAddr := fmt.Sprintf(":%d", c2i.env.InternalServer.MetricsPort)
+		fmt.Println("Prometheus metrics bind address", promAddr)
+		log.Fatal(http.ListenAndServe(promAddr, mux))
+	}()
 }
 
 func trapResponseGrpcErr(rs *pb.ResponseSync, grpcErr error) error {
