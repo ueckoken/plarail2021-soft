@@ -21,5 +21,5 @@ func (s *ServeSpeedControl) ControlSpeed(ctx context.Context, ss *pb.SendSpeed) 
 		return nil,
 			status.Errorf(codes.Unavailable, "grpc; %e", err)
 	}
-	return &pb.StatusCode{}, nil
+	return &pb.StatusCode{Code: pb.StatusCode_SUCCESS}, nil
 }
