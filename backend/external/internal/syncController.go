@@ -51,8 +51,6 @@ type SyncController struct {
 
 func (s *SyncController) StartSyncController() {
 	var kvs stationKVS
-	kvs.update(StationState{1, 0})
-	kvs.update(StationState{0, 0})
 	go func() {
 		ch := time.Tick(2 * time.Second)
 		for _ = range ch {
