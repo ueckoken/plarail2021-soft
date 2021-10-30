@@ -29,7 +29,7 @@ type Env struct {
 	ExternalSideServer struct {
 		Port Port `envconfig:"default=54321"`
 		//SslCertPath string
-		MetricsPort Port `envconfig:"default=8080"`
+		MetricsPort Port `envconfig:"default=9100"`
 	}
 	NodeConnection struct {
 		Timeout time.Duration `envconfig:"default=1s"`
