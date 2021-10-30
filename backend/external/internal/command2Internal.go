@@ -3,9 +3,11 @@ package internal
 import (
 	"context"
 	"fmt"
+	"time"
+	pb "ueckoken/plarail2021-soft-external/spec"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
-	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
 const (
@@ -30,7 +32,10 @@ func NewCommand2Internal(state StationState, e *Env) *Command2Internal {
 // If you want join gRPC response Status Code and gRPC error msg, please use Command2Internal.trapResponseGrpcErr method.
 func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(c2i.env.InternalServer.Addr.String(), grpc.WithInsecure(), grpc.WithBlock())
+	ctx := context.Background()
+	ctx, cansel1 := context.WithTimeout(ctx, 1*time.Second)
+	defer cansel1()
+	conn, err := grpc.DialContext(ctx, c2i.env.InternalServer.Addr.String(), grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +43,7 @@ func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	c := pb.NewControlClient(conn)
 
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), c2i.env.InternalServer.TimeoutSec)
+	ctx, cancel := context.WithTimeout(ctx, c2i.env.InternalServer.TimeoutSec)
 	defer cancel()
 	r, err := c.Command2Internal(ctx, c2i.convert2pb())
 	if err != nil {
