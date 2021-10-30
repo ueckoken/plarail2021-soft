@@ -20,7 +20,7 @@ statesync_external:
 	-I./ \
 	proto/statesync.proto
 
-speedControl: speedControl_internal speedControl_external
+speedControl: speedControl_internal speedControl_external speedControl_builtin
 
 speedControl_internal:
 	protoc \
@@ -36,6 +36,15 @@ speedControl_external:
 	--go_out=external/spec \
 	--go_opt=Mproto/speedControl.proto=. \
 	--go-grpc_out=external \
+	--go-grpc_opt=Mproto/speedControl.proto=. \
+	-I./ \
+	proto/speedControl.proto
+
+speedControl_builtin:
+	protoc \
+	--go_out=builtin/speed/spec \
+	--go_opt=Mproto/speedControl.proto=. \
+	--go-grpc_out=builtin/speed \
 	--go-grpc_opt=Mproto/speedControl.proto=. \
 	-I./ \
 	proto/speedControl.proto
