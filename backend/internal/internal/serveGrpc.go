@@ -45,7 +45,7 @@ func ServeMetrics(promAddr string) {
 	mux := http.NewServeMux()
 	// Enable histogram
 	grpcPrometheus.EnableHandlingTimeHistogram()
-	mux.Handle("/grpc/metrics", promhttp.Handler())
+	mux.Handle("/metrics", promhttp.Handler())
 	go func() {
 		fmt.Println("Prometheus metrics bind address", promAddr)
 		log.Fatal(http.ListenAndServe(promAddr, mux))
