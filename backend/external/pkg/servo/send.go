@@ -10,7 +10,8 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"ueckoken/plarail2021-soft-external/internal"
+	"ueckoken/plarail2021-soft-external/pkg/envStore"
+	"ueckoken/plarail2021-soft-external/pkg/syncController"
 	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
@@ -21,13 +22,13 @@ const (
 )
 
 type Command2Internal struct {
-	station *internal.StationState
-	env     *internal.Env
+	station *syncController.StationState
+	env     *envStore.Env
 }
 
 // NewCommand2Internal is Constructor of CommandInternal.
 // CommandInternal Struct has a method to talk to Internal server with gRPC.
-func NewCommand2Internal(state internal.StationState, e *internal.Env) *Command2Internal {
+func NewCommand2Internal(state syncController.StationState, e *envStore.Env) *Command2Internal {
 	return &Command2Internal{station: &state, env: e}
 }
 

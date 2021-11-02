@@ -1,10 +1,12 @@
-package internal
+package syncController
 
 import (
 	"errors"
 	"fmt"
 	"sync"
 	"time"
+	"ueckoken/plarail2021-soft-external/pkg/envStore"
+	"ueckoken/plarail2021-soft-external/pkg/servo"
 )
 
 type StationState struct {
@@ -47,7 +49,7 @@ func (skvs *stationKVS) retrieve() []StationState {
 type SyncController struct {
 	ClientHandler2syncController chan StationState
 	SyncController2clientHandler chan StationState
-	Environment                  *Env
+	Environment                  *envStore.Env
 }
 
 func (s *SyncController) StartSyncController() {
@@ -58,10 +60,10 @@ func (s *SyncController) StartSyncController() {
 	}
 }
 
-func (s *SyncController) triggeredSync(e *Env, kvs *stationKVS) {
+func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
 	for c := range s.ClientHandler2syncController {
 		kvs.update(c)
-		var c2i = NewCommand2Internal(c, e)
+		c2i := servo.NewCommand2Internal(c, e)
 		err := c2i.Send()
 		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@:", err)
 		s.SyncController2clientHandler <- c

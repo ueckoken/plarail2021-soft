@@ -1,4 +1,4 @@
-package internal
+package clientHandler
 
 import (
 	"context"
@@ -8,19 +8,20 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"ueckoken/plarail2021-soft-external/pkg/syncController"
 	pb "ueckoken/plarail2021-soft-external/spec"
 
 	"github.com/gorilla/websocket"
 )
 
-type clientHandler struct {
+type ClientHandler struct {
 	upgrader          websocket.Upgrader
-	ClientCommand     chan StationState
-	ClientChannelSend chan clientChannel
+	ClientCommand     chan syncController.StationState
+	ClientChannelSend chan ClientChannel
 }
 
-type clientChannel struct {
-	clientSync chan StationState
+type ClientChannel struct {
+	ClientSync chan syncController.StationState
 	Done       chan struct{}
 }
 type clientSendData struct {
@@ -28,7 +29,7 @@ type clientSendData struct {
 	State       string `json:"state"`
 }
 
-func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("responsing")
 	c, err := m.upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -37,9 +38,9 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close()
 	ctx, cancel := context.WithCancel(context.Background())
-	var cSync = make(chan StationState, 16)
+	var cSync = make(chan syncController.StationState, 16)
 	var cDone = make(chan struct{})
-	var cChannel = clientChannel{cSync, cDone}
+	var cChannel = ClientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
 	fmt.Println("added")
 	c.SetPongHandler(func(string) error {
@@ -54,7 +55,7 @@ func (m clientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	})
 	go handleClientCommand(ctx, c, &m)
 	go handleClientPing(ctx, c)
-	for cChan := range cChannel.clientSync {
+	for cChan := range cChannel.ClientSync {
 		fmt.Println(cChan)
 		fmt.Println("sent")
 		err := c.WriteJSON(cChan)
@@ -83,7 +84,7 @@ func handleClientPing(ctx context.Context, c *websocket.Conn) {
 	}
 }
 
-func handleClientCommand(ctx context.Context, c *websocket.Conn, m *clientHandler) {
+func handleClientCommand(ctx context.Context, c *websocket.Conn, m *ClientHandler) {
 	for {
 		select {
 		case <-ctx.Done():
@@ -99,7 +100,7 @@ func handleClientCommand(ctx context.Context, c *websocket.Conn, m *clientHandle
 	}
 }
 
-func unpackClientSendData(c *websocket.Conn) (*StationState, error) {
+func unpackClientSendData(c *websocket.Conn) (*syncController.StationState, error) {
 	_, msg, err := c.ReadMessage()
 	if err != nil {
 		return nil, fmt.Errorf("websocket read failed: %e", err)
@@ -120,7 +121,7 @@ func unpackClientSendData(c *websocket.Conn) (*StationState, error) {
 		return nil, fmt.Errorf("bad state format: %s", ud.State)
 	}
 	fmt.Printf("Received: StationID:%d, State:%d\n", station, state)
-	return &StationState{
+	return &syncController.StationState{
 		StationID: station,
 		State:     state,
 	}, nil
@@ -129,7 +130,7 @@ func unpackClientSendData(c *websocket.Conn) (*StationState, error) {
 //go:embed embed/index.html
 var IndexHtml []byte
 
-func handleStatic(w http.ResponseWriter, r *http.Request) {
+func HandleStatic(w http.ResponseWriter, r *http.Request) {
 	_, err := w.Write(IndexHtml)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
