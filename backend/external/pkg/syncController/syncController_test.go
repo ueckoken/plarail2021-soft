@@ -3,6 +3,7 @@ package syncController
 import (
 	"sync"
 	"testing"
+	"ueckoken/plarail2021-soft-external/pkg/servo"
 )
 
 func (skvs *stationKVS) contain(ss StationState) bool {
@@ -15,8 +16,8 @@ func (skvs *stationKVS) contain(ss StationState) bool {
 }
 
 func TestSyncController_update(t *testing.T) {
-	station1 := StationState{StationID: 1, State: 1}
-	station2 := StationState{StationID: 2, State: 1}
+	station1 := StationState{servo.StationState{StationID: 1, State: 1}}
+	station2 := StationState{servo.StationState{StationID: 2, State: 1}}
 	kvs := stationKVS{
 		stations: nil,
 		mtx:      sync.Mutex{},
@@ -42,7 +43,7 @@ func TestSyncController_update(t *testing.T) {
 	}
 
 	// update exist station data
-	station1 = StationState{StationID: 1, State: 0}
+	station1 = StationState{servo.StationState{StationID: 1, State: 0}}
 	kvs.update(station1)
 	if len(kvs.stations) != 2 {
 		t.Errorf("append failed")
@@ -52,8 +53,8 @@ func TestSyncController_update(t *testing.T) {
 	}
 }
 func TestSyncController_get(t *testing.T) {
-	station1 := StationState{StationID: 1, State: 1}
-	station2 := StationState{StationID: 2, State: 1}
+	station1 := StationState{servo.StationState{StationID: 1, State: 1}}
+	station2 := StationState{servo.StationState{StationID: 2, State: 1}}
 	skvs := stationKVS{
 		stations: nil,
 		mtx:      sync.Mutex{},
