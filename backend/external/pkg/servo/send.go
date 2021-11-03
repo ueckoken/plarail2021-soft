@@ -1,4 +1,4 @@
-package internal
+package servo
 
 import (
 	"context"
@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"ueckoken/plarail2021-soft-external/pkg/envStore"
 	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
@@ -19,14 +20,19 @@ const (
 	FAILED  = "FAILED"
 )
 
+type StationState struct {
+	StationID int32
+	State     int32
+}
+
 type Command2Internal struct {
 	station *StationState
-	env     *Env
+	env     *envStore.Env
 }
 
 // NewCommand2Internal is Constructor of CommandInternal.
 // CommandInternal Struct has a method to talk to Internal server with gRPC.
-func NewCommand2Internal(state StationState, e *Env) *Command2Internal {
+func NewCommand2Internal(state StationState, e *envStore.Env) *Command2Internal {
 	return &Command2Internal{station: &state, env: e}
 }
 
@@ -36,8 +42,8 @@ func NewCommand2Internal(state StationState, e *Env) *Command2Internal {
 func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	// Set up a connection to the server.
 	ctx := context.Background()
-	ctx, cansel1 := context.WithTimeout(ctx, 1*time.Second)
-	defer cansel1()
+	ctx, cancel1 := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel1()
 	conn, err := grpc.DialContext(
 		ctx,
 		c2i.env.InternalServer.Addr.String(),

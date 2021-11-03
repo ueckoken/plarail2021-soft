@@ -7,6 +7,9 @@ import (
 	"runtime"
 	"sync"
 	"time"
+	"ueckoken/plarail2021-soft-external/pkg/clientHandler"
+	"ueckoken/plarail2021-soft-external/pkg/envStore"
+	"ueckoken/plarail2021-soft-external/pkg/syncController"
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
@@ -14,20 +17,20 @@ import (
 )
 
 type HttpServer struct {
-	ClientHandler2syncController chan StationState
-	SyncController2clientHandler chan StationState
-	Environment                  *Env
+	ClientHandler2syncController chan syncController.StationState
+	SyncController2clientHandler chan syncController.StationState
+	Environment                  *envStore.Env
 	NumberOfClientConnection     *prometheus.GaugeVec
 }
 
 type clientsCollection struct {
-	Clients []clientChannel
+	Clients []clientHandler.ClientChannel
 	mtx     sync.Mutex
 }
 
 func (h HttpServer) StartServer() {
 	clients := clientsCollection{}
-	clientChannelSend := make(chan clientChannel)
+	clientChannelSend := make(chan clientHandler.ClientChannel)
 	go func() {
 		for {
 			h.NumberOfClientConnection.With(prometheus.Labels{"client": "hoge"}).Set(float64(time.Now().Unix()))
@@ -37,8 +40,8 @@ func (h HttpServer) StartServer() {
 	go func() {
 		r := mux.NewRouter()
 		prometheus.MustRegister(h.NumberOfClientConnection)
-		r.HandleFunc("/", handleStatic)
-		r.Handle("/ws", clientHandler{ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
+		r.HandleFunc("/", clientHandler.HandleStatic)
+		r.Handle("/ws", clientHandler.ClientHandler{ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
 		r.Handle("/metrics", promhttp.Handler())
 		srv := &http.Server{
 			Handler: r,
@@ -54,13 +57,13 @@ func (h HttpServer) StartServer() {
 			cChannel := <-clientChannelSend
 			fmt.Println("##clients:", len(clients.Clients))
 			clients.Clients = append(clients.Clients, cChannel)
-			nextClients := []clientChannel{}
+			nextClients := []clientHandler.ClientChannel{}
 			clients.mtx.Lock()
 			for _, c := range clients.Clients {
 				select {
 				case <-c.Done:
 					close(c.Done)
-					close(c.clientSync)
+					close(c.ClientSync)
 					continue
 				default:
 					nextClients = append(nextClients, c)
@@ -73,7 +76,7 @@ func (h HttpServer) StartServer() {
 	}()
 	go func() {
 		for {
-			h.SyncController2clientHandler <- StationState{}
+			h.SyncController2clientHandler <- syncController.StationState{}
 			time.Sleep(1 * time.Second)
 		}
 	}()
@@ -85,7 +88,7 @@ func (h HttpServer) StartServer() {
 			clients.mtx.Lock()
 			for _, c := range clients.Clients {
 				select {
-				case c.clientSync <- d:
+				case c.ClientSync <- d:
 				default:
 					continue
 				}
