@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"ueckoken/plarail2021-soft-external/pkg/servo"
 	"ueckoken/plarail2021-soft-external/pkg/syncController"
 	pb "ueckoken/plarail2021-soft-external/spec"
 
@@ -122,8 +123,10 @@ func unpackClientSendData(c *websocket.Conn) (*syncController.StationState, erro
 	}
 	fmt.Printf("Received: StationID:%d, State:%d\n", station, state)
 	return &syncController.StationState{
-		StationID: station,
-		State:     state,
+		StationState: servo.StationState{
+			StationID: station,
+			State:     state,
+		},
 	}, nil
 }
 

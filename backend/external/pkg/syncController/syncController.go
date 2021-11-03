@@ -10,8 +10,7 @@ import (
 )
 
 type StationState struct {
-	StationID int32
-	State     int32
+	servo.StationState
 }
 
 type stationKVS struct {
@@ -63,7 +62,7 @@ func (s *SyncController) StartSyncController() {
 func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
 	for c := range s.ClientHandler2syncController {
 		kvs.update(c)
-		c2i := servo.NewCommand2Internal(c, e)
+		c2i := servo.NewCommand2Internal(c.StationState, e)
 		err := c2i.Send()
 		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@:", err)
 		s.SyncController2clientHandler <- c
