@@ -1,8 +1,8 @@
-name: Deploy WebRTC test
+name: WebRTC test
 
 defaults:
   run:
-    working-directory: ./frontend
+    working-directory: ./frontend/other
 
 on: push
 

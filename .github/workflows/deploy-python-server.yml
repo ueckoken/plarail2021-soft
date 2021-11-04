@@ -2,7 +2,7 @@ name: Deploy WebRTC python server
 
 defaults:
   run:
-    working-directory: ./frontend
+    working-directory: ./frontend/other
 
 on:
   push:
