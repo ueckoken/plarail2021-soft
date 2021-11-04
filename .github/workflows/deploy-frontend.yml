@@ -38,8 +38,8 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v2
         with:
-          context: ./frontend
-          file: ./frontend/Dockerfile.nginx
+          context: ./frontend/other
+          file: ./frontend/other/Dockerfile.nginx
           platforms: linux/amd64
           push: true
           tags: ghcr.io/ueckoken/plarail2021-soft-frontend:${{ env.IMAGE_TAG }}
