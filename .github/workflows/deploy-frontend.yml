@@ -2,7 +2,7 @@ name: Deploy WebRTC
 
 defaults:
   run:
-    working-directory: ./frontend/chofusai-plarail2021-front/
+    working-directory: ./frontend/
 
 on:
   push:
