@@ -1,4 +1,4 @@
-package internal
+package envStore
 
 import (
 	"fmt"
@@ -39,8 +39,9 @@ type Env struct {
 		Port Port `envconfig:"default=54321"`
 	}
 	InternalServer struct {
-		Addr       hostnamePort
-		TimeoutSec time.Duration `envconfig:"default=1s"`
+		Addr        hostnamePort
+		TimeoutSec  time.Duration `envconfig:"default=1s"`
+		MetricsPort Port          `envconfig:"default=9100"`
 		//SslCertPath string
 	}
 }

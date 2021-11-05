@@ -1,69 +1,69 @@
 stations:
   - station:
       name: chofu_b1
-      address: 192.168.1.0:8080
+      address: http://192.168.1.1:8080
       pin: 1
   - station:
       name: chofu_b2
-      address: 192.168.1.0:8080
+      address: http://192.168.1.1:8080
       pin: 2
   - station:
       name: chofu_b3
-      address: 192.168.1.0:8080
+      address: http://192.168.1.1:8080
       pin: 3
   - station:
       name: chofu_s1
-      address: 192.168.1.0:8080
+      address: http://192.168.1.1:8080
       pin: 4
   - station:
       name: chofu_s2
-      address: 192.168.1.0:8080
+      address: http://192.168.1.1:8080
       pin: 5
   - station:
       name: chofu_s3
-      address: 192.168.1.0:8080
+      address: http://192.168.1.0:8080
       pin: 6
   - station:
       name: chofu_s4
-      address: 192.168.1.0:8080
+      address: http://192.168.1.0:8080
       pin: 7
 
   - station:
       name: meidaimae_s1
-      address: 192.168.1.1:8080
+      address: http://192.168.1.1:8080
       pin: 1
   - station:
       name: meidaimae_s2
-      address: 192.168.1.1:8080
+      address: http://192.168.1.1:8080
       pin: 2
 
   - station:
       name: sasazuka_b1
-      address: 192.168.1.3:8080
+      address: http://192.168.1.3:8080
       pin: 1
   - station:
       name: sasazuka_s1
-      address: 192.168.1.3:8080
+      address: http://192.168.1.3:8080
       pin: 2
   - station:
       name: sasazuka_s2
-      address: 192.168.1.3:8080
+      address: http://192.168.1.3:8080
       pin: 3
   - station:
       name: sasazuka_s4
-      address: 192.168.1.3:8080
+      address: http://192.168.1.3:8080
       pin: 4
 
   - station:
       name: kitano_b1
-      address: 192.168.1.4:8080
+      address: http://192.168.1.4:8080
       pin: 1
   - station:
       name: kitano_s2
-      address: 192.168.1.4:8080
+      address: http://192.168.1.4:8080
       pin: 2
   - station:
       name: kitano_s3
-      address: 192.168.1.4:8080
+      address: http://192.168.1.4:8080
       pin: 3
 

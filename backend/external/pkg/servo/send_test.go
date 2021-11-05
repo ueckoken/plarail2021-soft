@@ -1,4 +1,4 @@
-package internal
+package servo
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	pb "ueckoken/plarail2021-soft-external/spec"
 )
 
-func TestCommand2Internal_trapResponseGrpcErr(t *testing.T) {
+func TestSend_trapResponseGrpcErr(t *testing.T) {
 	// status 0 UNKNOWN; 1 SUCCESS; 2 FAILED
 	testPatterns := []struct {
 		grpcErr        error

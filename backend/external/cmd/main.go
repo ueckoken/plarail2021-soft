@@ -2,20 +2,33 @@ package main
 
 import (
 	"ueckoken/plarail2021-soft-external/internal"
+	"ueckoken/plarail2021-soft-external/pkg/envStore"
+	"ueckoken/plarail2021-soft-external/pkg/syncController"
+
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 func main() {
-	clientHandler2syncController := make(chan internal.StationState, 16)
-	syncController2clientHandler := make(chan internal.StationState, 16)
+	clientHandler2syncController := make(chan syncController.StationState)
+	syncController2clientHandler := make(chan syncController.StationState)
 
-	envVal := internal.GetEnv()
+	envVal := envStore.GetEnv()
+
+	clientconn := prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "plarailexternal_client_connections",
+			Help: "Number of connections handling websocket",
+		},
+		[]string{"client"},
+	)
 
 	httpServer := internal.HttpServer{
 		ClientHandler2syncController: clientHandler2syncController,
 		SyncController2clientHandler: syncController2clientHandler,
 		Environment:                  envVal,
+		NumberOfClientConnection:     clientconn,
 	}
-	syncController := internal.SyncController{
+	syncController := syncController.SyncController{
 		ClientHandler2syncController: clientHandler2syncController,
 		SyncController2clientHandler: syncController2clientHandler,
 		Environment:                  envVal,
