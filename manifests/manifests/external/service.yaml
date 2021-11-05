@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: plarail2021-soft-backend-external
   namespace: plarail2021
+  labels:
+    app: plarail2021-soft-backend-external
 spec:
   type: NodePort
   selector:
