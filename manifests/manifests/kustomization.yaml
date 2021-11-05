@@ -1,3 +1,4 @@
 resources:
   - ./frontend
   - ./python-webrtc-server
+  - ./external
