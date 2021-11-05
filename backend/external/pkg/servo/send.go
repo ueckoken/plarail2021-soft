@@ -4,11 +4,8 @@ import (
 	"context"
 	"fmt"
 	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
-	"log"
-	"net/http"
 	"time"
 	"ueckoken/plarail2021-soft-external/pkg/envStore"
 	pb "ueckoken/plarail2021-soft-external/spec"
@@ -56,8 +53,6 @@ func (c2i *Command2Internal) sendRaw() (*pb.ResponseSync, error) {
 	defer conn.Close()
 	c := pb.NewControlClient(conn)
 
-	c2i.runPrometheus()
-
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(ctx, c2i.env.InternalServer.TimeoutSec)
 	defer cancel()
@@ -79,18 +74,6 @@ func (c2i *Command2Internal) convert2pb() *pb.RequestSync {
 	}
 }
 
-// runPrometheus runs prometheus metrics server. This is non-blocking function.
-func (c2i *Command2Internal) runPrometheus() {
-	mux := http.NewServeMux()
-	// Enable histogram
-	grpcPrometheus.EnableHandlingTimeHistogram()
-	mux.Handle("/grpc/metrics/", promhttp.Handler())
-	go func() {
-		promAddr := fmt.Sprintf(":%d", c2i.env.InternalServer.MetricsPort)
-		fmt.Println("Prometheus metrics bind address", promAddr)
-		log.Fatal(http.ListenAndServe(promAddr, mux))
-	}()
-}
 
 func trapResponseGrpcErr(rs *pb.ResponseSync, grpcErr error) error {
 	// From Error will return true in ok if err is occurred by gRPC or nil
