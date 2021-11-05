@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plarail2021-soft-backend-external
+  namespace: plarail2021
+spec:
+  selector:
+    matchLabels:
+      app: plarail2021-soft-backend-external
+  template:
+    metadata:
+      labels:
+        app: plarail2021-soft-backend-external
+    spec:
+      containers:
+        - name: plarail2021-soft-backend-external
+          image: ghcr.io/ueckoken/plarail2021-soft-external:b2a090b-1635567417 # {"$imagepolicy": "plarail2021:external"}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
