@@ -1,8 +1,8 @@
-name: Deploy WebRTC test
+name: Deploy WebRTC
 
 defaults:
   run:
-    working-directory: ./frontend
+    working-directory: ./frontend/
 
 on:
   push:
@@ -38,8 +38,8 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v2
         with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
+          context: ./frontend/chofusai-plarail2021-front
+          file: ./frontend/chofusai-plarail2021-front/Dockerfile
           platforms: linux/amd64
           push: true
           tags: ghcr.io/ueckoken/plarail2021-soft-frontend:${{ env.IMAGE_TAG }}
