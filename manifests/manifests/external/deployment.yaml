@@ -17,4 +17,7 @@ spec:
           image: ghcr.io/ueckoken/plarail2021-soft-external:b2a090b-1635567417 # {"$imagepolicy": "plarail2021:external"}
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8080
+          envFrom:
+          - configMapRef:
+              name: external-env
