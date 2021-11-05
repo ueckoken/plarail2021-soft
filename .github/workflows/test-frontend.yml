@@ -2,7 +2,7 @@ name: WebRTC test
 
 defaults:
   run:
-    working-directory: ./frontend/other
+    working-directory: ./frontend
 
 on: push
 
@@ -13,14 +13,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
         with:
-          node-version: 16.x
-          cache: 'npm'
-          cache-dependency-path: ./frontend/other/package-lock.json
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: npm build
+      - name: set tag
         run: |-
-          npm install
-          npx webpack
+          export TIMESTUMP=$(date +%s)
+          export SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          echo "IMAGE_TAG=$SHA-$TIMESTUMP" >> $GITHUB_ENV
+
+      - name: Build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          platforms: linux/amd64
+          push: false
+          tags: ghcr.io/ueckoken/plarail2021-soft-frontend:${{ env.IMAGE_TAG }}
