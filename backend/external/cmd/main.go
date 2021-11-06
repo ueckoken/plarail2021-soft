@@ -34,7 +34,5 @@ func main() {
 		Environment:                  envVal,
 	}
 	go httpServer.StartServer()
-	go syncController.StartSyncController()
-	for {
-	}
+	syncController.StartSyncController()
 }
