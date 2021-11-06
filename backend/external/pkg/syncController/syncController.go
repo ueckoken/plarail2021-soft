@@ -54,9 +54,7 @@ type SyncController struct {
 func (s *SyncController) StartSyncController() {
 	var kvs stationKVS
 	go s.periodicallySync(&kvs)
-	go s.triggeredSync(s.Environment, &kvs)
-	for {
-	}
+	s.triggeredSync(s.Environment, &kvs)
 }
 
 func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
