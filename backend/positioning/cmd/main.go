@@ -1,6 +1,6 @@
 package main
 
-import(
+import (
 	"fmt"
 	"log"
 	"os"
@@ -12,12 +12,12 @@ import(
 	"gorm.io/gorm"
 )
 
-func main(){
+func main() {
 	dbenv := os.Getenv("DB")
 	fmt.Println("DB:", dbenv)
 	d, err := gorm.Open(postgres.Open(dbenv), &gorm.Config{})
-	if err != nil{
-		log.Fatalf("error when connecting to sql: %s",err)
+	if err != nil {
+		log.Fatalf("error when connecting to sql: %s", err)
 		os.Exit(1)
 	}
 	db := gormHandler.SQLHandler{DB: d}

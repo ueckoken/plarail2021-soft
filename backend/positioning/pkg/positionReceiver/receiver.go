@@ -1,9 +1,9 @@
 package positionReceiver
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 	"ueckoken/plarail2021-soft-positioning/pkg/gormHandler"
 	"ueckoken/plarail2021-soft-positioning/pkg/hallsensor"
 	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
@@ -25,24 +25,37 @@ func (p PositionReceiveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	r.ParseForm()
 	pin := r.URL.Query().Get("pin")
 	var ip string
-	ip_forwarded := r.Header.Get("X-FORWARDED-FOR")
-	if ip_forwarded != "" {
-		ip = ip_forwarded
+	ipForwarded := r.Header.Get("X-FORWARDED-FOR")
+	if ipForwarded != "" {
+		ip = ipForwarded
 	} else {
 		ip = r.RemoteAddr
 	}
 	h := hallsensor.NewEsp32PinSetting()
-	pin_i, err := strconv.Atoi(pin)
+	pinI, err := strconv.Atoi(pin)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("invalid pin"))
 	}
-	name, err := h.Search(ip, pin_i)
+	name, err := h.Search(ip, pinI)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("not found such address or pin"))
 	}
 	trainId := r.URL.Query().Get("trainId")
+	trainIdI, err := strconv.Atoi(trainId)
+	if err != nil{
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("invalid trainId"))
+	}
 	//TODO: validate trainId
-	fmt.Println(name,trainId)
+	dat := trainState.State{
+		TrainId:          trainIdI,
+		HallSensorName:   name,
+		FetchedTimeStump: time.Now(),
+	}
+	p.db.Store(dat)
+	p.registerReceivedPosition <- dat
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("accepted"))
 }

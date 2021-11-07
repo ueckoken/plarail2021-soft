@@ -25,7 +25,7 @@ func TestUpdate(t *testing.T) {
 		FetchedTimeStump: time.Now(),
 	}
 	db.Store(ts)
-	tsO := db.Fetch(123)
+	tsO := db.FetchFromTrainId(123)
 	fmt.Println(len(tsO.States))
 	if !(ts.TrainId==tsO.States[0].TrainId) && !(ts.HallSensorName==tsO.States[0].HallSensorName){
 		t.Errorf("error")
