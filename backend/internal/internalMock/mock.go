@@ -20,6 +20,7 @@ func main() {
 	pb.RegisterControlServer(s, &m)
 	grpcPrometheus.Register(s)
 	internal.ServeMetrics(fmt.Sprintf(":%d", e.ExternalSideServer.MetricsPort))
+	fmt.Printf("gRPC bind address :%d\n", e.ExternalSideServer.Port)
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", e.ExternalSideServer.Port))
 	if err != nil {
 		log.Fatalf("listen failed")
