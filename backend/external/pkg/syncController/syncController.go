@@ -16,7 +16,7 @@ type StationState struct {
 type stationKVS struct {
 	stations  []StationState
 	mtx       sync.Mutex
-	validator *Validator
+	validator IValidator
 }
 
 func newStationKvs() *stationKVS {
@@ -80,7 +80,7 @@ func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
 func (s *SyncController) periodicallySync(kvs *stationKVS) {
 	ch := time.Tick(2 * time.Second)
 	for range ch {
-		fmt.Println("lockig")
+		fmt.Println("locking")
 		kvs.mtx.Lock()
 		fmt.Println("locked")
 		for _, st := range kvs.retrieve() {

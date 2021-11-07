@@ -10,6 +10,9 @@ import (
 	"ueckoken/plarail2021-soft-external/spec"
 )
 
+type IValidator interface {
+	Validate(state StationState, ss []StationState) error
+}
 type Validator struct {
 	Stations []Station `yaml:"stations"`
 }
