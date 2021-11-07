@@ -1,0 +1,63 @@
+esp32:
+  - address: 192.168.1.100
+    sensors:
+      - name: "motoyawata_s1_b"
+        pin: 1
+      - name: "motoyawata_s1_f"
+        pin: 2
+      - name: "motoyawata_s2_b"
+        pin: 3
+      - name: "motoyawata_s2_f"
+        pin: 4
+  - address: 192.168.1.101
+    sensors:
+      - name: "iwamotocho_s1_b"
+        pin: 1
+      - name: "iwamotocho_s1_f"
+        pin: 2
+      - name: "iwamotocho_s2_b"
+        pin: 3
+      - name: "iwamotocho_s2_f"
+        pin: 4
+      - name: "iwamotocho_s4_b"
+        pin: 5
+      - name: "iwamotocho_s4_f"
+        pin: 6
+  - address: 192.168.1.102
+    sensors:
+      - name: "kudanshita_s5_b"
+        pin: 1
+      - name: "kudanshita_s5_f"
+        pin: 2
+      - name: "kudanshita_s6_b"
+        pin: 3
+      - name: "kudanshita_s6_f"
+        pin: 4
+  - address: 192.168.1.103
+    sensors:
+      - name: "sasazuka_s1_b"
+        pin: 1
+      - name: "sasazuka_s1_f"
+        pin: 2
+      - name: "sasazuka_s2_f"
+        pin: 3
+      - name: "sasazuka_s2_shinsen"
+        pin: 4
+      - name: "sasazuka_s3_shinsen"
+        pin: 5
+      - name: "sasazuka_s4_b"
+        pin: 6
+      - name: "sasazuka_s4_f"
+        pin: 7
+      - name: "sasazuka_s1_takao"
+        pin: 8
+  - address: 192.168.1.104
+    sensors:
+      - name: "meidaimae_s1_b"
+        pin: 1
+      - name: "meidaimae_s1_f"
+        pin: 2
+      - name: "meidaimae_s2_b"
+        pin: 3
+      - name: "meidaimae_s2_f"
+        pin: 4
