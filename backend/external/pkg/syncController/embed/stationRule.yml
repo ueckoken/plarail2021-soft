@@ -15,7 +15,6 @@ stations:
             - chofu_b2
         - on:
             - chofu_s1
-          off:
         - on:
             - chofu_s2
   - station:
@@ -37,21 +36,3 @@ stations:
           off:
         - on:
             - chofu_s2
-#  - station:
-#      - name: chofu_nobori
-#      - points:
-#          - chofu_s1
-#          - chofu_s2
-#          - chofu_b1
-#          - chofu_b2
-#      - rule:
-#          - on:
-#          - off:
-#              - chofu_s1
-#              - chofu_s2
-#              - chofu_b1
-#              - chofu_b2
-#      - rule:
-#          - on:
-#              - chofu_s1
-#          - off:

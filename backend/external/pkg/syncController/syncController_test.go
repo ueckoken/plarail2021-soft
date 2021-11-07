@@ -102,3 +102,74 @@ func TestSyncController_get(t *testing.T) {
 		t.Errorf("err.Error() expect 'Not found' but return %e", err)
 	}
 }
+
+func Test_stationKVS_update(t *testing.T) {
+	type fields struct {
+		stations  []StationState
+		validator *Validator
+	}
+	type args struct {
+		u StationState
+	}
+	var stations []StationState
+	for i := 1; i < 20; i++ {
+		stations = append(stations,
+			StationState{servo.StationState{StationID: int32(i), State: 1}})
+	}
+	v := Validator{Stations: []Station{{
+		EachStation{
+			Name:   "chofu_kudari",
+			Points: []string{"chofu_s1", "chofu_s2", "chofu_b1", "chofu_b2"},
+			Rules: []Rule{{
+				On:  nil,
+				Off: []string{"chofu_s1", "chofu_s2", "chofu_b1", "chofu_b2"},
+			}, {
+				On:  []string{"chofu_s1"},
+				Off: nil,
+			}, {
+				On:  []string{"chofu_s2"},
+				Off: nil,
+			},
+			},
+		},
+	}}}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		/*
+			1:  "chofu_b1",
+			2:  "chofu_b2",
+			3:  "chofu_b3",
+			4:  "chofu_s1",
+			5:  "chofu_s2",
+			6:  "chofu_s3",
+			7:  "chofu_s4",
+		*/
+		{
+			name: "全てOFFの状態でOFFにすることはルールの1つ目に従う",
+			fields: fields{
+				stations:  stations,
+				validator: &v,
+			},
+			args: args{StationState{servo.StationState{
+				StationID: 1, // chofu_b1
+				State:     2, // off
+			}}},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			skvs := &stationKVS{
+				stations:  tt.fields.stations,
+				validator: tt.fields.validator,
+			}
+			if err := skvs.update(tt.args.u); (err != nil) != tt.wantErr {
+				t.Errorf("update() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
