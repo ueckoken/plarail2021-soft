@@ -1,4 +1,4 @@
-package pkg
+package station2espIp
 
 import (
 	"reflect"

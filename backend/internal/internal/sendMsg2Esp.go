@@ -3,6 +3,7 @@ package internal
 import (
 	"encoding/json"
 	"ueckoken/plarail2021-soft-internal/pkg"
+	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 )
 
 type sendData struct {
@@ -10,12 +11,12 @@ type sendData struct {
 	Pin   int    `json:"pin"`
 }
 type Send2node struct {
-	Station     *pkg.StationDetail
+	Station     *station2espIp.StationDetail
 	Environment *Env
 	sendData    *sendData
 }
 
-func NewSend2Node(sta *pkg.StationDetail, state string, e *Env) *Send2node {
+func NewSend2Node(sta *station2espIp.StationDetail, state string, e *Env) *Send2node {
 	return &Send2node{
 		Station:     sta,
 		Environment: e,

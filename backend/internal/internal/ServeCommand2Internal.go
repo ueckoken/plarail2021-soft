@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"ueckoken/plarail2021-soft-internal/pkg"
+	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
 
 type ControlServer struct {
 	pb.UnimplementedControlServer
 	env      *Env
-	Stations *pkg.Stations
+	Stations *station2espIp.Stations
 }
 
 func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSync) (*pb.ResponseSync, error) {
@@ -29,7 +29,7 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	return &pb.ResponseSync{Response: pb.ResponseSync_SUCCESS}, nil
 }
 
-func (c *ControlServer) unpackStations(req *pb.Stations) (*pkg.StationDetail, error) {
+func (c *ControlServer) unpackStations(req *pb.Stations) (*station2espIp.StationDetail, error) {
 	s, ok := pb.Stations_StationId_name[int32(req.GetStationId())]
 	if !ok {
 		return nil, fmt.Errorf("station: %s do not define in proto file\n", req.String())

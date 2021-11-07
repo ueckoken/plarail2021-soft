@@ -8,12 +8,12 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"ueckoken/plarail2021-soft-internal/pkg"
+	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
 
 type GrpcServer struct {
-	Stations    *pkg.Stations
+	Stations    *station2espIp.Stations
 	Environment *Env
 }
 

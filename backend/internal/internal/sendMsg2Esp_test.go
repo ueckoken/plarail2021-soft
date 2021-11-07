@@ -3,12 +3,12 @@ package internal
 import (
 	"reflect"
 	"testing"
-	"ueckoken/plarail2021-soft-internal/pkg"
+	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 )
 
 func TestNewSend2Node(t *testing.T) {
 	type args struct {
-		sta   *pkg.StationDetail
+		sta   *station2espIp.StationDetail
 		state string
 		e     *Env
 	}
@@ -20,14 +20,14 @@ func TestNewSend2Node(t *testing.T) {
 		{
 			name: "",
 			args: args{
-				sta: &pkg.StationDetail{
+				sta: &station2espIp.StationDetail{
 					Pin: 0,
 				},
 				state: "ON",
 				e:     nil,
 			},
 			want: &Send2node{
-				Station:     &pkg.StationDetail{Pin: 0},
+				Station:     &station2espIp.StationDetail{Pin: 0},
 				Environment: nil,
 				sendData: &sendData{
 					State: "ON",
