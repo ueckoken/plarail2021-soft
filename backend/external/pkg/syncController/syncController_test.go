@@ -15,20 +15,33 @@ func (skvs *stationKVS) contain(ss StationState) bool {
 	return false
 }
 
+type ValidatorMock struct{}
+
+func (vm *ValidatorMock) Validate(_ StationState, _ []StationState) error {
+	return nil
+}
+
 func TestSyncController_update(t *testing.T) {
 	station1 := StationState{servo.StationState{StationID: 1, State: 1}}
 	station2 := StationState{servo.StationState{StationID: 2, State: 1}}
 	kvs := stationKVS{
-		stations: nil,
-		mtx:      sync.Mutex{},
+		stations:  nil,
+		mtx:       sync.Mutex{},
+		validator: &ValidatorMock{},
 	}
-	kvs.update(station1)
+	err := kvs.update(station1)
+	if err != nil {
+		t.Errorf("validate failed. `%v`", err)
+	}
 	if !kvs.contain(station1) {
 		t.Errorf("append failed")
 	}
 
 	// new station append
-	kvs.update(station2)
+	err = kvs.update(station2)
+	if err != nil {
+		t.Errorf("validate failed. `%v`", err)
+	}
 	if !kvs.contain(station2) {
 		t.Errorf("station add failed")
 	}
@@ -44,7 +57,10 @@ func TestSyncController_update(t *testing.T) {
 
 	// update exist station data
 	station1 = StationState{servo.StationState{StationID: 1, State: 0}}
-	kvs.update(station1)
+	err = kvs.update(station1)
+	if err != nil {
+		t.Errorf("validate failed. `%v`", err)
+	}
 	if len(kvs.stations) != 2 {
 		t.Errorf("append failed")
 	}

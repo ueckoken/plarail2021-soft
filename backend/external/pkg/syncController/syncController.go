@@ -14,21 +14,31 @@ type StationState struct {
 }
 
 type stationKVS struct {
-	stations []StationState
-	mtx      sync.Mutex
+	stations  []StationState
+	mtx       sync.Mutex
+	validator IValidator
 }
 
-func (skvs *stationKVS) update(u StationState) {
+func newStationKvs() *stationKVS {
+	v := NewRouteValidator()
+	skvs := stationKVS{validator: v}
+	return &skvs
+}
+func (skvs *stationKVS) update(u StationState) error {
 	skvs.mtx.Lock()
 	defer skvs.mtx.Unlock()
+	err := skvs.validator.Validate(u, skvs.stations)
+	if err != nil {
+		return err
+	}
 	for i, s := range skvs.stations {
 		if s.StationID == u.StationID {
 			skvs.stations[i].State = u.State
-			return
+			return nil
 		}
 	}
 	skvs.stations = append(skvs.stations, u)
-	return
+	return nil
 }
 func (skvs *stationKVS) get(stationID int32) (station StationState, err error) {
 	skvs.mtx.Lock()
@@ -52,9 +62,9 @@ type SyncController struct {
 }
 
 func (s *SyncController) StartSyncController() {
-	var kvs stationKVS
-	go s.periodicallySync(&kvs)
-	s.triggeredSync(s.Environment, &kvs)
+	kvs := newStationKvs()
+	go s.periodicallySync(kvs)
+	s.triggeredSync(s.Environment, kvs)
 }
 
 func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
@@ -70,7 +80,7 @@ func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
 func (s *SyncController) periodicallySync(kvs *stationKVS) {
 	ch := time.Tick(2 * time.Second)
 	for range ch {
-		fmt.Println("lockig")
+		fmt.Println("locking")
 		kvs.mtx.Lock()
 		fmt.Println("locked")
 		for _, st := range kvs.retrieve() {
