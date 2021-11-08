@@ -1,17 +1,31 @@
 package internal
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
 
+type TestStations struct {
+	Stations []station2espIp.Station
+}
+
+func (t *TestStations) Detail(name string) (*station2espIp.StationDetail, error) {
+	for _, s := range t.Stations {
+		if s.Station.Name == name {
+			return &s.Station, nil
+		}
+	}
+	return nil, fmt.Errorf("not found")
+}
+
 func TestControlServer_unpackState(t *testing.T) {
 	type fields struct {
 		UnimplementedControlServer pb.UnimplementedControlServer
 		env                        *Env
-		Stations                   *station2espIp.Stations
+		Stations                   station2espIp.Stations
 	}
 	type args struct {
 		state pb.RequestSync_State
@@ -51,18 +65,14 @@ func TestControlServer_unpackState(t *testing.T) {
 		})
 	}
 }
-
 func TestControlServer_unpackStations(t *testing.T) {
 	type fields struct {
 		UnimplementedControlServer pb.UnimplementedControlServer
 		env                        *Env
-		Stations                   *station2espIp.Stations
-	}
-	type args struct {
-		req *pb.Stations
+		Stations                   station2espIp.Stations
 	}
 	f := fields{
-		Stations: &station2espIp.Stations{Stations: []station2espIp.Station{
+		Stations: &TestStations{Stations: []station2espIp.Station{
 			{
 				station2espIp.StationDetail{
 					Name:    "chofu_b1",
@@ -90,7 +100,9 @@ func TestControlServer_unpackStations(t *testing.T) {
 				},
 			},
 		}}}
-
+	type args struct {
+		req *pb.Stations
+	}
 	tests := []struct {
 		name    string
 		fields  fields
@@ -110,16 +122,6 @@ func TestControlServer_unpackStations(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:   "",
-			fields: f,
-			args:   args{req: &pb.Stations{StationId: pb.Stations_chofu_b1}},
-			want: &station2espIp.StationDetail{
-				Name:    "chofu_b1",
-				Address: "TEST_ADDR",
-				Pin:     1,
-			},
-			wantErr: false,
-		}, {
 			name:    "station not define in yaml",
 			fields:  f,
 			args:    args{req: &pb.Stations{StationId: pb.Stations_sasazuka_b1}},

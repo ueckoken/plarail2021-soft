@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestStations_SearchStation(t *testing.T) {
+func TestStations_Detail(t *testing.T) {
 	type fields struct {
 		Stations []Station
 	}
@@ -52,16 +52,17 @@ func TestStations_SearchStation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Stations{
+			s := &stations{
 				Stations: tt.fields.Stations,
 			}
-			got, err := s.SearchStation(tt.args.name)
+
+			got, err := s.Detail(tt.args.name)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("SearchStation() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Detail() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("SearchStation() got = %v, want %v", got, tt.want)
+				t.Errorf("Detail() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

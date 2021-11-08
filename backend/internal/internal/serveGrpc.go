@@ -13,7 +13,7 @@ import (
 )
 
 type GrpcServer struct {
-	Stations    *station2espIp.Stations
+	Stations    station2espIp.Stations
 	Environment *Env
 }
 
