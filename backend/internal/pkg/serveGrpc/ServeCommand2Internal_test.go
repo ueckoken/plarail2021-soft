@@ -1,9 +1,10 @@
-package internal
+package serveGrpc
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
+	"ueckoken/plarail2021-soft-internal/internal"
 	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
@@ -24,7 +25,7 @@ func (t *TestStations) Detail(name string) (*station2espIp.StationDetail, error)
 func TestControlServer_unpackState(t *testing.T) {
 	type fields struct {
 		UnimplementedControlServer pb.UnimplementedControlServer
-		env                        *Env
+		env                        *internal.Env
 		Stations                   station2espIp.Stations
 	}
 	type args struct {
@@ -56,7 +57,7 @@ func TestControlServer_unpackState(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &ControlServer{
 				UnimplementedControlServer: tt.fields.UnimplementedControlServer,
-				env:                        tt.fields.env,
+				Env:                        tt.fields.env,
 				Stations:                   tt.fields.Stations,
 			}
 			if got := c.unpackState(tt.args.state); got != tt.want {
@@ -68,7 +69,7 @@ func TestControlServer_unpackState(t *testing.T) {
 func TestControlServer_unpackStations(t *testing.T) {
 	type fields struct {
 		UnimplementedControlServer pb.UnimplementedControlServer
-		env                        *Env
+		env                        *internal.Env
 		Stations                   station2espIp.Stations
 	}
 	f := fields{
@@ -133,7 +134,7 @@ func TestControlServer_unpackStations(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &ControlServer{
 				UnimplementedControlServer: tt.fields.UnimplementedControlServer,
-				env:                        tt.fields.env,
+				Env:                        tt.fields.env,
 				Stations:                   tt.fields.Stations,
 			}
 			got, err := c.unpackStations(tt.args.req)

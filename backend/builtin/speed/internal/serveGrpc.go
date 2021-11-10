@@ -24,6 +24,6 @@ func (g *GrpcServer) StartServer() {
 	c := NewServeSpeedControl()
 	pb.RegisterSpeedServer(s, c)
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		log.Fatalf("failed to serveGrpc: %v", err)
 	}
 }

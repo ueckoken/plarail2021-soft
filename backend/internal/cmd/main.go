@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"ueckoken/plarail2021-soft-internal/internal"
+	"ueckoken/plarail2021-soft-internal/pkg/serveGrpc"
 	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 )
 
@@ -12,6 +13,6 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	grpcServer := internal.GrpcServer{Stations: stations, Environment: env}
+	grpcServer := serveGrpc.GrpcServer{Stations: stations, Environment: env}
 	grpcServer.StartServer()
 }
