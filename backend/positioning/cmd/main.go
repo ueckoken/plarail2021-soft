@@ -18,10 +18,9 @@ func main() {
 	d, err := gorm.Open(postgres.Open(dbenv), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("error when connecting to sql: %s", err)
-		os.Exit(1)
 	}
-	db := gormHandler.SQLHandler{DB: d}
-	db.AutoMigrate(&trainState.State{})
-	r := internal.NewPositionReceiver(db)
+	db := gormHandler.SQLHandler{Db: d}
+	db.Db.AutoMigrate(&trainState.State{})
+	r := internal.NewPositionReceiver(db, internal.NewApplicationStatus())
 	r.StartPositionReceiver()
 }

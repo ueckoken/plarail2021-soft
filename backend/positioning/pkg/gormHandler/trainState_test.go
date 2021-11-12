@@ -17,8 +17,8 @@ func TestUpdate(t *testing.T) {
 	if err != nil {
 		t.Errorf("%s", err)
 	}
-	db := SQLHandler{DB: d}
-	db.AutoMigrate(&trainState.State{})
+	db := SQLHandler{Db: d}
+	db.Db.AutoMigrate(&trainState.State{})
 	ts := trainState.State{
 		TrainId:          123,
 		HallSensorName:   "sdkaa",
@@ -26,8 +26,10 @@ func TestUpdate(t *testing.T) {
 	}
 	db.Store(ts)
 	tsO := db.FetchFromTrainId(123)
-	fmt.Println(len(tsO.States))
+	fmt.Println(tsO.States)
 	if !(ts.TrainId==tsO.States[0].TrainId) && !(ts.HallSensorName==tsO.States[0].HallSensorName){
 		t.Errorf("error")
 	}
+	t.Errorf("a")
 }
+

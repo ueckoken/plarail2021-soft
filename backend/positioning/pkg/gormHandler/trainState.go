@@ -6,19 +6,24 @@ import (
 )
 
 type SQLHandler struct {
-	*gorm.DB
+	Db *gorm.DB
 }
 
 func (s SQLHandler) Store(state trainState.State) {
-	s.Create(state)
+	s.Db.Create(state)
 }
 
 func (s SQLHandler) FetchFromTrainId(trainId int) (state trainState.States) {
-	s.Where("train_id = ?", trainId).Find(&state.States)
+	s.Db.Where("train_id = ?", trainId).Order("fetched_time_stump desc").Find(&state.States)
 	return state
 }
 
-func (s SQLHandler) FetchFromHallSensorName(hallId string) (state trainState.States){
-	s.Where("hall_sensor_name = ?", hallId).Find(&state.States)
+func (s SQLHandler) FetchFromHallSensorName(hallId string) (state trainState.States) {
+	s.Db.Where("hall_sensor_name = ?", hallId).Order("fetched_time_stump desc").Find(&state.States)
+	return state
+}
+
+func (s SQLHandler) Fetch(trainId int, hallId string) (state trainState.States) {
+	s.Db.Where("hall_sensor_name = ?", hallId).Where("train_id = ?", trainId).Order("fetched_time_stump desc").Find(&state.States)
 	return state
 }

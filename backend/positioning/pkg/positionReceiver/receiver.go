@@ -1,60 +1,52 @@
 package positionReceiver
 
 import (
+	"encoding/json"
 	"net/http"
-	"strconv"
 	"time"
-	"ueckoken/plarail2021-soft-positioning/pkg/gormHandler"
 	"ueckoken/plarail2021-soft-positioning/pkg/hallsensor"
 	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
 )
 
 type PositionReceiveHandler struct {
 	registerReceivedPosition chan trainState.State
-	db                       gormHandler.SQLHandler
 }
 
-func NewPositionReceiverHandler(registerReceivedPosition chan trainState.State, db gormHandler.SQLHandler) PositionReceiveHandler {
+func NewPositionReceiverHandler(registerReceivedPosition chan trainState.State) PositionReceiveHandler {
 	return PositionReceiveHandler{
 		registerReceivedPosition: registerReceivedPosition,
-		db:                       db,
 	}
+}
+
+type ReceivedPosition struct {
+	MacAddress string `json:"mac_address"`
+	Pin        int    `json:"pin"`
+	TrainId    int    `json:"train_id"`
 }
 
 func (p PositionReceiveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	pin := r.URL.Query().Get("pin")
-	var ip string
-	ipForwarded := r.Header.Get("X-FORWARDED-FOR")
-	if ipForwarded != "" {
-		ip = ipForwarded
-	} else {
-		ip = r.RemoteAddr
-	}
-	h := hallsensor.NewEsp32PinSetting()
-	pinI, err := strconv.Atoi(pin)
-	if err != nil {
+	if r.Method != "POST" {
+		w.Write([]byte("Use POST"))
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("invalid pin"))
+		return
 	}
-	name, err := h.Search(ip, pinI)
+	var buf []byte
+	r.Body.Read(buf)
+	var receivedPosition ReceivedPosition
+	json.Unmarshal(buf, &receivedPosition)
+	h := hallsensor.NewEsp32PinSetting()
+	name, err := h.Search(receivedPosition.MacAddress, receivedPosition.Pin)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("not found such address or pin"))
-	}
-	trainId := r.URL.Query().Get("trainId")
-	trainIdI, err := strconv.Atoi(trainId)
-	if err != nil{
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("invalid trainId"))
+		return
 	}
 	//TODO: validate trainId
 	dat := trainState.State{
-		TrainId:          trainIdI,
+		TrainId:          receivedPosition.TrainId,
 		HallSensorName:   name,
 		FetchedTimeStump: time.Now(),
 	}
-	p.db.Store(dat)
 	p.registerReceivedPosition <- dat
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("accepted"))
