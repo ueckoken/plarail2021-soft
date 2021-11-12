@@ -1,4 +1,4 @@
-package pkg
+package Send2Json
 
 import (
 	"bytes"

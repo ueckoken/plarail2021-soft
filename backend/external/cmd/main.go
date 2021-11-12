@@ -9,8 +9,6 @@ import (
 )
 
 func main() {
-	v := syncController.NewRouteValidator()
-	println("%v", v)
 	clientHandler2syncController := make(chan syncController.StationState)
 	syncController2clientHandler := make(chan syncController.StationState)
 

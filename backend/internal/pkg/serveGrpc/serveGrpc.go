@@ -1,4 +1,4 @@
-package internal
+package serveGrpc
 
 import (
 	"fmt"
@@ -8,13 +8,14 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"ueckoken/plarail2021-soft-internal/pkg"
+	"ueckoken/plarail2021-soft-internal/internal"
+	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
 
 type GrpcServer struct {
-	Stations    *pkg.Stations
-	Environment *Env
+	Stations    station2espIp.Stations
+	Environment *internal.Env
 }
 
 func (g *GrpcServer) StartServer() {
@@ -22,7 +23,7 @@ func (g *GrpcServer) StartServer() {
 		grpc.UnaryInterceptor(grpcPrometheus.UnaryServerInterceptor),
 	)
 	c := ControlServer{
-		env:      g.Environment,
+		Env:      g.Environment,
 		Stations: g.Stations,
 	}
 	pb.RegisterControlServer(s, &c)
@@ -37,7 +38,7 @@ func (g *GrpcServer) StartServer() {
 	}
 
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		log.Fatalf("failed to serveGrpc: %v", err)
 	}
 }
 
