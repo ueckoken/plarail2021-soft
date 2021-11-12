@@ -8,5 +8,5 @@ ENV NODE_ENV production
 RUN yarn build
 
 # Production image, copy all the files and run nginx
-FROM nginx:mainline
+FROM nginx:1.20.1
 COPY --from=builder /app/out/ /usr/share/nginx/html/
