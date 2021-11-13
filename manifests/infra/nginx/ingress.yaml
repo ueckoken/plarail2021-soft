@@ -14,6 +14,8 @@ spec:
     - "grafana.chofufes2021.gotti.dev"
     - "prometheus.chofufes2021.gotti.dev"
     - "alert.chofufes2021.gotti.dev"
+    - "webrtc-sender.chofufes2021.gotti.dev"
+    - "receiver-test.chofufes2021.gotti.dev"
     # This assumes tls-secret exists and the SSL
     # certificate contains a CN for foo.bar.com
     secretName: cloudflare-cert
@@ -84,6 +86,26 @@ spec:
             port:
               number: 80
   - host: "alert.chofufes2021.gotti.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 80
+  - host: "webrtc-sender.chofufes2021.gotti.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 80
+  - host: "receiver-test.chofufes2021.gotti.dev"
     http:
       paths:
       - path: /
