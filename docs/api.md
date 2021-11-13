@@ -22,7 +22,7 @@
 |---|---|
 |`"ON"` |制御装置をON状態にする。|
 |`"OFF"`|制御装置をOFF状態とする。|
-|`"BY_ANGLE"`|angleフィールドを見て角度を決めてください。|
+|`"ANGLE"`|angleフィールドを見て角度を決めてください。|
 
 制御が成功したならば HTTP Response Status Codeの200番台を送信してください。失敗したならばHTTP Response Status Codeの400番台を返してください。
 
