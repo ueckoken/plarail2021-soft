@@ -7,12 +7,84 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - "*.gotti.dev"
+    - "control.chofufes2021.gotti.dev"
+    - "chofufes2021.gotti.dev"
+    - "webrtc.chofufes2021.gotti.dev"
+    - "auth.chofufes2021.gotti.dev"
+    - "grafana.chofufes2021.gotti.dev"
+    - "prometheus.chofufes2021.gotti.dev"
+    - "alert.chofufes2021.gotti.dev"
     # This assumes tls-secret exists and the SSL
     # certificate contains a CN for foo.bar.com
     secretName: cloudflare-cert
+  defaultBackend:
+    service:
+      name: traefik
+      port:
+        number: 80
   rules:
-  - http:
+  - host: "control.chofufes2021.gotti.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 80
+  - host: "chofufes2021.gotti.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 80
+  - host: "webrtc.chofufes2021.gotti.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 80
+  - host: "auth.chofufes2021.gotti.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 80
+  - host: "grafana.chofufes2021.gotti.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 80
+  - host: "prometheus.chofufes2021.gotti.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 80
+  - host: "alert.chofufes2021.gotti.dev"
+    http:
       paths:
       - path: /
         pathType: Prefix

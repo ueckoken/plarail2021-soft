@@ -6,7 +6,7 @@ metadata:
 spec:
   routes:
   - kind: Rule
-    match: Host(`external-plarail-chofufes2021.gotti.dev`)
+    match: Host(`control.chofufes2021.gotti.dev`)
     services:
     - name: plarail2021-soft-backend-external
       port: 80

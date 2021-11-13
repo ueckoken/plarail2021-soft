@@ -6,9 +6,13 @@ metadata:
 spec:
   secretName: cloudflare-cert
   dnsNames:
-    - "external-plarail-chofufes2021.gotti.dev"
-    - "plarail-chofufes2021.gotti.dev"
-    - "webrtc-plarail-chofufes2021.gotti.dev"
+    - "control.chofufes2021.gotti.dev"
+    - "chofufes2021.gotti.dev"
+    - "webrtc.chofufes2021.gotti.dev"
+    - "auth.chofufes2021.gotti.dev"
+    - "grafana.chofufes2021.gotti.dev"
+    - "prometheus.chofufes2021.gotti.dev"
+    - "alert.chofufes2021.gotti.dev"
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
