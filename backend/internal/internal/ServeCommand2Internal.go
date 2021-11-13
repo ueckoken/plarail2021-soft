@@ -20,7 +20,11 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	if err != nil {
 		return nil, err
 	}
-	s2n := NewSend2Node(sta, d, c.env)
+	angle, err := getAngle(req, sta)
+	if err != nil {
+		return nil, err
+	}
+	s2n := NewSend2Node(sta, c.unpackState(req.GetState()), angle, c.env)
 	err = s2n.Send2Esp()
 
 	if err != nil {
@@ -29,6 +33,17 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	return &pb.ResponseSync{Response: pb.ResponseSync_SUCCESS}, nil
 }
 
+func getAngle(req *pb.RequestSync, detail *pkg.StationDetail) (angle int, err error) {
+	switch req.GetState() {
+	case pb.RequestSync_ON:
+		angle = detail.On_Angle
+	case pb.RequestSync_OFF:
+		angle = detail.Off_Angle
+	default:
+		return 0, status.Errorf(codes.InvalidArgument, "state is not ON or OFF\n")
+	}
+	return angle, nil
+}
 func (c *ControlServer) unpackStations(req *pb.Stations) (*pkg.StationDetail, error) {
 	s, ok := pb.Stations_StationId_name[int32(req.GetStationId())]
 	if !ok {
