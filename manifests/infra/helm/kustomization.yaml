@@ -1,3 +1,4 @@
 resources:
-  - ./repository.yaml
-  - ./release.yaml
+  - ./nginx
+  - ./traefik
+  - ./cert-manager
