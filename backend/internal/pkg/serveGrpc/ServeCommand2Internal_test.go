@@ -57,7 +57,7 @@ func TestControlServer_unpackState(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &ControlServer{
 				UnimplementedControlServer: tt.fields.UnimplementedControlServer,
-				Env:                        tt.fields.env,
+				env:                        tt.fields.env,
 				Stations:                   tt.fields.Stations,
 			}
 			if got := c.unpackState(tt.args.state); got != tt.want {
@@ -134,7 +134,7 @@ func TestControlServer_unpackStations(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &ControlServer{
 				UnimplementedControlServer: tt.fields.UnimplementedControlServer,
-				Env:                        tt.fields.env,
+				env:                        tt.fields.env,
 				Stations:                   tt.fields.Stations,
 			}
 			got, err := c.unpackStations(tt.args.req)
