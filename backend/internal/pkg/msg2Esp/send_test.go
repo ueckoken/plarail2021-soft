@@ -9,7 +9,7 @@ package msg2Esp
 //	tests := []struct {
 //		name string
 //		args args
-//		want *send2node
+//		want *send2nodeExistAngle
 //	}{
 //		{
 //			name: "",
@@ -20,7 +20,7 @@ package msg2Esp
 //				state: "ON",
 //				e:     nil,
 //			},
-//			want: &send2node{
+//			want: &send2nodeExistAngle{
 //				Station:     &station2espIp.StationDetail{Pin: 0},
 //				Environment: nil,
 //				sendData: &sendData{
