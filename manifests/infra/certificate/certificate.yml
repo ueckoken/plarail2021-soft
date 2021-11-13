@@ -13,6 +13,8 @@ spec:
     - "grafana.chofufes2021.gotti.dev"
     - "prometheus.chofufes2021.gotti.dev"
     - "alert.chofufes2021.gotti.dev"
+    - "webrtc-sender.chofufes2021.gotti.dev"
+    - "receiver-test.chofufes2021.gotti.dev"
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
