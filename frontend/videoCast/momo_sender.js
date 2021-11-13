@@ -14,7 +14,7 @@ localVideo.controls = true;
 const signalingUrl = "wss://ayame-labo.shiguredo.jp/signaling";
 
 const options = Ayame.defaultOptions;
-options.signalingKey = "wyL5nvVEuX09H3qrLVNjGQq1gshPF1WZ60rCLaoohYEyQoRv";
+options.signalingKey = AYAME_SIGNALING_KEY;
 
 let conn = null;
 window.disconnectMomo = () => {
@@ -59,8 +59,8 @@ let roomId = null;
 
 window.connectReceiver = () => {
   skywayPeer = new SkywayPeer({
-    key: "c07e8954-ce1b-4783-a45e-e8421ece83ce",
-    debug: 3,
+    key: SKYWAY_APIKEY,
+    debug: SKYWAY_DEBUG_LEVEL,
   });
   roomId = roomIdInput.value;
   skywayPeer.on("open", () => {
@@ -69,6 +69,7 @@ window.connectReceiver = () => {
         msg_type: "connect_sender",
         peer_id: skywayPeer.id,
         room_id: roomIdInput.value,
+        sender_token: SENDER_TOKEN,
       })
     );
   });

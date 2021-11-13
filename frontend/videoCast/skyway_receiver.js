@@ -49,8 +49,8 @@ webSocket.onmessage = (event) => {
   const roomId = message["room_id"];
   const room = rooms[roomId];
   room["peer"] = new Peer({
-    key: "c07e8954-ce1b-4783-a45e-e8421ece83ce",
-    debug: 3,
+    key: SKYWAY_APIKEY,
+    debug: SKYWAY_DEBUG_LEVEL,
   });
   room["peer"].on("open", () => {
     room["media_connection"] = room["peer"].call(peerId);
