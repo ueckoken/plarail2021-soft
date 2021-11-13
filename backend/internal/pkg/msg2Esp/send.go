@@ -10,6 +10,7 @@ import (
 type sendData struct {
 	State string `json:"state"`
 	Pin   int    `json:"pin"`
+	Angle int    `json:"angle"`
 }
 type Send2Node interface {
 	Send() error
@@ -20,7 +21,7 @@ type send2node struct {
 	sendData *sendData
 }
 
-func NewSend2Node(sta *station2espIp.StationDetail, state string, timeOut time.Duration) Send2Node {
+func NewSend2Node(sta *station2espIp.StationDetail, state string, angle int, timeOut time.Duration) Send2Node {
 	return &send2node{
 		Station: sta,
 		TimeOut: timeOut,

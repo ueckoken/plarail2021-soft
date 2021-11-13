@@ -13,7 +13,7 @@ import (
 
 type ControlServer struct {
 	pb.UnimplementedControlServer
-	Env      *internal.Env
+	env      *internal.Env
 	Stations station2espIp.Stations
 }
 
@@ -26,7 +26,7 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	if err != nil {
 		return nil, err
 	}
-	s2n := msg2Esp.NewSend2Node(sta, c.unpackState(req.GetState()), angle, c.Env.NodeConnection.Timeout)
+	s2n := msg2Esp.NewSend2Node(sta, c.unpackState(req.GetState()), angle, c.env.NodeConnection.Timeout)
 	err = s2n.Send()
 
 	if err != nil {
@@ -35,7 +35,7 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	return &pb.ResponseSync{Response: pb.ResponseSync_SUCCESS}, nil
 }
 
-func getAngle(req *pb.RequestSync, detail *pkg.StationDetail) (angle int, err error) {
+func getAngle(req *pb.RequestSync, detail *station2espIp.StationDetail) (angle int, err error) {
 	switch req.GetState() {
 	case pb.RequestSync_ON:
 		angle = detail.On_Angle
@@ -55,17 +55,9 @@ func (c *ControlServer) unpackStations(req *pb.Stations) (*station2espIp.Station
 	if err != nil {
 		return nil, fmt.Errorf("station %s do not define in yaml file\n", s)
 	}
-	return sta	var angle int
-	switch req.GetState() {
-	case pb.RequestSync_ON:
-		angle = sta.On_Angle
-	case pb.RequestSync_OFF:
-		angle = sta.Off_Angle
-	default:
-		return nil, status.Errorf(codes.InvalidArgument, "state is not ON or OFF\n")
-	}
-, nil
+	return sta, nil
 }
+
 func (c *ControlServer) unpackState(state pb.RequestSync_State) string {
 	return state.String()
 }
