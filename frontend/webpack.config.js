@@ -12,8 +12,11 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      MOMO_WSURL: '"ws://192.168.2.5:8080/ws"',
       SW_WSURL: '"wss://plarail2021-py.gotti.dev/"',
+      SKYWAY_APIKEY: JSON.stringify(process.env.SKYWAY_APIKEY),
+      SKYWAY_DEBUG_LEVEL: "2",
+      AYAME_SIGNALING_KEY: JSON.stringify(process.env.AYAME_SIGNALING_KEY),
+      SENDER_TOKEN: JSON.stringify(process.env.SENDER_TOKEN),
     }),
   ],
 };
