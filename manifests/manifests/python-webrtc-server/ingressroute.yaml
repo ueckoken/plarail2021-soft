@@ -6,7 +6,7 @@ metadata:
 spec:
   routes:
   - kind: Rule
-    match: Host(`webrtc-plarail-chofufes2021.gotti.dev`)
+    match: Host(`webrtc.chofufes2021.gotti.dev`)
     services:
     - name: plarail2021-soft-python
       port: 80

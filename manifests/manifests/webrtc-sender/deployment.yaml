@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: plarail2021-soft-python
+  name: webrtc-sender
   namespace: plarail2021
 spec:
   selector:
     matchLabels:
-      app: plarail2021-soft-python
+      app: webrtc-sender
   template:
     metadata:
       labels:
-        app: plarail2021-soft-python
+        app: webrtc-sender
     spec:
       containers:
-        - name: plarail2021-soft-python
-          image: ghcr.io/ueckoken/plarail2021-soft-frontend-python:79469d0-1636781138 # {"$imagepolicy": "plarail2021:frontend-python"}
+        - name: webrtc-sender
+          image: ghcr.io/ueckoken/plarail2021-soft-webrtc-sender:79469d0-1636781138 # {"$imagepolicy": "plarail2021:webrtc-sender"}
           imagePullPolicy: Always
           ports:
             - containerPort: 80

@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: oauth2-proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: oauth2-proxy
+  name: oauth2-proxy
+  namespace: oauth2-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        k8s-app: oauth2-proxy
+    spec:
+      containers:
+      - args:
+        - --provider=github
+        - --email-domain=*
+        - --upstream=file:///dev/null
+        - --github-org=chofufes-plarail2021
+        - --http-address=0.0.0.0:4180
+        - --whitelist-domain=.chofufes2021.gotti.dev
+        - --cookie-domain=.chofufes2021.gotti.dev
+        - --cookie-expire=12h
+        # Register a new application
+        # https://github.com/settings/applications/new
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy
+        image: quay.io/oauth2-proxy/oauth2-proxy:latest
+        imagePullPolicy: Always
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: oauth2-proxy
+  name: oauth2-proxy
+  namespace: oauth2-proxy
+spec:
+  ports:
+  - name: http
+    port: 4180
+    protocol: TCP
+    targetPort: 4180
+  selector:
+    k8s-app: oauth2-proxy

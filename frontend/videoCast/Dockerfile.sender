@@ -1,0 +1,6 @@
+FROM nginx
+RUN apt-get update && apt-get -y install nodejs npm
+COPY ./ /usr/share/nginx/html/
+COPY ./momo_sender.html /usr/share/nginx/html/index.html
+
+CMD ["bash", "/usr/share/nginx/html/sender.sh"]
