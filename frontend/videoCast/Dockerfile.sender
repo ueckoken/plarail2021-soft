@@ -1,11 +1,6 @@
-FROM node:16 AS builder
-WORKDIR /frontend
-COPY ./ /frontend/
-RUN npm i
-RUN npx webpack
-RUN ls /frontend
-
 FROM nginx
-COPY --from=builder /frontend/momo_sender.html /usr/share/nginx/html/index.html
-COPY --from=builder /frontend/momo_sender_.js /usr/share/nginx/html/
-COPY ./ /usr/share/nginx/html
+RUN apt-get update && apt-get -y install nodejs npm
+COPY ./ /usr/share/nginx/html/
+COPY ./momo_sender.html /usr/share/nginx/html/index.html
+
+CMD ["bash", "/usr/share/nginx/html/sender.sh"]
