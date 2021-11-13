@@ -1,0 +1,5 @@
+- stations:
+    - name: chofu_b1
+      state: 1
+    - name: chofu_b2
+      state: 2
