@@ -3,7 +3,7 @@ package syncController
 import (
 	"errors"
 	"fmt"
-	"github.com/prometheus/common/log"
+	"log"
 	"sync"
 	"time"
 	"ueckoken/plarail2021-soft-external/pkg/envStore"
@@ -92,13 +92,14 @@ func (s *SyncController) initNode(e *envStore.Env, kvs *stationKVS) {
 	for c := range s.InitServoRoute {
 		err := kvs.forceUpdate(c)
 		if err != nil {
-			log.Errorln(err)
+			log.Fatalln(err)
 			return
 		}
 		c2i := servo.NewCommand2Internal(c.StationState, e)
 		err = c2i.Send()
 		if err != nil {
-			log.Errorln(err)
+			log.Fatalln(err)
+			return
 		}
 	}
 }
