@@ -11,6 +11,7 @@ import (
 func main() {
 	clientHandler2syncController := make(chan syncController.StationState)
 	syncController2clientHandler := make(chan syncController.StationState)
+	initEspStatus2syncController := make(chan syncController.StationState)
 
 	envVal := envStore.GetEnv()
 
@@ -32,6 +33,7 @@ func main() {
 		ClientHandler2syncController: clientHandler2syncController,
 		SyncController2clientHandler: syncController2clientHandler,
 		Environment:                  envVal,
+		InitServoRoute:               initEspStatus2syncController,
 	}
 	go httpServer.StartServer()
 	syncController.StartSyncController()
