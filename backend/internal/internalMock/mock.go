@@ -8,6 +8,7 @@ import (
 	"net"
 	"ueckoken/plarail2021-soft-internal/internal"
 	"ueckoken/plarail2021-soft-internal/pkg/grpcMock"
+	"ueckoken/plarail2021-soft-internal/pkg/serveGrpc"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
 
@@ -19,7 +20,7 @@ func main() {
 	m := grpcMock.GrpcMock{}
 	pb.RegisterControlServer(s, &m)
 	grpcPrometheus.Register(s)
-	internal.ServeMetrics(fmt.Sprintf(":%d", e.ExternalSideServer.MetricsPort))
+	serveGrpc.ServeMetrics(fmt.Sprintf(":%d", e.ExternalSideServer.MetricsPort))
 	fmt.Printf("gRPC bind address :%d\n", e.ExternalSideServer.Port)
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", e.ExternalSideServer.Port))
 	if err != nil {
