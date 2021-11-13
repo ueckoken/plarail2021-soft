@@ -8,6 +8,7 @@ import (
 type sendData struct {
 	State string `json:"state"`
 	Pin   int    `json:"pin"`
+	Angle int    `json:"angle"`
 }
 type Send2node struct {
 	Station     *pkg.StationDetail
@@ -15,13 +16,14 @@ type Send2node struct {
 	sendData    *sendData
 }
 
-func NewSend2Node(sta *pkg.StationDetail, state string, e *Env) *Send2node {
+func NewSend2Node(sta *pkg.StationDetail, state string, angle int, e *Env) *Send2node {
 	return &Send2node{
 		Station:     sta,
 		Environment: e,
 		sendData: &sendData{
 			State: state,
 			Pin:   sta.Pin,
+      Angle: angle,
 		},
 	}
 }

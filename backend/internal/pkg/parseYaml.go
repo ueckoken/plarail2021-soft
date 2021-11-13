@@ -13,9 +13,11 @@ type Station struct {
 	Station StationDetail `yaml:"station"`
 }
 type StationDetail struct {
-	Name    string `yaml:"name"`
-	Address string `yaml:"address"`
-	Pin     int    `yaml:"pin"`
+	Name      string `yaml:"name"`
+	Address   string `yaml:"address"`
+	Pin       int    `yaml:"pin"`
+	On_Angle  int    `yaml:"on_angle"`
+	Off_Angle int    `yaml:"off_angle"`
 }
 
 //go:embed embed/station2espIp.yml

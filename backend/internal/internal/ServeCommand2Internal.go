@@ -20,7 +20,7 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	if err != nil {
 		return nil, err
 	}
-	s2n := NewSend2Node(sta, c.unpackState(req.State), c.env)
+	s2n := NewSend2Node(sta, d, c.env)
 	err = s2n.Send2Esp()
 
 	if err != nil {
