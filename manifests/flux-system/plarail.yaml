@@ -14,7 +14,7 @@ spec:
     branch: main
   secretRef:
     name: plarail-repository
-  url: https://github.com/ueckoken/plarail2021-soft
+  url: ssh://github.com/ueckoken/plarail2021-soft
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
@@ -23,7 +23,7 @@ metadata:
   namespace: plarail2021
 spec:
   interval: 1m
-  path: ./manifests
+  path: ./manifests/manifests
   prune: true
   sourceRef:
     kind: GitRepository
