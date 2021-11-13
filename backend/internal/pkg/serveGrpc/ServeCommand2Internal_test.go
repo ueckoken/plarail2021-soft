@@ -1,17 +1,32 @@
-package internal
+package serveGrpc
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
-	"ueckoken/plarail2021-soft-internal/pkg"
+	"ueckoken/plarail2021-soft-internal/internal"
+	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
+
+type TestStations struct {
+	Stations []station2espIp.Station
+}
+
+func (t *TestStations) Detail(name string) (*station2espIp.StationDetail, error) {
+	for _, s := range t.Stations {
+		if s.Station.Name == name {
+			return &s.Station, nil
+		}
+	}
+	return nil, fmt.Errorf("not found")
+}
 
 func TestControlServer_unpackState(t *testing.T) {
 	type fields struct {
 		UnimplementedControlServer pb.UnimplementedControlServer
-		env                        *Env
-		Stations                   *pkg.Stations
+		env                        *internal.Env
+		Stations                   station2espIp.Stations
 	}
 	type args struct {
 		state pb.RequestSync_State
@@ -42,7 +57,7 @@ func TestControlServer_unpackState(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &ControlServer{
 				UnimplementedControlServer: tt.fields.UnimplementedControlServer,
-				env:                        tt.fields.env,
+				Env:                        tt.fields.env,
 				Stations:                   tt.fields.Stations,
 			}
 			if got := c.unpackState(tt.args.state); got != tt.want {
@@ -51,58 +66,56 @@ func TestControlServer_unpackState(t *testing.T) {
 		})
 	}
 }
-
 func TestControlServer_unpackStations(t *testing.T) {
 	type fields struct {
 		UnimplementedControlServer pb.UnimplementedControlServer
-		env                        *Env
-		Stations                   *pkg.Stations
-	}
-	type args struct {
-		req *pb.Stations
+		env                        *internal.Env
+		Stations                   station2espIp.Stations
 	}
 	f := fields{
-		Stations: &pkg.Stations{Stations: []pkg.Station{
+		Stations: &TestStations{Stations: []station2espIp.Station{
 			{
-				pkg.StationDetail{
+				station2espIp.StationDetail{
 					Name:    "chofu_b1",
 					Address: "TEST_ADDR",
 					Pin:     1,
 				},
 			}, {
-				pkg.StationDetail{
+				station2espIp.StationDetail{
 					Name:    "chofu_b2",
 					Address: "TEST_ADDR",
 					Pin:     2,
 				},
 			},
 			{
-				pkg.StationDetail{
+				station2espIp.StationDetail{
 					Name:    "TOKYO",
 					Address: "TEST_ADDR",
 					Pin:     1,
 				},
 			}, {
-				pkg.StationDetail{
+				station2espIp.StationDetail{
 					Name:    "chofu_b2",
 					Address: "TEST_ADDR",
 					Pin:     2,
 				},
 			},
 		}}}
-
+	type args struct {
+		req *pb.Stations
+	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
-		want    *pkg.StationDetail
+		want    *station2espIp.StationDetail
 		wantErr bool
 	}{
 		{
 			name:   "station exist",
 			fields: f,
 			args:   args{req: &pb.Stations{StationId: pb.Stations_chofu_b1}},
-			want: &pkg.StationDetail{
+			want: &station2espIp.StationDetail{
 				Name:    "chofu_b1",
 				Address: "TEST_ADDR",
 				Pin:     1,
@@ -110,16 +123,6 @@ func TestControlServer_unpackStations(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:   "",
-			fields: f,
-			args:   args{req: &pb.Stations{StationId: pb.Stations_chofu_b1}},
-			want: &pkg.StationDetail{
-				Name:    "chofu_b1",
-				Address: "TEST_ADDR",
-				Pin:     1,
-			},
-			wantErr: false,
-		}, {
 			name:    "station not define in yaml",
 			fields:  f,
 			args:    args{req: &pb.Stations{StationId: pb.Stations_sasazuka_b1}},
@@ -131,7 +134,7 @@ func TestControlServer_unpackStations(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &ControlServer{
 				UnimplementedControlServer: tt.fields.UnimplementedControlServer,
-				env:                        tt.fields.env,
+				Env:                        tt.fields.env,
 				Stations:                   tt.fields.Stations,
 			}
 			got, err := c.unpackStations(tt.args.req)

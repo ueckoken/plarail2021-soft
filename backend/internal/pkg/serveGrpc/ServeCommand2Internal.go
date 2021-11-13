@@ -1,18 +1,20 @@
-package internal
+package serveGrpc
 
 import (
 	"context"
 	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"ueckoken/plarail2021-soft-internal/pkg"
+	"ueckoken/plarail2021-soft-internal/internal"
+	"ueckoken/plarail2021-soft-internal/pkg/msg2Esp"
+	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
 
 type ControlServer struct {
 	pb.UnimplementedControlServer
-	env      *Env
-	Stations *pkg.Stations
+	Env      *internal.Env
+	Stations station2espIp.Stations
 }
 
 func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSync) (*pb.ResponseSync, error) {
@@ -24,8 +26,8 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	if err != nil {
 		return nil, err
 	}
-	s2n := NewSend2Node(sta, c.unpackState(req.GetState()), angle, c.env)
-	err = s2n.Send2Esp()
+	s2n := msg2Esp.NewSend2Node(sta, c.unpackState(req.GetState()), angle, c.Env.NodeConnection.Timeout)
+	err = s2n.Send()
 
 	if err != nil {
 		return nil, status.Errorf(codes.Unavailable, "sender err %s; not connected to Node", err.Error())
@@ -44,16 +46,25 @@ func getAngle(req *pb.RequestSync, detail *pkg.StationDetail) (angle int, err er
 	}
 	return angle, nil
 }
-func (c *ControlServer) unpackStations(req *pb.Stations) (*pkg.StationDetail, error) {
+func (c *ControlServer) unpackStations(req *pb.Stations) (*station2espIp.StationDetail, error) {
 	s, ok := pb.Stations_StationId_name[int32(req.GetStationId())]
 	if !ok {
 		return nil, fmt.Errorf("station: %s do not define in proto file\n", req.String())
 	}
-	sta, err := c.Stations.SearchStation(s)
+	sta, err := c.Stations.Detail(s)
 	if err != nil {
 		return nil, fmt.Errorf("station %s do not define in yaml file\n", s)
 	}
-	return sta, nil
+	return sta	var angle int
+	switch req.GetState() {
+	case pb.RequestSync_ON:
+		angle = sta.On_Angle
+	case pb.RequestSync_OFF:
+		angle = sta.Off_Angle
+	default:
+		return nil, status.Errorf(codes.InvalidArgument, "state is not ON or OFF\n")
+	}
+, nil
 }
 func (c *ControlServer) unpackState(state pb.RequestSync_State) string {
 	return state.String()

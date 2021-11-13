@@ -38,7 +38,7 @@ const (
 //go:embed embed/stationRule.yml
 var confFile []byte
 
-func NewRouteValidator() *Validator {
+func NewRouteValidator() IValidator {
 	v := new(Validator)
 	err := yaml.Unmarshal(confFile, v)
 	if err != nil {

@@ -1,4 +1,4 @@
-package pkg
+package station2espIp
 
 import (
 	_ "embed"
@@ -6,7 +6,10 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type Stations struct {
+type Stations interface {
+	Detail(name string) (*StationDetail, error)
+}
+type stations struct {
 	Stations []Station `yaml:"stations"`
 }
 type Station struct {
@@ -23,8 +26,8 @@ type StationDetail struct {
 //go:embed embed/station2espIp.yml
 var ConfigFile []byte
 
-func NewStations() (*Stations, error) {
-	t := Stations{}
+func NewStations() (*stations, error) {
+	t := stations{}
 	err := yaml.Unmarshal(ConfigFile, &t)
 	if err != nil {
 		return nil, err
@@ -32,7 +35,7 @@ func NewStations() (*Stations, error) {
 	return &t, nil
 }
 
-func (s *Stations) SearchStation(name string) (*StationDetail, error) {
+func (s *stations) Detail(name string) (*StationDetail, error) {
 	for _, sta := range s.Stations {
 		if name == sta.Station.Name {
 			return &sta.Station, nil
