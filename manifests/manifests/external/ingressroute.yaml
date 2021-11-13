@@ -1,0 +1,12 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: external
+  namespace: plarail2021
+spec:
+  routes:
+  - kind: Rule
+    match: Host(`control.chofufes2021.gotti.dev`)
+    services:
+    - name: plarail2021-soft-backend-external
+      port: 80

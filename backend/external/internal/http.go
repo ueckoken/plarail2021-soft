@@ -2,27 +2,50 @@ package internal
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"runtime"
+	"sync"
+	"time"
+	"ueckoken/plarail2021-soft-external/pkg/clientHandler"
+	"ueckoken/plarail2021-soft-external/pkg/envStore"
+	"ueckoken/plarail2021-soft-external/pkg/syncController"
+
+	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-type HttpServer struct{
-	ClientHandler2syncController chan StationState
-	SyncController2clientHandler chan StationState
+type HttpServer struct {
+	ClientHandler2syncController chan syncController.StationState
+	SyncController2clientHandler chan syncController.StationState
+	Environment                  *envStore.Env
+	NumberOfClientConnection     *prometheus.GaugeVec
 }
 
-func (h HttpServer)StartServer() {
-	clients := []clientChannel{}
-	clientCommand := make(chan StationState, 16)
-	clientChannelSend := make(chan clientChannel, 16)
+type clientsCollection struct {
+	Clients []clientHandler.ClientChannel
+	mtx     sync.Mutex
+}
+
+func (h HttpServer) StartServer() {
+	clients := clientsCollection{}
+	clientChannelSend := make(chan clientHandler.ClientChannel)
+	go func() {
+		for {
+			h.NumberOfClientConnection.With(prometheus.Labels{"client": "hoge"}).Set(float64(time.Now().Unix()))
+			time.Sleep(1 * time.Second)
+		}
+	}()
 	go func() {
 		r := mux.NewRouter()
-		r.HandleFunc("/", handleStatic)
-		r.Handle("/ws", clientHandler{ClientCommand: clientCommand, ClientChannelSend: clientChannelSend})
+		prometheus.MustRegister(h.NumberOfClientConnection)
+		r.HandleFunc("/", clientHandler.HandleStatic)
+		r.Handle("/ws", clientHandler.ClientHandler{ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
+		r.Handle("/metrics", promhttp.Handler())
 		srv := &http.Server{
 			Handler: r,
-			Addr:    "127.0.0.1:8000",
+			Addr:    fmt.Sprintf("0.0.0.0:%d", h.Environment.ClientSideServer.Port),
 			// Good practice: enforce timeouts for servers you create!
 		}
 
@@ -30,32 +53,48 @@ func (h HttpServer)StartServer() {
 	}()
 	go func() {
 		for {
+			fmt.Println("waiting...")
 			cChannel := <-clientChannelSend
-			clients = append(clients, cChannel)
-			nextClients := []clientChannel{}
-			for _, c := range clients {
+			fmt.Println("##clients:", len(clients.Clients))
+			clients.Clients = append(clients.Clients, cChannel)
+			nextClients := []clientHandler.ClientChannel{}
+			clients.mtx.Lock()
+			for _, c := range clients.Clients {
 				select {
-				case b := <-c.Done:
-					if b {
-						continue
-					}
+				case <-c.Done:
+					close(c.Done)
+					close(c.ClientSync)
+					continue
 				default:
+					nextClients = append(nextClients, c)
 					//nop
 				}
-				nextClients = append(nextClients, c)
 			}
-			clients = nextClients
+			clients.Clients = nextClients
+			clients.mtx.Unlock()
+		}
+	}()
+	go func() {
+		for {
+			h.SyncController2clientHandler <- syncController.StationState{}
+			time.Sleep(1 * time.Second)
 		}
 	}()
 	for {
-		fmt.Println(clients)
+		fmt.Println(clients.Clients)
+		fmt.Println("goroutine:", runtime.NumGoroutine())
 		for d := range h.SyncController2clientHandler {
-			for _, c := range clients {
-				c.clientSync <- StationState{
-					StationID: d.StationID,
-					State:   d.State,
+			fmt.Println(clients.Clients)
+			clients.mtx.Lock()
+			for _, c := range clients.Clients {
+				select {
+				case c.ClientSync <- d:
+				default:
+					continue
 				}
 			}
+			clients.mtx.Unlock()
 		}
+		time.Sleep(1 * time.Second)
 	}
 }

@@ -1,0 +1,12 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: webrtc
+  namespace: plarail2021
+spec:
+  routes:
+  - kind: Rule
+    match: Host(`webrtc.chofufes2021.gotti.dev`)
+    services:
+    - name: plarail2021-soft-python
+      port: 80

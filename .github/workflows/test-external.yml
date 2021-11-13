@@ -1,10 +1,10 @@
-name: Build
+name: External build and test
 
 defaults:
   run:
-    working-directory: ./backend/internal
+    working-directory: ./backend/external
 
-on: [push, pull_request]
+on: push
 
 jobs:
   build:
@@ -22,3 +22,7 @@ jobs:
       - name: Build Go binary
         run: |-
           make build
+
+      - name: Run Go Test
+        run: |-
+          make test

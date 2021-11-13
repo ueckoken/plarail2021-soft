@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tlscert
+  namespace: traefik
+spec:
+  secretName: cloudflare-cert
+  dnsNames:
+    - "control.chofufes2021.gotti.dev"
+    - "chofufes2021.gotti.dev"
+    - "webrtc.chofufes2021.gotti.dev"
+    - "auth.chofufes2021.gotti.dev"
+    - "grafana.chofufes2021.gotti.dev"
+    - "prometheus.chofufes2021.gotti.dev"
+    - "alert.chofufes2021.gotti.dev"
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

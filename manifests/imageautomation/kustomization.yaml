@@ -1,0 +1,5 @@
+resources:
+  - ./external
+  - ./frontend
+  - ./frontend-python
+  - ./automation.yaml
