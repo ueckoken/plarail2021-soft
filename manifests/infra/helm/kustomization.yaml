@@ -2,3 +2,4 @@ resources:
   - ./nginx
   - ./traefik
   - ./cert-manager
+  - ./prometheus
