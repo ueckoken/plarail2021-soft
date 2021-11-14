@@ -17,3 +17,5 @@ services:
     build:
       context: ./internal
       dockerfile: ./Dockerfile
+    ports:
+      - "6060:6060"
