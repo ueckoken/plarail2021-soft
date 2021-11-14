@@ -13,7 +13,7 @@ import (
 
 type ControlServer struct {
 	pb.UnimplementedControlServer
-	Env      *internal.Env
+	env      *internal.Env
 	Stations station2espIp.Stations
 }
 
@@ -22,7 +22,14 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 	if err != nil {
 		return nil, err
 	}
-	s2n := msg2Esp.NewSend2Node(sta, c.unpackState(req.State), c.Env.NodeConnection.Timeout)
+	angle := 0
+	if sta.IsAngleDefined() {
+		angle, err = sta.GetAngle(req.GetState())
+		if err != nil {
+			return nil, err
+		}
+	}
+	s2n := msg2Esp.NewSend2Node(sta, c.unpackState(req.GetState()), angle, c.env.NodeConnection.Timeout)
 	err = s2n.Send()
 
 	if err != nil {
@@ -42,6 +49,7 @@ func (c *ControlServer) unpackStations(req *pb.Stations) (*station2espIp.Station
 	}
 	return sta, nil
 }
+
 func (c *ControlServer) unpackState(state pb.RequestSync_State) string {
 	return state.String()
 }

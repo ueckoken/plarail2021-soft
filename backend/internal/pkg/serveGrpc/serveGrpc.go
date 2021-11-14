@@ -23,7 +23,7 @@ func (g *GrpcServer) StartServer() {
 		grpc.UnaryInterceptor(grpcPrometheus.UnaryServerInterceptor),
 	)
 	c := ControlServer{
-		Env:      g.Environment,
+		env:      g.Environment,
 		Stations: g.Stations,
 	}
 	pb.RegisterControlServer(s, &c)
