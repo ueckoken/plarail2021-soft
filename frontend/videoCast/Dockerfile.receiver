@@ -1,10 +1,6 @@
-FROM node:16 AS builder
-WORKDIR /frontend
-COPY ./ /frontend/
-RUN npm i
-RUN npx webpack
-
 FROM nginx
-COPY --from=builder /frontend/skyway_receiver_.js /usr/share/nginx/html/
-COPY --from=builder /frontend/skyway_receiver.html /usr/share/nginx/html/index.html
-COPY ./ /usr/share/nginx/html
+RUN apt-get update && apt-get -y install nodejs npm
+COPY ./ /usr/share/nginx/html/
+COPY ./skyway_receiver.html /usr/share/nginx/html/index.html
+
+CMD ["bash", "/usr/share/nginx/html/receiver.sh"]
