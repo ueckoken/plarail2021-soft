@@ -25,13 +25,7 @@ const RailroadMap: FC<Props> = ({ startPosition, endPosition, trains }) => {
           (endPosition.y - startPosition.y) * train.positionScale +
           startPosition.y
         return (
-          <ellipse
-            key={train.id}
-            cx={trainX}
-            cy={trainY}
-            rx={7.5}
-            fill="blue"
-          />
+          <circle key={train.id} cx={trainX} cy={trainY} r={7.5} fill="blue" />
         )
       })}
     </g>
