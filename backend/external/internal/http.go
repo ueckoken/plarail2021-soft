@@ -69,7 +69,7 @@ func (h HttpServer) StartServer() {
 				}
 			}
 			clients.Clients = nextClients
-			h.NumberOfClientConnection.With(prometheus.Labels{"host": "external-control-server"}).Set(float64(len(clients.Clients)))
+			h.NumberOfClientConnection.With(prometheus.Labels{}).Set(float64(len(clients.Clients)))
 			clients.mtx.Unlock()
 		}
 	}()
