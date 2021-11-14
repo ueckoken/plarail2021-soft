@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: test
+  namespace: monitoring
+  labels:
+    release: monitoring-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: plarail2021-test
+  endpoints:
+    - port: web
+      path: /metrics

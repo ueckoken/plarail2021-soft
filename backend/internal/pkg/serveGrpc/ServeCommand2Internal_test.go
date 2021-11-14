@@ -22,6 +22,11 @@ func (t *TestStations) Detail(name string) (*station2espIp.StationDetail, error)
 	return nil, fmt.Errorf("not found")
 }
 
+func (t *TestStations) Enumerate() []station2espIp.Station {
+	return t.Stations
+}
+
+
 func TestControlServer_unpackState(t *testing.T) {
 	type fields struct {
 		UnimplementedControlServer pb.UnimplementedControlServer

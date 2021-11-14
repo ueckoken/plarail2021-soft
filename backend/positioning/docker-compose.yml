@@ -1,0 +1,22 @@
+version: "3"
+services:
+  position:
+    build: .
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - "8081:8080"
+    environment:
+      - "CLIENTSIDESERVER_PORT=8080"
+      - "INTERNALSERVER_ADDR=192.168.1.3:10000"
+      - "DB=host=db user=gormHandler password=gormHandler dbname=gormHandler port=5432 sslmode=disable TimeZone=Asia/Tokyo"
+  db:
+    ports:
+      - "5432:5432"
+    image: postgres:11.12
+    environment:
+    - "POSTGRES_USER=gormHandler"
+    - "POSTGRES_PASSWORD=gormHandler"
+    - "POSTGRES_DB=gormHandler"
