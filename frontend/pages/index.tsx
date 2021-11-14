@@ -1,8 +1,22 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import RailroadMap from "../components/RailRoadMap";
+import { useEffect, useState } from 'react';
 
 const Home: NextPage = () => {
+  const [isStopPoint, setIsStopPoint] = useState<boolean>(true);
+  const [isLeftSwichPoint, setIsLeftSwitchPoint] = useState<boolean>(true);
+  const [trainPosition1, setTrainPosition1] = useState<number>(0.4);
+  const [isStopStation1, setIsStopStation1] = useState<boolean>(true);
+  const [isStopStation2, setIsStopStation2] = useState<boolean>(true);
+  const [isStopStation3, setIsStopStation3] = useState<boolean>(true);
+
+  useEffect(() => {
+    const intervalId = setInterval((() => setTrainPosition1((trainPosition1 + 0.01) % 1)), 20);
+    return () => clearInterval(intervalId);
+  });
+
   return (
     <div className={styles.container}>
       <Head>
@@ -15,6 +29,25 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+
+        <RailroadMap
+          datas={{
+            stop1: isStopPoint,
+            switch1: isLeftSwichPoint,
+            train1: {
+              positionScale: trainPosition1,
+              id: "koken",
+            },
+            station1: isStopStation1,
+            station2: isStopStation2,
+            station3: isStopStation3,
+          }}
+        />
+        <button onClick={() => setIsLeftSwitchPoint(!isLeftSwichPoint)}>分岐点切り替え</button>
+        <button onClick={() => setIsStopPoint(!isStopPoint)}>ストップレール切り替え</button>
+        <button onClick={() => setIsStopStation1(!isStopStation1)}>東京駅切り替え</button>
+        <button onClick={() => setIsStopStation2(!isStopStation2)}>札幌駅切り替え</button>
+        <button onClick={() => setIsStopStation3(!isStopStation3)}>那覇駅切り替え</button>
 
         <p className={styles.description}>
           Get started by editing{' '}
