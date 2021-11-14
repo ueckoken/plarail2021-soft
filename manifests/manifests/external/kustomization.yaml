@@ -3,3 +3,4 @@ resources:
   - ./service.yaml
   - ./env.yaml
   - ./ingressroute.yaml
+  - ./monitor.yaml

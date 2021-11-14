@@ -10,6 +10,7 @@ spec:
   selector:
     app: plarail2021-soft-backend-external
   ports:
-  - port: 80
+  - name: web
+    port: 80
     protocol: TCP
     targetPort: 8080

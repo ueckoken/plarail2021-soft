@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+
+metadata:
+  name: external-server
+  namespace: plarail2021
+  labels:
+    release: monitoring-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: plarail2021-soft-backend-external
+  endpoints:
+    - port: web
+      path: /metrics
