@@ -8,6 +8,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+const namespace = "plarailexternal"
+
 func main() {
 	clientHandler2syncController := make(chan syncController.StationState)
 	syncController2clientHandler := make(chan syncController.StationState)
@@ -15,19 +17,40 @@ func main() {
 
 	envVal := envStore.GetEnv()
 
-	clientconn := prometheus.NewGaugeVec(
+	clientConn := prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "plarailexternal_client_connections",
-			Help: "Number of connections handling websocket",
+			Namespace: namespace,
+			Name:      "clients_connections_seconds",
+			Help:      "Number of connections handling websocket",
 		},
 		[]string{"client"},
+	)
+
+	clientConnTotal := prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Namespace: namespace,
+			Name:      "clients_connections_total",
+			Help:      "Total client connection",
+		},
+		[]string{},
+	)
+
+	controlCommandTotal := prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Namespace: namespace,
+			Name:      "client_commands_total",
+			Help:      "Total client commands",
+		},
+		[]string{},
 	)
 
 	httpServer := internal.HttpServer{
 		ClientHandler2syncController: clientHandler2syncController,
 		SyncController2clientHandler: syncController2clientHandler,
 		Environment:                  envVal,
-		NumberOfClientConnection:     clientconn,
+		NumberOfClientConnection:     clientConn,
+		TotalClientConnection:        clientConnTotal,
+		TotalCLientCommands: controlCommandTotal,
 	}
 	syncController := syncController.SyncController{
 		ClientHandler2syncController: clientHandler2syncController,
