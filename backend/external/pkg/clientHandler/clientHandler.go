@@ -58,7 +58,8 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for cChan := range cChannel.ClientSync {
 		fmt.Println(cChan)
 		fmt.Println("sent")
-		err := c.WriteJSON(cChan)
+		dat := clientSendData{StationName: pb.Stations_StationId_name[cChan.StationID], State: pb.RequestSync_State_name[cChan.State]}
+		err := c.WriteJSON(dat)
 		if err != nil {
 			fmt.Println("err", err)
 			cDone <- struct{}{}
