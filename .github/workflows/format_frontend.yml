@@ -2,7 +2,7 @@ name: formatter
 on:
   push:
     paths:
-      - 'frontend/*'
+      - 'frontend/**/*'
     branches-ignore:
       - 'main'
       - 'deployment'
