@@ -25,14 +25,10 @@ dockerイメージの更新やるぞ!と思ったらmainからdeploymentにマ�
 
 新しいイメージができたらfluxcdが自動で検出してmainに更新commitを加えるところまでやります。鯖への反映は2分ぐらいかかります。
 
-鯖エンドポイント(変更の可能性があります)
-
-- backend/external (ポイント制御) https://plarail2021-backend.gotti.dev
-- frontend (フロントエンド全般) https://plarail2021.gotti.dev
-- frontend/other/one_to_multiple_cast_skyway.py (STUN鯖) https://plarail2021-py.gotti.dev
 
 ## 各種ドキュメント
 
 - [環境変数に関するドキュメント](./docs/environmentValList.md)
 - [ESP32に送信するJSONに関するドキュメント](./docs/api.md)
 - [External<->Internalで用いるプロトコルに関するドキュメント(未整備)](./docs/protocolBuf.md)
+- [エンドポイントに関するドキュメント](./docs/endpoints.md)
