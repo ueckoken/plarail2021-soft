@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/prometheus/client_golang/prometheus"
 	"log"
+	"net/http"
+	_ "net/http/pprof"
 	"ueckoken/plarail2021-soft-internal/internal"
 	"ueckoken/plarail2021-soft-internal/pkg/esp32healthcheck"
 	"ueckoken/plarail2021-soft-internal/pkg/serveGrpc"
@@ -25,6 +28,11 @@ func main() {
 		},
 		[]string{"esp32Addr"},
 	)
+
+	go func() {
+		fmt.Println("pprof serve at 0.0.0.0:6060")
+		log.Println(http.ListenAndServe("0.0.0.0:6060", nil))
+	}()
 
 	pingHandler := esp32healthcheck.PingHandler{
 		Stations:         stations,
