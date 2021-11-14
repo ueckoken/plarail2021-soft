@@ -27,9 +27,11 @@ func (pos PositionReceiver) StartPositionReceiver() {
 	p := positionReceiver.NewPositionReceiverHandler(c)
 	n := make(chan ClientNotifier)
 	h := ClientHandler{ClientNotification: n}
+
 	go pos.RegisterClient(n)
 	go pos.HandleChange(c)
 	go pos.UnregisterClient()
+
 	http.Handle("/registerPosition", p)
 	http.Handle("/subscribePosition", h)
 	log.Fatal(http.ListenAndServe(":8080", nil))

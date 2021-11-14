@@ -36,7 +36,6 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	m.ClientNotification <- notifier
 	c.SetPongHandler(func(string) error {
 		c.SetReadDeadline(time.Now().Add(20 * time.Second))
-		cancel()
 		return nil
 	})
 	c.SetCloseHandler(func(code int, text string) error {
