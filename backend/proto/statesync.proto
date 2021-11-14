@@ -47,9 +47,12 @@ message Stations {
     kudanshita_s6 = 22;
 
     sasazuka_b1 = 31;
-    sasazuka_s1 = 32;
-    sasazuka_s2 = 33;
-    sasazuka_s4 = 34;
+    sasazuka_b2 = 32;
+    sasazuka_s1 = 33;
+    sasazuka_s2 = 34;
+    sasazuka_s3 = 35;
+    sasazuka_s4 = 36;
+    sasazuka_s5 = 37;
 
     meidaimae_s1 = 41;
     meidaimae_s2 = 42;
@@ -59,12 +62,12 @@ message Stations {
     chofu_s3 = 53;
     chofu_s4 = 54;
     chofu_s5 = 55;
-    chofu_b1 = 56;
-    chofu_b2 = 57;
-    chofu_b3 = 58;
-    chofu_b4 = 59;
-    chofu_b5 = 60;
-    chofu_b6 = 61;
+    chofu_s6 = 56;
+    chofu_b1 = 57;
+    chofu_b2 = 58;
+    chofu_b3 = 59;
+    chofu_b4 = 60;
+    chofu_b5 = 61;
 
     kitano_b1 = 71;
     kitano_b2 = 72;
