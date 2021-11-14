@@ -24,10 +24,12 @@ const RailroadMap: FC<Prop> = ({
       <rect x={0} y={0} width={640} height={480} fill="lightgray" />
 
       <Station name="東京" position={{ x: 120, y: 120 }} isStop={station1} />
-          <Station name="札幌" position={{ x: 520, y: 120 }} isStop={station2} />
-                        <Station name="那覇" position={{ x: 320, y: 360 }} isStop={station3} />
+      <Station name="札幌" position={{ x: 520, y: 120 }} isStop={station2} />
+      <Station name="那覇" position={{ x: 320, y: 360 }} isStop={station3} />
 
-      <SwitchPoint        position={{ x: 320, y: 120 }}        fromAngle={180}
+      <SwitchPoint
+        position={{ x: 320, y: 120 }}
+        fromAngle={180}
         leftOutAngle={0}
         rightOutAngle={90}
         isLeft={switch1}
