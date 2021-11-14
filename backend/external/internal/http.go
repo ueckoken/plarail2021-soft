@@ -54,7 +54,7 @@ func (h HttpServer) StartServer() {
 			cChannel := <-clientChannelSend
 			fmt.Println("##clients:", len(clients.Clients))
 			clients.Clients = append(clients.Clients, cChannel)
-      h.TotalClientConnection.With(prometheus.Labels{}).Inc()
+			h.TotalClientConnection.With(prometheus.Labels{}).Inc()
 			nextClients := []clientHandler.ClientChannel{}
 			clients.mtx.Lock()
 			for _, c := range clients.Clients {
