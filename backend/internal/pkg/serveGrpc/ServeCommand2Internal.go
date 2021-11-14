@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"ueckoken/plarail2021-soft-internal/internal"
+	"net/http"
 	"ueckoken/plarail2021-soft-internal/pkg/msg2Esp"
 	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2021-soft-internal/spec"
@@ -13,11 +13,11 @@ import (
 
 type ControlServer struct {
 	pb.UnimplementedControlServer
-	env      *internal.Env
 	Stations station2espIp.Stations
+	client   *http.Client
 }
 
-func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSync) (*pb.ResponseSync, error) {
+func (c *ControlServer) Command2Internal(_ context.Context, req *pb.RequestSync) (*pb.ResponseSync, error) {
 	sta, err := c.unpackStations(req.GetStation())
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (c *ControlServer) Command2Internal(ctx context.Context, req *pb.RequestSyn
 			return nil, err
 		}
 	}
-	s2n := msg2Esp.NewSend2Node(sta, c.unpackState(req.GetState()), angle, c.env.NodeConnection.Timeout)
+	s2n := msg2Esp.NewSend2Node(c.client, sta, c.unpackState(req.GetState()), angle)
 	err = s2n.Send()
 
 	if err != nil {
@@ -50,6 +50,6 @@ func (c *ControlServer) unpackStations(req *pb.Stations) (*station2espIp.Station
 	return sta, nil
 }
 
-func (c *ControlServer) unpackState(state pb.RequestSync_State) string {
+func (*ControlServer) unpackState(state pb.RequestSync_State) string {
 	return state.String()
 }
