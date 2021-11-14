@@ -39,6 +39,10 @@ Code [404 Not Found](https://developer.mozilla.org/ja/docs/Web/HTTP/Status/404) 
 
 クライアントからexternal、externalからクライアントへは次のような形式のjsonをweb socketでやりとりします。
 
+クライアントは操作をしたときにexternalにデータを送信します。
+
+externalは何らかの変化があったときや定期的に情報を提供するためにクライアントに向けてデータを送信します。
+
 ```json
 {
   "station_name": "chofu_b1",
