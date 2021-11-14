@@ -23,7 +23,7 @@ func main() {
 			Name:      "clients_connections_seconds",
 			Help:      "Number of connections handling websocket",
 		},
-		[]string{"client"},
+		[]string{},
 	)
 
 	clientConnTotal := prometheus.NewCounterVec(
