@@ -1,3 +1,6 @@
+up:
+	docker-compose build
+	docker-compose up
 all: statesync speedControl
 	
 statesync: statesync_internal statesync_external

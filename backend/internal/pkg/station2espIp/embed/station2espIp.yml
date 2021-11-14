@@ -1,11 +1,12 @@
 stations:
   - station:
       name: chofu_b1
-      address: http://192.168.1.1:8080
+        #address: http://192.168.1.1:8080
+      address: http://example.com:80
       pin: 1
   - station:
       name: chofu_b2
-      address: http://192.168.1.1:8080
+      address: http://example.com:80
       pin: 2
   - station:
       name: chofu_b3
