@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"context"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -21,6 +22,6 @@ func (s *WebSocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close()
 
-	//ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
 
 }
