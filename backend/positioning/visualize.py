@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import yaml
 
-with open("./hallsensor.yaml") as f:
+with open("./pkg/hallsensor/embed/hallsensor.yaml") as f:
     y = yaml.safe_load(f)
 
 y = y["halls"]
