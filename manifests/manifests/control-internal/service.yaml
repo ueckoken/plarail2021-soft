@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: test
+  namespace: monitoring
+  labels:
+    app: plarail2021-test
+spec:
+  externalName: 10.56.14.94
+  ports:
+  - name: web
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  type: ExternalName
