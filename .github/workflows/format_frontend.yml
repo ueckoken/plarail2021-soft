@@ -1,0 +1,37 @@
+name: formatter
+on:
+  push:
+    paths:
+      - 'frontend/*'
+    branches-ignore:
+      - 'main'
+      - 'deployment'
+
+defaults:
+  run:
+    working-directory: 'frontend/'
+
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: set up node
+        uses: actions/setup-node@v2
+      - run: npm install
+      - run: npm run fmt
+      - name: Count changes
+        id: changes
+        run: |
+          git add -N .
+          echo "::set-output name=count::$(git diff --name-only |wc -l)"
+      - name: commit and push
+        run: |
+          git config --global user.name 'format BOT'
+          git config --global user.email 'bot@example.com'
+          git add .
+          git commit -m 'format by prettier'
+          git push
+        if: steps.changes.outputs.count > 0
