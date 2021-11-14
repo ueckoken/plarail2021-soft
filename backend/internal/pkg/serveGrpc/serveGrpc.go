@@ -26,8 +26,8 @@ func (g *GrpcServer) StartServer() {
 		grpc.UnaryInterceptor(grpcPrometheus.UnaryServerInterceptor),
 	)
 	c := ControlServer{
-		env:      g.Environment,
 		Stations: g.Stations,
+		client:   &http.Client{Timeout: g.Environment.NodeConnection.Timeout},
 	}
 	pb.RegisterControlServer(s, &c)
 
