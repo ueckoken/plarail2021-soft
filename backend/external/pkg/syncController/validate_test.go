@@ -3,16 +3,14 @@ package syncController
 import (
 	"testing"
 	"ueckoken/plarail2021-soft-external/pkg/servo"
+	"ueckoken/plarail2021-soft-external/spec"
 )
 
 const (
-	CHOFU_B1 = 1
-	CHOFU_B2 = 2
-	CHOFU_B3 = 3
-	CHOFU_S1 = 4
-	CHOFU_S2 = 5
-	CHOFU_S3 = 6
-	CHOFU_S4 = 7
+	CHOFU_B1 = int32(spec.Stations_chofu_b1)
+	CHOFU_B2 = int32(spec.Stations_chofu_b2)
+	CHOFU_S1 = int32(spec.Stations_chofu_s1)
+	CHOFU_S2 = int32(spec.Stations_chofu_s2)
 )
 const (
 	ON  = 1
