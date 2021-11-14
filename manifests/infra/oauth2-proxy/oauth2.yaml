@@ -25,7 +25,7 @@ spec:
         - --provider=github
         - --email-domain=*
         - --upstream=file:///dev/null
-        - --github-org=chofufes-plarail2021
+        - --github-org=ueckoken
         - --http-address=0.0.0.0:4180
         - --whitelist-domain=.chofufes2021.gotti.dev
         - --cookie-domain=.chofufes2021.gotti.dev

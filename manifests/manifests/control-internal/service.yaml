@@ -6,10 +6,10 @@ metadata:
   labels:
     app: plarail2021-test
 spec:
-  externalName: 10.56.14.94
+  externalName: 164.70.126.185
   ports:
   - name: web
     port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 9100
   type: ExternalName
