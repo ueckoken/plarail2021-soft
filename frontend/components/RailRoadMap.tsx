@@ -5,7 +5,7 @@ import SwitchPoint from "./svgParts/SwitchPoint"
 import StopPoint from "./svgParts/StopPoint"
 import { TrainData } from "../types/svgPartsTypes"
 
-interface Prop {
+        interface Prop {
   datas: {
     stop1: boolean
     switch1: boolean

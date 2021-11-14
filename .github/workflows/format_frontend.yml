@@ -20,8 +20,8 @@ jobs:
         uses: actions/checkout@v2
       - name: set up node
         uses: actions/setup-node@v2
-      - run: npm install
-      - run: npm run fmt
+      - run: yarn install --frozen-lockfile
+      - run: yarn fmt
       - name: Count changes
         id: changes
         run: |
