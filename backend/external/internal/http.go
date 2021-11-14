@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"runtime"
 	"sync"
 	"time"
 	"ueckoken/plarail2021-soft-external/pkg/clientHandler"
@@ -21,6 +20,8 @@ type HttpServer struct {
 	SyncController2clientHandler chan syncController.StationState
 	Environment                  *envStore.Env
 	NumberOfClientConnection     *prometheus.GaugeVec
+	TotalClientConnection        *prometheus.CounterVec
+	TotalCLientCommands          *prometheus.CounterVec
 }
 
 type clientsCollection struct {
@@ -32,14 +33,10 @@ func (h HttpServer) StartServer() {
 	clients := clientsCollection{}
 	clientChannelSend := make(chan clientHandler.ClientChannel)
 	go func() {
-		for {
-			h.NumberOfClientConnection.With(prometheus.Labels{"client": "hoge"}).Set(float64(time.Now().Unix()))
-			time.Sleep(1 * time.Second)
-		}
-	}()
-	go func() {
 		r := mux.NewRouter()
 		prometheus.MustRegister(h.NumberOfClientConnection)
+		prometheus.MustRegister(h.TotalClientConnection)
+		prometheus.MustRegister(h.TotalCLientCommands)
 		r.HandleFunc("/", clientHandler.HandleStatic)
 		r.Handle("/ws", clientHandler.ClientHandler{ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
 		r.Handle("/metrics", promhttp.Handler())
@@ -57,6 +54,7 @@ func (h HttpServer) StartServer() {
 			cChannel := <-clientChannelSend
 			fmt.Println("##clients:", len(clients.Clients))
 			clients.Clients = append(clients.Clients, cChannel)
+			h.TotalClientConnection.With(prometheus.Labels{}).Inc()
 			nextClients := []clientHandler.ClientChannel{}
 			clients.mtx.Lock()
 			for _, c := range clients.Clients {
@@ -71,6 +69,7 @@ func (h HttpServer) StartServer() {
 				}
 			}
 			clients.Clients = nextClients
+			h.NumberOfClientConnection.With(prometheus.Labels{"host": "external-control-server"}).Set(float64(len(clients.Clients)))
 			clients.mtx.Unlock()
 		}
 	}()
@@ -81,9 +80,8 @@ func (h HttpServer) StartServer() {
 		}
 	}()
 	for {
-		fmt.Println(clients.Clients)
-		fmt.Println("goroutine:", runtime.NumGoroutine())
 		for d := range h.SyncController2clientHandler {
+			h.TotalCLientCommands.With(prometheus.Labels{}).Inc()
 			fmt.Println(clients.Clients)
 			clients.mtx.Lock()
 			for _, c := range clients.Clients {
