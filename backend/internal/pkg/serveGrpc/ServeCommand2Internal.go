@@ -45,7 +45,7 @@ func (c *ControlServer) unpackStations(req *pb.Stations) (*station2espIp.Station
 	}
 	sta, err := c.Stations.Detail(s)
 	if err != nil {
-		return nil, fmt.Errorf("station %s do not define in yaml file\n", s)
+		return nil, fmt.Errorf("%w; station `%s` is not defined in yaml file\n", err, s)
 	}
 	return sta, nil
 }

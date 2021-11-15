@@ -11,7 +11,7 @@ type InitRule struct {
 }
 type StationInitRule struct {
 	Name  string `yaml:"name"`
-	State int    `yaml:"state"`
+	State string `yaml:"state"`
 }
 
 //go:embed embed/stationInit.yml
