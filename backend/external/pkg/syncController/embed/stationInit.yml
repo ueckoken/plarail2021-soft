@@ -1,5 +1,102 @@
 stations:
+  - name: motoyawata_s1
+    state: 1
+  - name: motoyawata_s2
+    state: 1
+  - name: motoyawata_s3
+    state: 1
+  - name: motoyawata_s4
+    state: 1
+  - name: motoyawata_s5
+    state: 1
+  - name: motoyawata_s6
+    state: 1
+
+  - name: iwamotocho_s1
+    state: 1
+  - name: iwamotocho_s2
+    state: 1
+  - name: iwamotocho_s4
+    state: 1
+  - name: iwamotocho_b1
+    state: 1
+  - name: iwamotocho_b2
+    state: 1
+  - name: iwamotocho_b3
+    state: 1
+  - name: iwamotocho_b4
+    state: 1
+
+  - name: kudanshita_s5
+    state: 1
+  - name: kudanshita_s6
+    state: 1
+
+  - name: sasazuka_b1
+    state: 1
+  - name: sasazuka_b2
+    state: 1
+  - name: sasazuka_s1
+    state: 1
+  - name: sasazuka_s2
+    state: 1
+  - name: sasazuka_s3
+    state: 1
+  - name: sasazuka_s4
+    state: 1
+  - name: sasazuka_s5
+    state: 1
+
+  - name: meidaimae_s1
+    state: 1
+  - name: meidaimae_s2
+    state: 1
+
+  - name: chofu_s1
+    state: 1
+  - name: chofu_s2
+    state: 2
+  - name: chofu_s3
+    state: 1
+  - name: chofu_s4
+    state: 1
+  - name: chofu_s5
+    state: 1
+  - name: chofu_s6
+    state: 1
   - name: chofu_b1
     state: 1
   - name: chofu_b2
     state: 2
+  - name: chofu_b3
+    state: 1
+  - name: chofu_b4
+    state: 1
+  - name: chofu_b5
+    state: 1
+
+  - name: kitano_b1
+    state: 1
+  - name: kitano_b2
+    state: 1
+  - name: kitano_b3
+    state: 1
+  - name: kitano_b4
+    state: 1
+  - name: kitano_s1
+    state: 1
+  - name: kitano_s2
+    state: 1
+  - name: kitano_s3
+    state: 1
+  - name: kitano_s4
+    state: 1
+  - name: kitano_s5
+    state: 1
+  - name: kitano_s6
+    state: 1
+
+  - name: takao_s1
+    state: 1
+  - name: takao_s2
+    state: 1
