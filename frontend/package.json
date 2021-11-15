@@ -5,7 +5,8 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fmt": "prettier --no-semi --write ."
   },
   "dependencies": {
     "next": "12.0.2",
@@ -19,6 +20,8 @@
     "@types/react": "17.0.34",
     "eslint": "7",
     "eslint-config-next": "12.0.2",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.4.1",
     "typescript": "4.4.4"
   }
 }

@@ -11,6 +11,7 @@ import (
 	"ueckoken/plarail2021-soft-external/pkg/syncController"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -38,7 +39,14 @@ func (h HttpServer) StartServer() {
 		prometheus.MustRegister(h.TotalClientConnection)
 		prometheus.MustRegister(h.TotalCLientCommands)
 		r.HandleFunc("/", clientHandler.HandleStatic)
-		r.Handle("/ws", clientHandler.ClientHandler{ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
+		var upgrader = websocket.Upgrader{
+			ReadBufferSize:  1024,
+			WriteBufferSize: 1024,
+			CheckOrigin: func(r *http.Request) bool {
+				return true
+			},
+		}
+		r.Handle("/ws", clientHandler.ClientHandler{Upgrader: upgrader, ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
 		r.Handle("/metrics", promhttp.Handler())
 		srv := &http.Server{
 			Handler: r,

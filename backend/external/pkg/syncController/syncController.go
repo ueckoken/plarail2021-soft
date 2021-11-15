@@ -9,6 +9,7 @@ import (
 	"ueckoken/plarail2021-soft-external/pkg/envStore"
 	"ueckoken/plarail2021-soft-external/pkg/servo"
 	"ueckoken/plarail2021-soft-external/pkg/stationNameId"
+	"ueckoken/plarail2021-soft-external/spec"
 )
 
 type StationState struct {
@@ -134,13 +135,17 @@ func (s SyncController) Init(r *InitRule) {
 		if err != nil {
 			log.Fatalln(err)
 		}
+		state, ok := spec.RequestSync_State_value[sta.State]
+		if !ok {
+			log.Fatalln(sta.State, "is incorrect")
+		}
 		s.InitServoRoute <- StationState{
 			struct {
 				StationID int32
 				State     int32
 			}{
 				StationID: id,
-				State:     int32(sta.State),
+				State:     state,
 			},
 		}
 		time.Sleep(500 * time.Millisecond)
