@@ -5,8 +5,10 @@ import RailroadMap from "../components/RailRoadMap"
 import { useEffect, useState } from "react"
 
 const Home: NextPage = () => {
-  const [isStopPoint, setIsStopPoint] = useState<boolean>(true)
-  const [isLeftSwichPoint, setIsLeftSwitchPoint] = useState<boolean>(true)
+  const [isStopPoint1, setIsStopPoint1] = useState<boolean>(true)
+  const [isStopPoint2, setIsStopPoint2] = useState<boolean>(true)
+  const [isLeftSwichPoint1, setIsLeftSwitchPoint1] = useState<boolean>(true)
+  const [isLeftSwichPoint2, setIsLeftSwitchPoint2] = useState<boolean>(true)
   const [trainPosition1, setTrainPosition1] = useState<number>(0.4)
   const [isStopStation1, setIsStopStation1] = useState<boolean>(true)
   const [isStopStation2, setIsStopStation2] = useState<boolean>(true)
@@ -35,8 +37,10 @@ const Home: NextPage = () => {
 
         <RailroadMap
           datas={{
-            stop1: isStopPoint,
-            switch1: isLeftSwichPoint,
+            stop1: isStopPoint1,
+            stop2: isStopPoint2,
+            switch1: isLeftSwichPoint1,
+            switch2: isLeftSwichPoint2,
             train1: {
               positionScale: trainPosition1,
               id: "koken",
@@ -46,11 +50,17 @@ const Home: NextPage = () => {
             station3: isStopStation3,
           }}
         />
-        <button onClick={() => setIsLeftSwitchPoint(!isLeftSwichPoint)}>
-          分岐点切り替え
+        <button onClick={() => setIsLeftSwitchPoint1(!isLeftSwichPoint1)}>
+          分岐点1切り替え
         </button>
-        <button onClick={() => setIsStopPoint(!isStopPoint)}>
-          ストップレール切り替え
+        <button onClick={() => setIsLeftSwitchPoint2(!isLeftSwichPoint2)}>
+          分岐点2切り替え
+        </button>
+        <button onClick={() => setIsStopPoint1(!isStopPoint1)}>
+          ストップレール1切り替え
+        </button>
+        <button onClick={() => setIsStopPoint2(!isStopPoint2)}>
+          ストップレール2切り替え
         </button>
         <button onClick={() => setIsStopStation1(!isStopStation1)}>
           東京駅切り替え
