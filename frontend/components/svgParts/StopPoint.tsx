@@ -11,7 +11,7 @@ const StopPoint: FC<Props> = ({ position, isStop }) => {
     <g>
       {isStop ? (
         <>
-          <ellipse cx={position.x} cy={position.y} rx={10} fill="red" />
+          <circle cx={position.x} cy={position.y} r={10} fill="red" />
           <rect
             x={position.x - 7}
             y={position.y - 2}

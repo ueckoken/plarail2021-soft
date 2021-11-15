@@ -27,10 +27,10 @@ const SwitchPoint: FC<Props> = ({
     position.y + Math.sin(degToRad(rightOutAngle)) * 10
   return (
     <g>
-      <ellipse
+      <circle
         cx={position.x}
         cy={position.y}
-        rx={10}
+        r={10}
         fill="white"
         stroke="black"
       />
