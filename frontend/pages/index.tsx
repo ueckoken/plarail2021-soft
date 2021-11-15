@@ -15,13 +15,10 @@ const Home: NextPage = () => {
   const [isStopStation3, setIsStopStation3] = useState<boolean>(true)
 
   useEffect(() => {
-    const intervalId = setInterval(
-      () => {
-        const tmpTrainPosition1 = trainPosition1 + 0.01;
-        setTrainPosition1(tmpTrainPosition1 <= 1 ? tmpTrainPosition1 : 0);
-      },
-      20
-    )
+    const intervalId = setInterval(() => {
+      const tmpTrainPosition1 = trainPosition1 + 0.01
+      setTrainPosition1(tmpTrainPosition1 <= 1 ? tmpTrainPosition1 : 0)
+    }, 20)
     return () => clearInterval(intervalId)
   })
 
