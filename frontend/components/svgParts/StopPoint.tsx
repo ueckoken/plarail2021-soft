@@ -7,22 +7,19 @@ interface Props {
 }
 
 const StopPoint: FC<Props> = ({ position, isStop }) => {
+  if (!isStop) {
+    return null
+  }
   return (
     <g>
-      {isStop ? (
-        <>
-          <circle cx={position.x} cy={position.y} r={10} fill="red" />
-          <rect
-            x={position.x - 7}
-            y={position.y - 2}
-            width={14}
-            height={4}
-            fill="white"
-          />
-        </>
-      ) : (
-        ""
-      )}
+      <circle cx={position.x} cy={position.y} r={10} fill="red" />
+      <rect
+        x={position.x - 7}
+        y={position.y - 2}
+        width={14}
+        height={4}
+        fill="white"
+      />
     </g>
   )
 }
