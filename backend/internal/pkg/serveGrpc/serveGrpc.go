@@ -37,7 +37,9 @@ func (g *GrpcServer) StartServer() {
 	go g.PingHandler.Start()
 	go ServeMetrics(fmt.Sprintf(":%d", g.Environment.ExternalSideServer.MetricsPort))
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", g.Environment.ExternalSideServer.Port))
+	port := fmt.Sprintf(":%d", g.Environment.ExternalSideServer.Port)
+	log.Println("gRPC serve at", port)
+	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
