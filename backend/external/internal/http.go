@@ -50,9 +50,7 @@ func (h HttpServer) StartServer() {
 	}()
 	go func() {
 		for {
-			fmt.Println("waiting...")
 			cChannel := <-clientChannelSend
-			fmt.Println("##clients:", len(clients.Clients))
 			clients.Clients = append(clients.Clients, cChannel)
 			h.TotalClientConnection.With(prometheus.Labels{}).Inc()
 			nextClients := []clientHandler.ClientChannel{}
@@ -82,7 +80,6 @@ func (h HttpServer) StartServer() {
 	for {
 		for d := range h.SyncController2clientHandler {
 			h.TotalCLientCommands.With(prometheus.Labels{}).Inc()
-			fmt.Println(clients.Clients)
 			clients.mtx.Lock()
 			for _, c := range clients.Clients {
 				select {
