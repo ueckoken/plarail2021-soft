@@ -7,7 +7,7 @@
 ### 認証なし
 
 - "control.chofufes2021.gotti.dev"
-`./backend/external`が動いています。クライアントはここにむけてwebsocketを張ってください。
+`./backend/external`が動いています。クライアントはここにむけてwebsocketを張ってください。`/ws`にwebsocketのエンドポイントがあります。
 - "chofufes2021.gotti.dev"
 `./frontend`が動いています。ここにメインのページがデプロイされます。
 - "webrtc.chofufes2021.gotti.dev"
