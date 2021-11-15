@@ -14,6 +14,29 @@ const Home: NextPage = () => {
   const [trainPosition1, setTrainPosition1] = useState<number>(0.4)
 
   useEffect(() => {
+    const ws = new WebSocket("wss://control.chofufes2021.gotti.dev/ws")
+    ws.addEventListener("open", (e) => {
+      console.log("opened")
+      console.log(e)
+    })
+    ws.addEventListener("message", (e) => {
+      console.log("recieved message")
+      console.log(e)
+    })
+    ws.addEventListener("error", (e) => {
+      console.log("error occured")
+      console.log(e)
+    })
+    ws.addEventListener("close", (e) => {
+      console.log("closed")
+      console.log(e)
+    })
+    return () => {
+      ws.close()
+    }
+  }, [])
+
+  useEffect(() => {
     const intervalId = setInterval(() => {
       const tmpTrainPosition1 = trainPosition1 + 0.01
       setTrainPosition1(tmpTrainPosition1 <= 1 ? tmpTrainPosition1 : 0)
