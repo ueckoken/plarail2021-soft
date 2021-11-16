@@ -22,6 +22,7 @@ const Home: NextPage = () => {
     ws.addEventListener("message", (e) => {
       console.log("recieved message")
       console.log(e)
+      console.log(JSON.parse(e.data))
     })
     ws.addEventListener("error", (e) => {
       console.log("error occured")
