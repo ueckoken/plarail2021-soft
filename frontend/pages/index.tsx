@@ -6,13 +6,12 @@ import { useEffect, useState } from "react"
 
 const Home: NextPage = () => {
   const [isStopPoint1, setIsStopPoint1] = useState<boolean>(true)
-  const [isStopPoint2, setIsStopPoint2] = useState<boolean>(true)
+  const [isStopPoint2, setIsStopPoint2] = useState<boolean>(false)
+  const [isStopPoint3, setIsStopPoint3] = useState<boolean>(true)
+  const [isStopPoint4, setIsStopPoint4] = useState<boolean>(true)
   const [isLeftSwichPoint1, setIsLeftSwitchPoint1] = useState<boolean>(true)
   const [isLeftSwichPoint2, setIsLeftSwitchPoint2] = useState<boolean>(true)
   const [trainPosition1, setTrainPosition1] = useState<number>(0.4)
-  const [isStopStation1, setIsStopStation1] = useState<boolean>(true)
-  const [isStopStation2, setIsStopStation2] = useState<boolean>(true)
-  const [isStopStation3, setIsStopStation3] = useState<boolean>(true)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -48,15 +47,14 @@ const Home: NextPage = () => {
             datas={{
               stop1: isStopPoint1,
               stop2: isStopPoint2,
+              stop3: isStopPoint3,
+              stop4: isStopPoint4,
               switch1: isLeftSwichPoint1,
               switch2: isLeftSwichPoint2,
               train1: {
                 positionScale: trainPosition1,
                 id: "koken",
               },
-              station1: isStopStation1,
-              station2: isStopStation2,
-              station3: isStopStation3,
             }}
           />
         </section>
@@ -75,14 +73,11 @@ const Home: NextPage = () => {
           <button onClick={() => setIsStopPoint2(!isStopPoint2)}>
             ストップレール2切り替え
           </button>
-          <button onClick={() => setIsStopStation1(!isStopStation1)}>
-            東京駅切り替え
+          <button onClick={() => setIsStopPoint3(!isStopPoint3)}>
+            ストップレール3切り替え
           </button>
-          <button onClick={() => setIsStopStation2(!isStopStation2)}>
-            札幌駅切り替え
-          </button>
-          <button onClick={() => setIsStopStation3(!isStopStation3)}>
-            那覇駅切り替え
+          <button onClick={() => setIsStopPoint4(!isStopPoint4)}>
+            ストップレール4切り替え
           </button>
         </section>
       </main>
