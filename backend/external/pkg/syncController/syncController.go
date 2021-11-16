@@ -2,7 +2,6 @@ package syncController
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -110,8 +109,8 @@ func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
 		kvs.update(c)
 		//todo; handle update error
 		c2i := servo.NewCommand2Internal(c.StationState, e)
-		err := c2i.Send()
-		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@:", err)
+		c2i.Send()
+    //todo error handling
 		s.SyncController2clientHandler <- c
 	}
 }
@@ -119,9 +118,7 @@ func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
 func (s *SyncController) periodicallySync(kvs *stationKVS) {
 	ch := time.Tick(2 * time.Second)
 	for range ch {
-		fmt.Println("locking")
 		kvs.mtx.Lock()
-		fmt.Println("locked")
 		for _, st := range kvs.retrieve() {
 			s.SyncController2clientHandler <- st
 		}
