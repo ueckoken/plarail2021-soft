@@ -12,6 +12,7 @@ spec:
       labels:
         app: plarail2021-soft-backend-external
     spec:
+      serviceAccountName: "tailscale"
       containers:
         - name: plarail2021-soft-backend-external
           image: ghcr.io/ueckoken/plarail2021-soft-external:0e60272-1636991593 # {"$imagepolicy": "plarail2021:external"}
@@ -21,3 +22,25 @@ spec:
           envFrom:
             - configMapRef:
                 name: external-env
+        - name: ts-sidecar
+          image: "ghcr.io/tailscale/tailscale:latest"
+          command: ["/bin/sh","/usr/bin/run.sh"]
+          volumeMounts:
+            - name: tailscale-config
+              mountPath: /usr/bin
+          env:
+            # Store the state in a k8s secret
+            - name: KUBE_SECRET
+              value: "tailscale"
+            - name: USERSPACE
+              value: "true"
+            - name: AUTH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-auth
+                  key: AUTH_KEY
+                  optional: false
+      volumes:
+        - name: tailscale-config
+          configMap:
+            name: tailscale-config
