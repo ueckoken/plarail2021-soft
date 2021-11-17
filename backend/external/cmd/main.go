@@ -50,7 +50,8 @@ func main() {
 		Environment:                  envVal,
 		NumberOfClientConnection:     clientConn,
 		TotalClientConnection:        clientConnTotal,
-		TotalCLientCommands: controlCommandTotal,
+		TotalCLientCommands:          controlCommandTotal,
+		Clients:                      &internal.ClientsCollection{},
 	}
 	syncController := syncController.SyncController{
 		ClientHandler2syncController: clientHandler2syncController,

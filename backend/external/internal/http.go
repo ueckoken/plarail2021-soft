@@ -23,81 +23,104 @@ type HttpServer struct {
 	NumberOfClientConnection     *prometheus.GaugeVec
 	TotalClientConnection        *prometheus.CounterVec
 	TotalCLientCommands          *prometheus.CounterVec
+	Clients                      *ClientsCollection
 }
 
-type clientsCollection struct {
+type ClientsCollection struct {
 	Clients []clientHandler.ClientChannel
 	mtx     sync.Mutex
 }
 
-func (h HttpServer) StartServer() {
-	clients := clientsCollection{}
+func (h *HttpServer) StartServer() {
 	clientChannelSend := make(chan clientHandler.ClientChannel)
-	go func() {
-		r := mux.NewRouter()
-		prometheus.MustRegister(h.NumberOfClientConnection)
-		prometheus.MustRegister(h.TotalClientConnection)
-		prometheus.MustRegister(h.TotalCLientCommands)
-		r.HandleFunc("/", clientHandler.HandleStatic)
-		var upgrader = websocket.Upgrader{
-			ReadBufferSize:  1024,
-			WriteBufferSize: 1024,
-			CheckOrigin: func(r *http.Request) bool {
-				return true
-			},
-		}
-		r.Handle("/ws", clientHandler.ClientHandler{Upgrader: upgrader, ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
-		r.Handle("/metrics", promhttp.Handler())
-		srv := &http.Server{
-			Handler: r,
-			Addr:    fmt.Sprintf("0.0.0.0:%d", h.Environment.ClientSideServer.Port),
-			// Good practice: enforce timeouts for servers you create!
-		}
+	go h.registerClient(clientChannelSend)
+	go h.handleChanges()
+	go h.unregisterClient()
+	r := mux.NewRouter()
+	prometheus.MustRegister(h.NumberOfClientConnection)
+	prometheus.MustRegister(h.TotalClientConnection)
+	prometheus.MustRegister(h.TotalCLientCommands)
+	r.HandleFunc("/", clientHandler.HandleStatic)
+	var upgrader = websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	}
+	r.Handle("/ws", clientHandler.ClientHandler{Upgrader: upgrader, ClientCommand: h.ClientHandler2syncController, ClientChannelSend: clientChannelSend})
+	r.Handle("/metrics", promhttp.Handler())
+	srv := &http.Server{
+		Handler: r,
+		Addr:    fmt.Sprintf("0.0.0.0:%d", h.Environment.ClientSideServer.Port),
+		// Good practice: enforce timeouts for servers you create!
+	}
 
-		log.Fatal(srv.ListenAndServe())
-	}()
-	go func() {
-		for {
-			cChannel := <-clientChannelSend
-			clients.Clients = append(clients.Clients, cChannel)
-			h.TotalClientConnection.With(prometheus.Labels{}).Inc()
-			nextClients := []clientHandler.ClientChannel{}
-			clients.mtx.Lock()
-			for _, c := range clients.Clients {
-				select {
-				case <-c.Done:
-					close(c.Done)
-					close(c.ClientSync)
-					continue
-				default:
-					nextClients = append(nextClients, c)
-					//nop
-				}
+	log.Fatal(srv.ListenAndServe())
+}
+
+func (h *HttpServer) handleChanges() {
+	for d := range h.SyncController2clientHandler {
+		h.Clients.mtx.Lock()
+		h.TotalCLientCommands.With(prometheus.Labels{}).Inc()
+		for _, c := range h.Clients.Clients {
+			select {
+			case c.ClientSync <- d:
+			default:
+				continue
 			}
-			clients.Clients = nextClients
-			h.NumberOfClientConnection.With(prometheus.Labels{}).Set(float64(len(clients.Clients)))
-			clients.mtx.Unlock()
 		}
-	}()
-	go func() {
-		for {
-			h.SyncController2clientHandler <- syncController.StationState{}
-			time.Sleep(1 * time.Second)
-		}
-	}()
+		h.Clients.mtx.Unlock()
+	}
+	time.Sleep(1 * time.Second)
+}
+
+func (h *HttpServer) registerClient(cn chan clientHandler.ClientChannel) {
 	for {
-		for d := range h.SyncController2clientHandler {
-			h.TotalCLientCommands.With(prometheus.Labels{}).Inc()
-			clients.mtx.Lock()
-			for _, c := range clients.Clients {
-				select {
-				case c.ClientSync <- d:
-				default:
-					continue
-				}
-			}
-			clients.mtx.Unlock()
+		select {
+		case n := <-cn:
+			h.Clients.mtx.Lock()
+			h.TotalClientConnection.With(prometheus.Labels{}).Inc()
+			h.Clients.Clients = append(h.Clients.Clients, n)
+			h.Clients.mtx.Unlock()
 		}
+	}
+}
+
+func (h *HttpServer) unregisterClient() {
+	for {
+		h.Clients.mtx.Lock()
+		var deletionList []int
+		for i, c := range h.Clients.Clients {
+			select {
+			case <-c.Done:
+				deletionList = append(deletionList, i)
+			default:
+				continue
+			}
+		}
+		h.Clients.deleteClient(deletionList)
+		h.Clients.mtx.Unlock()
+		h.NumberOfClientConnection.With(prometheus.Labels{}).Set(float64(len(h.Clients.Clients)))
 		time.Sleep(1 * time.Second)
 	}
+}
+
+func (cl *ClientsCollection) deleteClient(deletion []int) {
+	var tmp []clientHandler.ClientChannel
+	for i, c := range cl.Clients {
+		if !contain(deletion, i) {
+			tmp = append(tmp, c)
+		}
+	}
+	cl.Clients = tmp
+}
+
+func contain(list []int, data int) bool {
+	for _, l := range list {
+		if l == data {
+			return true
+		}
+	}
+	return false
 }
