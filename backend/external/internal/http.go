@@ -79,11 +79,9 @@ func (h *HttpServer) registerClient(cn chan clientHandler.ClientChannel) {
 	for {
 		select {
 		case n := <-cn:
-			fmt.Println("registering")
 			h.Clients.mtx.Lock()
 			h.TotalClientConnection.With(prometheus.Labels{}).Inc()
 			h.Clients.Clients = append(h.Clients.Clients, n)
-			fmt.Println("registered")
 			h.Clients.mtx.Unlock()
 		}
 	}
@@ -91,14 +89,11 @@ func (h *HttpServer) registerClient(cn chan clientHandler.ClientChannel) {
 
 func (h *HttpServer) unregisterClient() {
 	for {
-		fmt.Println("locking")
 		h.Clients.mtx.Lock()
-		fmt.Println("locked")
 		var deletionList []int
 		for i, c := range h.Clients.Clients {
 			select {
 			case <-c.Done:
-				fmt.Println("unregistered")
 				deletionList = append(deletionList, i)
 			default:
 				continue
@@ -107,7 +102,6 @@ func (h *HttpServer) unregisterClient() {
 		h.Clients.deleteClient(deletionList)
 		h.Clients.mtx.Unlock()
 		h.NumberOfClientConnection.With(prometheus.Labels{}).Set(float64(len(h.Clients.Clients)))
-		fmt.Println(len(h.Clients.Clients))
 		time.Sleep(1 * time.Second)
 	}
 }
