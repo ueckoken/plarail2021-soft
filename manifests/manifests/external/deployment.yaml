@@ -15,7 +15,7 @@ spec:
       serviceAccountName: "tailscale"
       containers:
         - name: plarail2021-soft-backend-external
-          image: ghcr.io/ueckoken/plarail2021-soft-external:0e60272-1636991593 # {"$imagepolicy": "plarail2021:external"}
+          image: ghcr.io/ueckoken/plarail2021-soft-external:befe2d1-1637137568 # {"$imagepolicy": "plarail2021:external"}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -24,7 +24,7 @@ spec:
                 name: external-env
         - name: ts-sidecar
           image: "ghcr.io/tailscale/tailscale:latest"
-          command: ["/bin/sh","/usr/bin/run.sh"]
+          command: ["/bin/sh", "/usr/bin/run.sh"]
           volumeMounts:
             - name: tailscale-config
               mountPath: /usr/bin
