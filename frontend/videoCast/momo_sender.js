@@ -37,6 +37,7 @@ window.connectMomo = async () => {
   await conn.connect(null);
   conn.on("open", ({ authzMetadata }) => console.log(authzMetadata));
   conn.on("disconnect", (e) => {
+    momoStream = null;
     stopVideo(remoteVideo);
   });
   conn.on("addstream", (e) => {
