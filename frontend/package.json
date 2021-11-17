@@ -9,6 +9,8 @@
     "fmt": "prettier --no-semi --write ."
   },
   "dependencies": {
+    "fp-ts": "^2.11.5",
+    "io-ts": "^2.2.16",
     "next": "12.0.2",
     "react": "17.0.2",
     "react-dom": "17.0.2"
