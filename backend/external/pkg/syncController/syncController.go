@@ -84,7 +84,7 @@ func (s *SyncController) StartSyncController() {
 	go s.Init(NewInitializeRule())
 	s.initNode(s.Environment, kvs)
 
-	go s.periodicallySync(kvs)
+	//go s.periodicallySync(kvs)
 	s.triggeredSync(s.Environment, kvs)
 }
 

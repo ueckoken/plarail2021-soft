@@ -59,7 +59,6 @@ func (pos *PositionReceiver) HandleChange(cn chan trainState.State) {
 	for {
 		select {
 		case c := <-cn:
-
 			for _, client := range pos.clients.clients {
 				select {
 				case client.notifier.Notifier <- c:
@@ -74,28 +73,36 @@ func (pos *PositionReceiver) HandleChange(cn chan trainState.State) {
 func (pos *PositionReceiver) UnregisterClient() {
 	for {
 		pos.clients.mtx.Lock()
+		var deletionList []int
 		for i, c := range pos.clients.clients {
 			select {
 			case <-c.notifier.Unregister:
-				pos.clients.delete(i)
+				deletionList = append(deletionList, i)
 			default:
 				continue
 			}
 		}
+		pos.clients.deleteClient(deletionList)
 		pos.clients.mtx.Unlock()
 		time.Sleep(1 * time.Second)
 	}
 }
 
-func (cl *ClientSet) delete(index int) {
+func (cl *ClientSet) deleteClient(deletion []int) {
 	var tmp []Client
-	cl.mtx.Lock()
 	for i, c := range cl.clients {
-		if i == index {
-			continue
+		if !contain(deletion, i) {
+			tmp = append(tmp, c)
 		}
-		tmp = append(tmp, c)
 	}
 	cl.clients = tmp
-	cl.mtx.Unlock()
+}
+
+func contain(list []int, data int) bool {
+	for _, l := range list {
+		if l == data {
+			return true
+		}
+	}
+	return false
 }
