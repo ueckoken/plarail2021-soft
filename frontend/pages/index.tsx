@@ -3,7 +3,13 @@ import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import RailroadMap from "../components/RailRoadMap"
 import { useEffect, useState } from "react"
-import { Message, stopRailId, StopRailId } from "../types/websocket-messages"
+import {
+  bunkiRailId,
+  BunkiRailId,
+  Message,
+  stopRailId,
+  StopRailId,
+} from "../types/websocket-messages"
 
 // OFF: false, ON: trueと対応
 type StopPointState = Record<StopRailId, boolean>
@@ -42,6 +48,25 @@ const INITIAL_STOP_POINT_STATE: StopPointState = {
   takao_s2: false,
 }
 
+type SwitchPointState = Record<BunkiRailId, boolean>
+const INITIAL_SWITCH_POINT_STATE: SwitchPointState = {
+  iwamotocho_b1: false,
+  iwamotocho_b2: false,
+  iwamotocho_b3: false,
+  iwamotocho_b4: false,
+  sasazuka_b1: false,
+  sasazuka_b2: false,
+  chofu_b1: false,
+  chofu_b2: false,
+  chofu_b3: false,
+  chofu_b4: false,
+  chofu_b5: false,
+  kitano_b1: false,
+  kitano_b2: false,
+  kitano_b3: false,
+  kitano_b4: false,
+}
+
 const Home: NextPage = () => {
   const [stopPointState, setStopPointState] = useState<StopPointState>(
     INITIAL_STOP_POINT_STATE
@@ -50,6 +75,9 @@ const Home: NextPage = () => {
   const [isStopPoint2, setIsStopPoint2] = useState<boolean>(true)
   const [isStopPoint3, setIsStopPoint3] = useState<boolean>(true)
   const [isStopPoint4, setIsStopPoint4] = useState<boolean>(true)
+  const [switchPointState, setSwitchPointState] = useState<SwitchPointState>(
+    INITIAL_SWITCH_POINT_STATE
+  )
   const [isLeftSwichPoint1, setIsLeftSwitchPoint1] = useState<boolean>(true)
   const [isLeftSwichPoint2, setIsLeftSwitchPoint2] = useState<boolean>(true)
   const [trainPosition1, setTrainPosition1] = useState<number>(0.4)
@@ -71,6 +99,13 @@ const Home: NextPage = () => {
       if (stopRailId.is(message.station_name)) {
         setStopPointState((previousStopPointState) => ({
           ...previousStopPointState,
+          [message.station_name]: message.state === "ON",
+        }))
+        return
+      }
+      if (bunkiRailId.is(message.station_name)) {
+        setSwitchPointState((previousSwitchPointState) => ({
+          ...previousSwitchPointState,
           [message.station_name]: message.state === "ON",
         }))
       }
@@ -125,6 +160,7 @@ const Home: NextPage = () => {
               stop2: isStopPoint2,
               stop3: isStopPoint3,
               stop4: isStopPoint4,
+              switchState: switchPointState,
               switch1: isLeftSwichPoint1,
               switch2: isLeftSwichPoint2,
               train1: {
