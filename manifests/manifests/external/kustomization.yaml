@@ -4,3 +4,5 @@ resources:
   - ./env.yaml
   - ./ingressroute.yaml
   - ./monitor.yaml
+  - ./rbac.yaml
+  - ./tailscale-conf.yaml
