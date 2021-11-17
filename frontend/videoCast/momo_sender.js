@@ -29,6 +29,7 @@ window.onChangeVideoCodec = () => {
     videoCodec = null;
   }
 };
+let momoStream = null;
 window.connectMomo = async () => {
   options.video.codec = videoCodec;
   console.log(options.video.codec);
@@ -40,6 +41,7 @@ window.connectMomo = async () => {
   });
   conn.on("addstream", (e) => {
     console.log("addstream");
+    momoStream = e.stream;
     playVideo(remoteVideo, e.stream);
   });
 };
@@ -69,7 +71,7 @@ window.connectReceiver = () => {
     const selected = selector.options[selectedIdx].value;
     let stream = null;
     if (selected == "momo") {
-      stream = momoConnecter.getStream();
+      stream = momoStream;
     } else {
       stream = cameraStream;
     }
