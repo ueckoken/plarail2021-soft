@@ -2,8 +2,8 @@ import * as t from "io-ts"
 
 // https://github.com/ueckoken/plarail2021-soft/blob/a3982c4ef4b20e371052b4ad36b777a04ed67d1a/backend/proto/statesync.proto#L28-L85
 // 無限 user-defined type guard イヤイヤ期なので io-ts に頼る
+export const unknownId = t.literal("unknown")
 export const stopRailId = t.union([
-  t.literal("unknown"),
   t.literal("motoyawata_s1"),
   t.literal("motoyawata_s2"),
   t.literal("motoyawata_s3"),
@@ -40,7 +40,6 @@ export const stopRailId = t.union([
 export type StopRailId = t.TypeOf<typeof stopRailId>
 
 export const bunkiRailId = t.union([
-  t.literal("unknown"),
   t.literal("iwamotocho_b1"),
   t.literal("iwamotocho_b2"),
   t.literal("iwamotocho_b3"),
@@ -59,7 +58,7 @@ export const bunkiRailId = t.union([
 ])
 export type BunkiRailId = t.TypeOf<typeof bunkiRailId>
 
-export const stationId = t.union([stopRailId, bunkiRailId])
+export const stationId = t.union([unknownId, stopRailId, bunkiRailId])
 export type StationId = t.TypeOf<typeof stationId>
 
 // https://github.com/ueckoken/plarail2021-soft/blob/a3982c4ef4b20e371052b4ad36b777a04ed67d1a/backend/proto/statesync.proto#L10-L14
