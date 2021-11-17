@@ -3,15 +3,90 @@ import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import RailroadMap from "../components/RailRoadMap"
 import { useEffect, useState } from "react"
+import { Message, stopRailId, StopRailId } from "../types/websocket-messages"
+
+// OFF: false, ON: trueと対応
+type StopPointState = Record<StopRailId, boolean>
+const INITIAL_STOP_POINT_STATE: StopPointState = {
+  motoyawata_s1: false,
+  motoyawata_s2: false,
+  motoyawata_s3: false,
+  motoyawata_s4: false,
+  motoyawata_s5: false,
+  motoyawata_s6: false,
+  iwamotocho_s1: false,
+  iwamotocho_s2: false,
+  iwamotocho_s4: false,
+  kudanshita_s5: false,
+  kudanshita_s6: false,
+  sasazuka_s1: false,
+  sasazuka_s2: false,
+  sasazuka_s3: false,
+  sasazuka_s4: false,
+  sasazuka_s5: false,
+  meidaimae_s1: false,
+  meidaimae_s2: false,
+  chofu_s1: false,
+  chofu_s2: false,
+  chofu_s3: false,
+  chofu_s4: false,
+  chofu_s5: false,
+  chofu_s6: false,
+  kitano_s1: false,
+  kitano_s2: false,
+  kitano_s3: false,
+  kitano_s4: false,
+  kitano_s5: false,
+  kitano_s6: false,
+  takao_s1: false,
+  takao_s2: false,
+}
 
 const Home: NextPage = () => {
+  const [stopPointState, setStopPointState] = useState<StopPointState>(
+    INITIAL_STOP_POINT_STATE
+  )
   const [isStopPoint1, setIsStopPoint1] = useState<boolean>(true)
-  const [isStopPoint2, setIsStopPoint2] = useState<boolean>(false)
+  const [isStopPoint2, setIsStopPoint2] = useState<boolean>(true)
   const [isStopPoint3, setIsStopPoint3] = useState<boolean>(true)
   const [isStopPoint4, setIsStopPoint4] = useState<boolean>(true)
   const [isLeftSwichPoint1, setIsLeftSwitchPoint1] = useState<boolean>(true)
   const [isLeftSwichPoint2, setIsLeftSwitchPoint2] = useState<boolean>(true)
   const [trainPosition1, setTrainPosition1] = useState<number>(0.4)
+
+  useEffect(() => {
+    const ws = new WebSocket("wss://control.chofufes2021.gotti.dev/ws")
+    ws.addEventListener("open", (e) => {
+      console.log("opened")
+      console.log(e)
+    })
+    ws.addEventListener("message", (e) => {
+      console.log("recieved message")
+      console.log(e)
+      const message: Message = JSON.parse(e.data)
+      console.log(message)
+      if (message.station_name === "unknown" || message.state === "UNKNOWN") {
+        return
+      }
+      if (stopRailId.is(message.station_name)) {
+        setStopPointState((previousStopPointState) => ({
+          ...previousStopPointState,
+          [message.station_name]: message.state === "ON",
+        }))
+      }
+    })
+    ws.addEventListener("error", (e) => {
+      console.log("error occured")
+      console.log(e)
+    })
+    ws.addEventListener("close", (e) => {
+      console.log("closed")
+      console.log(e)
+    })
+    return () => {
+      ws.close()
+    }
+  }, [])
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -45,6 +120,7 @@ const Home: NextPage = () => {
           <h2>地図部分</h2>
           <RailroadMap
             datas={{
+              stop: stopPointState,
               stop1: isStopPoint1,
               stop2: isStopPoint2,
               stop3: isStopPoint3,
