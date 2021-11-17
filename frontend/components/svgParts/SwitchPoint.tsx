@@ -19,12 +19,7 @@ const SwitchPoint: FC<Props> = ({
 }) => {
   const fromAnglePointX = position.x + Math.cos(degToRad(fromAngle)) * 10
   const fromAnglePointY = position.y + Math.sin(degToRad(fromAngle)) * 10
-  const leftOutAnglePointX = position.x + Math.cos(degToRad(leftOutAngle)) * 10
-  const leftOutAnglePointY = position.y + Math.sin(degToRad(leftOutAngle)) * 10
-  const rightOutAnglePointX =
-    position.x + Math.cos(degToRad(rightOutAngle)) * 10
-  const rightOutAnglePointY =
-    position.y + Math.sin(degToRad(rightOutAngle)) * 10
+  const outAngle = isLeft ? leftOutAngle : rightOutAngle
   return (
     <g>
       <circle
@@ -41,23 +36,18 @@ const SwitchPoint: FC<Props> = ({
         y2={fromAnglePointY}
         stroke="black"
       />
-      {isLeft ? (
-        <line
-          x1={position.x}
-          y1={position.y}
-          x2={leftOutAnglePointX}
-          y2={leftOutAnglePointY}
-          stroke="black"
-        />
-      ) : (
-        <line
-          x1={position.x}
-          y1={position.y}
-          x2={rightOutAnglePointX}
-          y2={rightOutAnglePointY}
-          stroke="black"
-        />
-      )}
+      <line
+        x1={position.x}
+        y1={position.y}
+        x2={position.x + 10}
+        y2={position.y}
+        stroke="black"
+        style={{
+          transform: `rotate(${outAngle}deg)`,
+          transformOrigin: `${position.x}px ${position.y}px`,
+          transition: "transform 0.5s linear 0s",
+        }}
+      />
     </g>
   )
 }
