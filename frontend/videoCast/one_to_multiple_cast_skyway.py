@@ -7,13 +7,14 @@ import json
 import ssl
 import os
 address = "0.0.0.0"
-# cert = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.cert.pem"
-# key = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.key.pem"
+cert = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.cert.pem"
+key = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.key.pem"
 
 
 port = 8081
 connection_num = 0
 connections = []
+max_connect_num = 5
 sender_token = os.environ["SENDER_TOKEN"]  # ["127.0.0.1"]
 print(sender_token)
 
@@ -27,12 +28,15 @@ print("a")
 # answerer == sender
 
 # idで判別して複数動画同時配信したい
+lock = asyncio.Lock()
+
 
 async def server(websocket, path):
-    global connection_num, connections, rooms
+    global connection_num, connections, rooms, lock
     remote_address = websocket.remote_address
     print(remote_address)
-    connections.append(websocket)
+    async with lock:
+        connections.append(websocket)
     while True:
         # 受信
         try:
@@ -50,50 +54,78 @@ async def server(websocket, path):
             room = {
                 "sender_socket": None,
                 "peer_id": None,
+                "skyway_room_id": None,
                 "connections": [websocket],
+                "connect_num": 0,
+                # ルームの累積接続数が1000行くと通信が弾かれるのでその前にルームを切り替え
             }
-            rooms[room_id] = room
+            async with lock:
+                rooms[room_id] = room
         else:
             room = rooms[room_id]
             if websocket not in room["connections"]:
-                room["connections"].append(websocket)
+                async with lock:
+                    room["connections"].append(websocket)
         # 現在の通信のwebsocketが入ったroom_idのroomが存在することを保証
 
         if msg_type == "connect_sender":
             if sender_token is None or sender_token == dictionary["sender_token"]:
-                if room["sender_socket"] is None:
+                async with lock:  # if room["sender_socket"] is None:
                     print("sender_connect")
                     room["sender_socket"] = websocket
+                    room["skyway_room_id"] = dictionary["skyway_room_id"]
+                    room["connect_num"] = 0
                     # senderは上書き
                     room["peer_id"] = dictionary["peer_id"]
                     for connection in room["connections"]:
                         if connection is websocket:
-                            break
+                            continue
                         print("send")
                         promise = connection.send(
                             json.dumps({
                                 "msg_type": "connect_receiver",
                                 "room_id": room_id,
+                                "skyway_room_id": room["skyway_room_id"],
                                 "peer_id": room["peer_id"]
                             }))
+                        room["connect_num"] += 1
                         promises.append(promise)
         elif msg_type == "connect_receiver":
             print("connect_receiver")
             if room["sender_socket"] is not None:
                 print("send")
-                promise = websocket.send(
-                    json.dumps({
-                        "msg_type": "connect_receiver",
-                        "room_id": room_id,
-                        "peer_id": room["peer_id"]
-                    }))
-                promises.append(promise)
+                if room["connect_num"] < max_connect_num:
+                    promise = websocket.send(
+                        json.dumps({
+                            "msg_type": "connect_receiver",
+                            "room_id": room_id,
+                            "skyway_room_id": room["skyway_room_id"],
+                            "peer_id": room["peer_id"]
+                        }))
+
+                    async with lock:
+                        room["connect_num"] += 1
+                    promises.append(promise)
+                else:
+                    # ルームの累積接続数が溢れそうだったら新しい部屋をsenderに作ってもらう
+                    promise = room["sender_socket"].send(
+                        json.dumps({
+                            "msg_type": "request_reconnect_sender",
+                            "room_id": room_id
+                        }))
+                    promises.append(promise)
+                    async with lock:
+                        room["connect_num"] = 0
         elif msg_type == "exit_room":
             if websocket in room["connections"]:
-                room["connections"].remove(websocket)
+                async with lock:
+                    room["connections"].remove(websocket)
             if room["sender_socket"] is websocket:
-                room["sender_socket"] = None
-                room["peer_id"] = None
+                async with lock:
+                    room["sender_socket"] = None
+                    room["peer_id"] = None
+                    room["skyway_room_id"] = None
+                    room["connect_num"] = 0
         print("{}: {}".format(path, dictionary))
         for p in promises:
             try:
@@ -105,20 +137,26 @@ async def server(websocket, path):
     for room_id, room in rooms.items():
         print(room)
         if websocket in room["connections"]:
-            room["connections"].remove(websocket)
+            async with lock:
+                room["connections"].remove(websocket)
         if room["sender_socket"] is websocket:
-            room["sender_socket"] = None
-            room["peer_id"] = None
-    rooms = {room_id: room for room_id,
-             room in rooms.items() if len(room["connections"]) != 0}
+            async with lock:
+                room["sender_socket"] = None
+                room["peer_id"] = None
+
+    async with lock:
+        rooms = {room_id: room for room_id,
+                 room in rooms.items() if len(room["connections"]) != 0}
     # ルームに人がいなくなったら削除
-    connections.remove(websocket)
+
+    async with lock:
+        connections.remove(websocket)
 
 
-#ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-#ssl_context.load_cert_chain(cert, keyfile=key)
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+ssl_context.load_cert_chain(cert, keyfile=key)
 
-start_server = websockets.serve(server, address, port)  # , ssl=ssl_context)
+start_server = websockets.serve(server, address, port, ssl=ssl_context)
 # サーバー立ち上げ
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
