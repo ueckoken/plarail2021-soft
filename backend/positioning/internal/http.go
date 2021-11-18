@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sync"
 	"time"
+	"ueckoken/plarail2021-soft-positioning/pkg/addressChecker"
 	"ueckoken/plarail2021-soft-positioning/pkg/gormHandler"
 	"ueckoken/plarail2021-soft-positioning/pkg/positionReceiver"
 	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
@@ -26,7 +27,11 @@ func (pos PositionReceiver) StartPositionReceiver() {
 	c := make(chan trainState.State)
 	p := positionReceiver.NewPositionReceiverHandler(c)
 	n := make(chan ClientNotifier)
-	h := ClientHandler{ClientNotification: n}
+	checker, err := addressChecker.NewAddressChecker()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	h := ClientHandler{ClientNotification: n, Checker: *checker}
 	go pos.RegisterClient(n)
 	go pos.HandleChange(c)
 	go pos.UnregisterClient()
