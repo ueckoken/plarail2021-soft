@@ -30,10 +30,6 @@ message Stations {
 
     motoyawata_s1 = 1;
     motoyawata_s2 = 2;
-    motoyawata_s3 = 3;
-    motoyawata_s4 = 4;
-    motoyawata_s5 = 5;
-    motoyawata_s6 = 6;
 
     iwamotocho_s1 = 11;
     iwamotocho_s2 = 12;
@@ -72,13 +68,13 @@ message Stations {
     kitano_b1 = 71;
     kitano_b2 = 72;
     kitano_b3 = 73;
-    kitano_b4 = 74;
-    kitano_s1 = 75;
-    kitano_s2 = 76;
-    kitano_s3 = 77;
-    kitano_s4 = 78;
-    kitano_s5 = 79;
-    kitano_s6 = 80;
+    kitano_s1 = 74;
+    kitano_s2 = 75;
+    kitano_s3 = 76;
+    kitano_s4 = 77;
+    kitano_s5 = 78;
+    kitano_s6 = 79;
+    kitano_s7 = 80;
 
     takao_s1 = 91;
     takao_s2 = 92;
