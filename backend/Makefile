@@ -33,7 +33,7 @@ statesync_positioning:
 	-I./ \
 	proto/statesync.proto
 
-speedControl: speedControl_builtin speedControlSpeed statesync_positioning
+speedControl: speedControl_builtin speedControlSpeed speedControlPositioning
 
 speedControl_builtin:
 	protoc \
