@@ -51,43 +51,42 @@ func NewRouteValidator() IValidator {
 	}
 	return v
 }
+
 func (v *Validator) Validate(u StationState, ss []StationState) error {
 	targetSta, err := v.getValidateTarget(u)
 	if err != nil {
 		return err
 	}
-
-	// バリデート対象外
+	// getValidateTarget は引数に取った駅がvalidateの対象外のときに空の構造体を返す
 	if reflect.DeepEqual(targetSta, &Station{}) {
 		return nil
 	}
-	var ok []RuleSuite
-	// 置き替え後に正常
+	beforeAfter := struct {
+		before bool
+		after  bool
+	}{}
+	// 置き替え前
+	allRuleRes, err := searchAllRules(targetSta.Station.Rules, ss)
+	if err != nil {
+		return err
+	}
+	beforeAfter.before = allRuleOk(allRuleRes)
+
+	// 置き替え後
 	id, err := searchIndex(u.StationID, ss)
 	if err != nil {
 		return err
 	}
-	ss[id] = StationState{servo.StationState{
-		StationID: u.StationID,
-		State:     u.State,
-	}}
-	for _, rule := range targetSta.Station.Rules {
-		isOnOk := UNDEFINED
-		isOffOk := UNDEFINED
-		isOnOk, err := matchRule(rule.On, ss, int32(spec.RequestSync_ON))
-		if err != nil {
-			return err
-		}
-		isOffOk, err = matchRule(rule.Off, ss, int32(spec.RequestSync_OFF))
-		if err != nil {
-			return err
-		}
-		ok = append(ok, RuleSuite{On: isOnOk, Off: isOffOk})
-	}
+	ss[id] = StationState{servo.StationState{StationID: u.StationID, State: u.State}}
 
-	if !allRuleOk(ok) {
+	allRuleRes, err = searchAllRules(targetSta.Station.Rules, ss)
+	if err != nil {
+		return err
+	}
+	beforeAfter.after = allRuleOk(allRuleRes)
+	if beforeAfter.before == true && beforeAfter.after == false {
 		n, _ := stationNameId.Id2Name(u.StationID)
-		return fmt.Errorf("validation `%s` error\n", n)
+		return fmt.Errorf("validation %s error\n", n)
 	}
 	return nil
 }
@@ -156,4 +155,21 @@ func matchRule(rules []string, ss []StationState, state int32) (status int, err 
 		}
 	}
 	return isSuiteRule, nil
+}
+
+func searchAllRules(rules []Rule, ss []StationState) (ok []RuleSuite, err error) {
+	for _, rule := range rules {
+		isOnOk := UNDEFINED
+		isOffOk := UNDEFINED
+		isOnOk, err := matchRule(rule.On, ss, int32(spec.RequestSync_ON))
+		if err != nil {
+			return nil, err
+		}
+		isOffOk, err = matchRule(rule.Off, ss, int32(spec.RequestSync_OFF))
+		if err != nil {
+			return nil, err
+		}
+		ok = append(ok, RuleSuite{On: isOnOk, Off: isOffOk})
+	}
+	return ok, nil
 }
