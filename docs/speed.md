@@ -6,9 +6,16 @@
 
 例えば以下のような形式でデータを受けとれます。golangではhttpサーバを立ててQuery()で取得できます。(ぐぐって)
 
-エンドポイントは決まってないので適当に決めてください。たとえば
+エンドポイントは決まってないので適当に決めてください。たとえば `https://speedcontrol.gotti.dev`
 
-https://speedcontrol.gotti.dev?trainId=takao&speed=8
+POSTで以下の形式をwebSocketによって配信します。
+
+```json
+{
+  "id": "takao",
+  "speed": 8
+}
+```
 
 このデータを事前定義の構造体にまとめてgRPCでRaspberry Piに送信します。
 
