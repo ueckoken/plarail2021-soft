@@ -46,7 +46,6 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var cDone = make(chan struct{})
 	var cChannel = ClientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
-	fmt.Println("added")
 	c.SetPongHandler(func(string) error {
 		c.SetReadDeadline(time.Now().Add(20 * time.Second))
 		return nil
@@ -59,8 +58,6 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	go handleClientCommand(ctx, c, &m)
 	go handleClientPing(ctx, c)
 	for cChan := range cChannel.ClientSync {
-		fmt.Println(cChan)
-		fmt.Println("sent")
 		dat := clientSendData{StationName: pb.Stations_StationId_name[cChan.StationID], State: pb.RequestSync_State_name[cChan.State]}
 		err := c.WriteJSON(dat)
 		if err != nil {
@@ -79,7 +76,6 @@ func handleClientPing(ctx context.Context, c *websocket.Conn) {
 		select {
 		case <-ticker.C:
 			if err := c.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(1*time.Second)); err != nil {
-				fmt.Println("ping:", err)
 			}
 		case <-ctx.Done():
 			ticker.Stop()
