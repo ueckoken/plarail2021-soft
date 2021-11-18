@@ -11,8 +11,8 @@ import (
 const namespace = "plarailexternal"
 
 func main() {
-	clientHandler2syncController := make(chan syncController.StationState)
-	syncController2clientHandler := make(chan syncController.StationState)
+	clientHandler2syncController := make(chan syncController.StationState, 16)
+	syncController2clientHandler := make(chan syncController.StationState, 64)
 	initEspStatus2syncController := make(chan syncController.StationState)
 
 	envVal := envStore.GetEnv()
