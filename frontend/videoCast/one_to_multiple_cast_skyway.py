@@ -7,15 +7,18 @@ import json
 import ssl
 import os
 address = "0.0.0.0"
-cert = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.cert.pem"
-key = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.key.pem"
+# cert = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.cert.pem"
+# key = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.key.pem"
 
 
 port = 8081
 connection_num = 0
 connections = []
-max_connect_num = 5
-sender_token = os.environ["SENDER_TOKEN"]  # ["127.0.0.1"]
+max_connect_num = 980
+if "SENDER_TOKEN" in os.environ:
+    sender_token = os.environ["SENDER_TOKEN"]  # ["127.0.0.1"]
+else:
+    sender_token = None
 print(sender_token)
 
 rooms = {}
@@ -69,7 +72,8 @@ async def server(websocket, path):
         # 現在の通信のwebsocketが入ったroom_idのroomが存在することを保証
 
         if msg_type == "connect_sender":
-            if sender_token is None or sender_token == dictionary["sender_token"]:
+            if sender_token is None or\
+                    sender_token == dictionary["sender_token"]:
                 async with lock:  # if room["sender_socket"] is None:
                     print("sender_connect")
                     room["sender_socket"] = websocket
@@ -153,10 +157,10 @@ async def server(websocket, path):
         connections.remove(websocket)
 
 
-ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-ssl_context.load_cert_chain(cert, keyfile=key)
+# ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+# ssl_context.load_cert_chain(cert, keyfile=key)
 
-start_server = websockets.serve(server, address, port, ssl=ssl_context)
+start_server = websockets.serve(server, address, port)  # , ssl=ssl_context)
 # サーバー立ち上げ
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
