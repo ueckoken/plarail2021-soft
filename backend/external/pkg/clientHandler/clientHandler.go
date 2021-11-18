@@ -42,7 +42,7 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close()
 	ctx, cancel := context.WithCancel(context.Background())
-	var cSync = make(chan syncController.StationState, 16)
+	var cSync = make(chan syncController.StationState, 64)
 	var cDone = make(chan struct{})
 	var cChannel = ClientChannel{cSync, cDone}
 	m.ClientChannelSend <- cChannel
