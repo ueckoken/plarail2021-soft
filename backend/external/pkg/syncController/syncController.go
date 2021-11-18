@@ -2,6 +2,7 @@ package syncController
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -125,6 +126,7 @@ func (s *SyncController) periodicallySync(kvs *stationKVS) {
 	ch := time.Tick(2 * time.Second)
 	for range ch {
 		kvs.mtx.Lock()
+		fmt.Println("kvs data:", kvs.retrieve())
 		for _, st := range kvs.retrieve() {
 			s.SyncController2clientHandler <- st
 		}
