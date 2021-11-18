@@ -2,6 +2,7 @@ package internal
 
 import (
 	"net/http"
+	"ueckoken/plarail2021-soft-positioning/pkg/addressChecker"
 	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
 
 	"context"
@@ -14,6 +15,7 @@ import (
 type ClientHandler struct {
 	upgrader           websocket.Upgrader
 	ClientNotification chan ClientNotifier
+	Checker            addressChecker.AddressChecker
 }
 
 type ClientNotifier struct {
