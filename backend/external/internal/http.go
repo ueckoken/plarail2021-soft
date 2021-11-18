@@ -67,6 +67,7 @@ func (h *HttpServer) handleChanges() {
 			select {
 			case c.ClientSync <- d:
 			default:
+				log.Println("buffer is full when send...")
 				continue
 			}
 		}
