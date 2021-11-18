@@ -57,33 +57,46 @@ const RailroadMap: FC<Prop> = ({
       />
 
       <Rail
-        startPosition={{ x: 120 - 50, y: 120 - 20 }}
-        endPosition={{ x: 320 + 10, y: 120 - 20 }}
+        positions={[
+          { x: 120 - 50, y: 120 - 20 },
+          { x: 220, y: 80 },
+          { x: 320 + 10, y: 120 - 20 },
+        ]}
         trains={[]}
       />
       <Rail
-        startPosition={{ x: 120 - 50, y: 120 + 20 }}
-        endPosition={{ x: 320 - 30, y: 120 + 20 }}
+        positions={[
+          { x: 120 - 50, y: 120 + 20 },
+          { x: 320 - 30, y: 120 + 20 },
+        ]}
         trains={[train1]}
       />
       <Rail
-        startPosition={{ x: 320 + 30, y: 120 - 20 }}
-        endPosition={{ x: 520 + 50, y: 120 - 20 }}
+        positions={[
+          { x: 320 + 30, y: 120 - 20 },
+          { x: 520 + 50, y: 120 - 20 },
+        ]}
         trains={[]}
       />
       <Rail
-        startPosition={{ x: 320 - 10, y: 120 + 20 }}
-        endPosition={{ x: 520 + 50, y: 120 + 20 }}
+        positions={[
+          { x: 320 - 10, y: 120 + 20 },
+          { x: 520 + 50, y: 120 + 20 },
+        ]}
         trains={[]}
       />
       <Rail
-        startPosition={{ x: 320 - 20, y: 120 + 30 }}
-        endPosition={{ x: 320 - 20, y: 360 - 10 }}
+        positions={[
+          { x: 320 - 20, y: 120 + 30 },
+          { x: 320 - 20, y: 360 - 10 },
+        ]}
         trains={[]}
       />
       <Rail
-        startPosition={{ x: 320 + 20, y: 120 - 10 }}
-        endPosition={{ x: 320 + 20, y: 360 - 10 }}
+        positions={[
+          { x: 320 + 20, y: 120 - 10 },
+          { x: 320 + 20, y: 360 - 10 },
+        ]}
         trains={[]}
       />
 
