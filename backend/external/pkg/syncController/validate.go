@@ -29,6 +29,11 @@ type Rule struct {
 	Off []string `yaml:"off,omitempty"`
 }
 
+type RuleSuite struct {
+	On  int
+	Off int
+}
+
 const (
 	UNDEFINED = 0
 	ALLOW     = 1
@@ -56,8 +61,7 @@ func (v *Validator) Validate(u StationState, ss []StationState) error {
 	if reflect.DeepEqual(targetSta, &Station{}) {
 		return nil
 	}
-
-	var ok [][]int
+	var ok []RuleSuite
 	// 置き替え後に正常
 	id, err := searchIndex(u.StationID, ss)
 	if err != nil {
@@ -70,69 +74,22 @@ func (v *Validator) Validate(u StationState, ss []StationState) error {
 	for _, rule := range targetSta.Station.Rules {
 		isOnOk := UNDEFINED
 		isOffOk := UNDEFINED
-		if rule.On == nil {
-			isOnOk = ALLOW
+		isOnOk, err := matchRule(rule.On, ss, int32(spec.RequestSync_ON))
+		if err != nil {
+			return err
 		}
-		for _, onRule := range rule.On {
-			onId, err := stationNameId.Name2Id(onRule)
-			if err != nil {
-				return err
-			}
-			for _, kvsSta := range ss {
-				if isOnOk == DENY {
-					break
-				}
-				if kvsSta.StationID != onId {
-					continue
-				}
-				// ルール合致
-				if kvsSta.State == int32(spec.RequestSync_ON) {
-					isOnOk = ALLOW
-				} else {
-					isOnOk = UNDEFINED
-				}
-			}
+		isOffOk, err = matchRule(rule.Off, ss, int32(spec.RequestSync_OFF))
+		if err != nil {
+			return err
 		}
-		if rule.Off == nil {
-			isOffOk = ALLOW
-		}
-		for _, offRule := range rule.Off {
-			offId, err := stationNameId.Name2Id(offRule)
-			if err != nil {
-				return err
-			}
-			for _, kvsSta := range ss {
-				if isOffOk == DENY {
-					break
-				}
-				if kvsSta.StationID != offId {
-					continue
-				}
-				if kvsSta.State == int32(spec.RequestSync_OFF) {
-					isOffOk = ALLOW
-				} else if kvsSta.State != int32(spec.RequestSync_OFF) {
-					isOffOk = DENY
-				}
-			}
-		}
-		ok = append(ok, []int{isOnOk, isOffOk})
+		ok = append(ok, RuleSuite{On: isOnOk, Off: isOffOk})
 	}
-	if !isOk(ok) {
+
+	if !allRuleOk(ok) {
 		n, _ := stationNameId.Id2Name(u.StationID)
 		return fmt.Errorf("validation `%s` error\n", n)
 	}
 	return nil
-}
-
-func isOk(b [][]int) bool {
-	for _, eachRule := range b {
-		on := eachRule[0]
-		off := eachRule[1]
-		if on == ALLOW && off == ALLOW {
-			return true
-		}
-	}
-	return false
 }
 func (v *Validator) getValidateTarget(u StationState) (*Station, error) {
 	targetSta := new(Station)
@@ -151,6 +108,17 @@ func (v *Validator) getValidateTarget(u StationState) (*Station, error) {
 	return targetSta, nil
 }
 
+func (r *RuleSuite) isOk() bool {
+	return r.On == ALLOW && r.Off == ALLOW
+}
+func allRuleOk(rules []RuleSuite) bool {
+	for _, r := range rules {
+		if r.isOk() {
+			return true
+		}
+	}
+	return false
+}
 func searchIndex(id int32, ss []StationState) (int, error) {
 	for i, s := range ss {
 		if s.StationID == id {
@@ -158,4 +126,34 @@ func searchIndex(id int32, ss []StationState) (int, error) {
 		}
 	}
 	return -1, fmt.Errorf("index error\n")
+}
+
+// matchRule
+func matchRule(rules []string, ss []StationState, state int32) (status int, err error) {
+	isSuiteRule := UNDEFINED
+	if rules == nil {
+		isSuiteRule = ALLOW
+	}
+	for _, rule := range rules {
+		id, err := stationNameId.Name2Id(rule)
+		if err != nil {
+			return -1, err
+		}
+		for _, kvsSta := range ss {
+			if isSuiteRule == DENY {
+				break
+			}
+			if kvsSta.StationID != id {
+				continue
+			}
+			// ルール合致
+			if kvsSta.State == state {
+				isSuiteRule = ALLOW
+			} else {
+				isSuiteRule = DENY
+			}
+			break
+		}
+	}
+	return isSuiteRule, nil
 }
