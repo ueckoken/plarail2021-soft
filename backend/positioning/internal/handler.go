@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"time"
+	pb "ueckoken/plarail2021-soft-positioning/spec"
 )
 
 type ClientHandler struct {
@@ -21,6 +22,13 @@ type ClientHandler struct {
 type ClientNotifier struct {
 	Notifier   chan trainState.PositionAndSpeed
 	Unregister chan struct{}
+}
+
+type ClientSendData struct {
+	TrainName string  `json:"train_name"`
+	HallName  string  `json:"hall_name"`
+	Duration  float64 `json:"duration"`
+	FetchedAt float64 `json:"fetched_at"`
 }
 
 func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +55,8 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	})
 	go handleClientPing(ctx, c)
 	for notification := range notifier.Notifier {
-		err := c.WriteJSON(notification)
+		data := ClientSendData{TrainName: pb.SendSpeed_Train_name[int32(notification.TrainId)], HallName: notification.HallSensorName, Duration: notification.Speed, FetchedAt: float64(notification.FetchedTimeStump.UnixMilli()) / 1000}
+		err := c.WriteJSON(data)
 		if err != nil {
 			notifier.Unregister <- struct{}{}
 			cancel()
