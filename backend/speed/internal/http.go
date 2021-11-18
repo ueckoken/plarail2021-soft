@@ -15,8 +15,8 @@ type SpeedServer struct {
 }
 
 func (s SpeedServer) StartSpeed() {
-	reg := make(chan Client)
-	change := make(chan storeSpeed.TrainConf)
+	reg := make(chan Client, 64)
+	change := make(chan storeSpeed.TrainConf, 64)
 	var upgrader = websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
