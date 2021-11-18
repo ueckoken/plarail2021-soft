@@ -11,7 +11,13 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	pb "ueckoken/plarail2021-soft-speed/spec"
 )
+
+type speedStruct struct {
+	TrainName string `json:"train_name"`
+	Speed     int    `json:"speed"`
+}
 
 func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c, err := m.upgrader.Upgrade(w, r, nil)
@@ -38,7 +44,8 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	go handleClientPing(ctx, c)
 	go handleClientCommand(ctx, c, &m)
 	for notification := range notifier.notifier.Notifier {
-		err := c.WriteJSON(notification)
+		sendData := speedStruct{TrainName: notification.GetTrain().Name.String(), Speed: int(notification.GetSpeed())}
+		err := c.WriteJSON(sendData)
 		if err != nil {
 			notifier.notifier.Unregister <- struct{}{}
 			cancel()
@@ -84,10 +91,12 @@ func unpackClientSendData(c *websocket.Conn) (*storeSpeed.TrainConf, error) {
 	if err != nil {
 		return nil, fmt.Errorf("websocket read failed: %e", err)
 	}
-	var ud storeSpeed.TrainConf
+	var ud speedStruct
 	err = json.Unmarshal(msg, &ud)
 	if err != nil {
 		return nil, fmt.Errorf("bad json format: %e", err)
 	}
-	return &ud, nil
+	speed := storeSpeed.NewTrainConf(storeSpeed.NewTrain(pb.SendSpeed_Train(pb.SendSpeed_Train_value[ud.TrainName])))
+	speed.SetSpeed(int32(ud.Speed))
+	return &speed, nil
 }
