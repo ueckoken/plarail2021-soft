@@ -2,34 +2,17 @@ import React, { FC } from "react"
 import { Point, TrainData } from "../../types/svgPartsTypes"
 
 interface Props {
-  startPosition: Point
-  endPosition: Point
+  positions: [Point, Point, ...Point[]];
   trains: TrainData[]
 }
 
-const RailroadMap: FC<Props> = ({ startPosition, endPosition, trains }) => {
+const Rail: FC<Props> = ({ positions, trains }) => {
+  const pointsText = positions.map((point: Point) => `${point.x}, ${point.y}`).join("\n");
   return (
     <g>
-      <line
-        x1={startPosition.x}
-        y1={startPosition.y}
-        x2={endPosition.x}
-        y2={endPosition.y}
-        stroke="black"
-      />
-      {trains.map((train) => {
-        const trainX =
-          (endPosition.x - startPosition.x) * train.positionScale +
-          startPosition.x
-        const trainY =
-          (endPosition.y - startPosition.y) * train.positionScale +
-          startPosition.y
-        return (
-          <circle key={train.id} cx={trainX} cy={trainY} r={7.5} fill="blue" />
-        )
-      })}
+      <polyline points={pointsText} stroke={trains.length!==0 ? "blue" : "black"} fill="none" />
     </g>
   )
 }
 
-export default RailroadMap
+export default Rail
