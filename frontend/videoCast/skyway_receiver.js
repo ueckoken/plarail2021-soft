@@ -53,10 +53,17 @@ webSocket.onmessage = (event) => {
     debug: SKYWAY_DEBUG_LEVEL,
   });
   room["peer"].on("open", () => {
-    room["media_connection"] = room["peer"].call(peerId);
-    room["media_connection"].on("stream", (stream) => {
+    console.log("joinroom");
+    //room["media_connection"] = room["peer"].call(peerId);
+    room["skyway_room"] = room["peer"].joinRoom(roomId, {
+      mode: "sfu",
+    });
+    room["skyway_room"].on("stream", (stream) => {
+      const streamPeerId = stream.peerId;
       console.log("on stream");
-      playVideo(room["video_element"], stream);
+      if (streamPeerId == peerId) {
+        playVideo(room["video_element"], stream);
+      }
     });
   });
 };

@@ -14,16 +14,16 @@ func (s SQLHandler) Store(state trainState.State) {
 }
 
 func (s SQLHandler) FetchFromTrainId(trainId int) (state trainState.States) {
-	s.Db.Where("train_id = ?", trainId).Order("fetched_time_stump desc").Find(&state.States)
+	s.Db.Where("train_id = ?", trainId).Order("fetched_time_stump asc").Find(&state.States)
 	return state
 }
 
 func (s SQLHandler) FetchFromHallSensorName(hallId string) (state trainState.States) {
-	s.Db.Where("hall_sensor_name = ?", hallId).Order("fetched_time_stump desc").Find(&state.States)
+	s.Db.Where("hall_sensor_name = ?", hallId).Order("fetched_time_stump asc").Find(&state.States)
 	return state
 }
 
 func (s SQLHandler) Fetch(trainId int, hallId string) (state trainState.States) {
-	s.Db.Where("hall_sensor_name = ?", hallId).Where("train_id = ?", trainId).Order("fetched_time_stump desc").Find(&state.States)
+	s.Db.Where("hall_sensor_name = ?", hallId).Where("train_id = ?", trainId).Order("fetched_time_stump asc").Find(&state.States)
 	return state
 }

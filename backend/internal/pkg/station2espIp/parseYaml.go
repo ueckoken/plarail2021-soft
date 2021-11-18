@@ -11,6 +11,7 @@ import (
 
 type Stations interface {
 	Detail(name string) (*StationDetail, error)
+	Enumerate() []Station
 }
 type stations struct {
 	Stations []Station `yaml:"stations"`
@@ -64,4 +65,8 @@ func (d *StationDetail) GetAngle(state pb.RequestSync_State) (angle int, err err
 		return 0, status.Errorf(codes.InvalidArgument, "state is not ON or OFF\n")
 	}
 	return angle, nil
+}
+
+func (s *stations) Enumerate() []Station{
+	return s.Stations
 }

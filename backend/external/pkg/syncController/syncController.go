@@ -2,13 +2,13 @@ package syncController
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"sync"
 	"time"
 	"ueckoken/plarail2021-soft-external/pkg/envStore"
 	"ueckoken/plarail2021-soft-external/pkg/servo"
 	"ueckoken/plarail2021-soft-external/pkg/stationNameId"
+	"ueckoken/plarail2021-soft-external/spec"
 )
 
 type StationState struct {
@@ -109,8 +109,8 @@ func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
 		kvs.update(c)
 		//todo; handle update error
 		c2i := servo.NewCommand2Internal(c.StationState, e)
-		err := c2i.Send()
-		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@:", err)
+		c2i.Send()
+    //todo error handling
 		s.SyncController2clientHandler <- c
 	}
 }
@@ -118,9 +118,7 @@ func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
 func (s *SyncController) periodicallySync(kvs *stationKVS) {
 	ch := time.Tick(2 * time.Second)
 	for range ch {
-		fmt.Println("locking")
 		kvs.mtx.Lock()
-		fmt.Println("locked")
 		for _, st := range kvs.retrieve() {
 			s.SyncController2clientHandler <- st
 		}
@@ -134,13 +132,17 @@ func (s SyncController) Init(r *InitRule) {
 		if err != nil {
 			log.Fatalln(err)
 		}
+		state, ok := spec.RequestSync_State_value[sta.State]
+		if !ok {
+			log.Fatalln(sta.State, "is incorrect")
+		}
 		s.InitServoRoute <- StationState{
 			struct {
 				StationID int32
 				State     int32
 			}{
 				StationID: id,
-				State:     int32(sta.State),
+				State:     state,
 			},
 		}
 		time.Sleep(500 * time.Millisecond)

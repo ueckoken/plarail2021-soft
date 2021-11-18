@@ -3,12 +3,14 @@ package serveGrpc
 import (
 	"fmt"
 	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 	"log"
 	"net"
 	"net/http"
 	"ueckoken/plarail2021-soft-internal/internal"
+	"ueckoken/plarail2021-soft-internal/pkg/esp32healthcheck"
 	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2021-soft-internal/spec"
 )
@@ -16,6 +18,7 @@ import (
 type GrpcServer struct {
 	Stations    station2espIp.Stations
 	Environment *internal.Env
+	PingHandler esp32healthcheck.PingHandler
 }
 
 func (g *GrpcServer) StartServer() {
@@ -23,16 +26,20 @@ func (g *GrpcServer) StartServer() {
 		grpc.UnaryInterceptor(grpcPrometheus.UnaryServerInterceptor),
 	)
 	c := ControlServer{
-		env:      g.Environment,
 		Stations: g.Stations,
+		client:   &http.Client{Timeout: g.Environment.NodeConnection.Timeout},
 	}
 	pb.RegisterControlServer(s, &c)
 
 	// After all your registrations, make sure all the Prometheus metrics are initialized.
 	grpcPrometheus.Register(s)
-	ServeMetrics(fmt.Sprintf(":%d", g.Environment.ExternalSideServer.MetricsPort))
+	prometheus.MustRegister(g.PingHandler.Esp32HealthCheck)
+	go g.PingHandler.Start()
+	go ServeMetrics(fmt.Sprintf(":%d", g.Environment.ExternalSideServer.MetricsPort))
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", g.Environment.ExternalSideServer.Port))
+	port := fmt.Sprintf(":%d", g.Environment.ExternalSideServer.Port)
+	log.Println("gRPC serve at", port)
+	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -47,8 +54,6 @@ func ServeMetrics(promAddr string) {
 	// Enable histogram
 	grpcPrometheus.EnableHandlingTimeHistogram()
 	mux.Handle("/metrics", promhttp.Handler())
-	go func() {
-		fmt.Println("Prometheus metrics bind address", promAddr)
-		log.Fatal(http.ListenAndServe(promAddr, mux))
-	}()
+	fmt.Println("Prometheus metrics bind address", promAddr)
+	log.Fatal(http.ListenAndServe(promAddr, mux))
 }

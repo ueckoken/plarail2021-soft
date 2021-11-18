@@ -6,7 +6,7 @@ service Control {
 }
 
 message RequestSync {
- Stations station = 1;
+  Stations station = 1;
   enum State {
     UNKNOWN = 0;
     ON = 1;
@@ -28,25 +28,60 @@ message Stations {
   enum StationId {
     unknown = 0;
 
-    chofu_b1 = 1;
-    chofu_b2 = 2;
-    chofu_b3 = 3;
-    chofu_s1 = 4;
-    chofu_s2 = 5;
-    chofu_s3 = 6;
-    chofu_s4 = 7;
+    motoyawata_s1 = 1;
+    motoyawata_s2 = 2;
+    motoyawata_s3 = 3;
+    motoyawata_s4 = 4;
+    motoyawata_s5 = 5;
+    motoyawata_s6 = 6;
 
-    meidaimae_s1 = 8;
-    meidaimae_s2 = 9;
+    iwamotocho_s1 = 11;
+    iwamotocho_s2 = 12;
+    iwamotocho_s4 = 13;
+    iwamotocho_b1 = 14;
+    iwamotocho_b2 = 15;
+    iwamotocho_b3 = 16;
+    iwamotocho_b4 = 17;
 
-    sasazuka_b1 = 10;
-    sasazuka_s1 = 11;
-    sasazuka_s2 = 12;
-    sasazuka_s4 = 13;
+    kudanshita_s5 = 21;
+    kudanshita_s6 = 22;
 
-    kitano_b1 = 14;
-    kitano_s2 = 15;
-    kitano_s3 = 16;
+    sasazuka_b1 = 31;
+    sasazuka_b2 = 32;
+    sasazuka_s1 = 33;
+    sasazuka_s2 = 34;
+    sasazuka_s3 = 35;
+    sasazuka_s4 = 36;
+    sasazuka_s5 = 37;
+
+    meidaimae_s1 = 41;
+    meidaimae_s2 = 42;
+
+    chofu_s1 = 51;
+    chofu_s2 = 52;
+    chofu_s3 = 53;
+    chofu_s4 = 54;
+    chofu_s5 = 55;
+    chofu_s6 = 56;
+    chofu_b1 = 57;
+    chofu_b2 = 58;
+    chofu_b3 = 59;
+    chofu_b4 = 60;
+    chofu_b5 = 61;
+
+    kitano_b1 = 71;
+    kitano_b2 = 72;
+    kitano_b3 = 73;
+    kitano_b4 = 74;
+    kitano_s1 = 75;
+    kitano_s2 = 76;
+    kitano_s3 = 77;
+    kitano_s4 = 78;
+    kitano_s5 = 79;
+    kitano_s6 = 80;
+
+    takao_s1 = 91;
+    takao_s2 = 92;
   }
   StationId stationId = 1;
 }

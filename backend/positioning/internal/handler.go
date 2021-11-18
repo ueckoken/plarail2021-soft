@@ -17,7 +17,7 @@ type ClientHandler struct {
 }
 
 type ClientNotifier struct {
-	Notifier   chan trainState.State
+	Notifier   chan trainState.PositionAndSpeed
 	Unregister chan struct{}
 }
 
@@ -30,7 +30,7 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 
 	ctx, cancel := context.WithCancel(context.Background())
-	n := make(chan trainState.State)
+	n := make(chan trainState.PositionAndSpeed)
 	unregister := make(chan struct{})
 	notifier := ClientNotifier{n, unregister}
 	m.ClientNotification <- notifier

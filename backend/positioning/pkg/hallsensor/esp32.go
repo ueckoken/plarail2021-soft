@@ -36,5 +36,5 @@ func (esp *Esp32Pins) Search(addr string, pin int) (name string, err error) {
 			}
 		}
 	}
-	return "", fmt.Errorf("not found such addr: %s, pin:%d",addr, pin)
+	return "", fmt.Errorf("not found such addr: %s, pin:%d", addr, pin)
 }

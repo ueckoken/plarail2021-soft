@@ -96,7 +96,10 @@ async def server(websocket, path):
                 room["peer_id"] = None
         print("{}: {}".format(path, dictionary))
         for p in promises:
-            a = await p
+            try:
+                a = await p
+            except:
+                pass
 
     # 接続が切れたらその接続を削除
     for room_id, room in rooms.items():

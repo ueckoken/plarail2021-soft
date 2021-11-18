@@ -16,7 +16,7 @@ import (
 )
 
 type ClientHandler struct {
-	upgrader          websocket.Upgrader
+	Upgrader          websocket.Upgrader
 	ClientCommand     chan syncController.StationState
 	ClientChannelSend chan ClientChannel
 }
@@ -31,8 +31,11 @@ type clientSendData struct {
 }
 
 func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("responsing")
-	c, err := m.upgrader.Upgrade(w, r, nil)
+	w.Header().Set("Access-Control-Allow-Origin", r.RemoteAddr)
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	c, err := m.Upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
@@ -58,7 +61,8 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for cChan := range cChannel.ClientSync {
 		fmt.Println(cChan)
 		fmt.Println("sent")
-		err := c.WriteJSON(cChan)
+		dat := clientSendData{StationName: pb.Stations_StationId_name[cChan.StationID], State: pb.RequestSync_State_name[cChan.State]}
+		err := c.WriteJSON(dat)
 		if err != nil {
 			fmt.Println("err", err)
 			cDone <- struct{}{}

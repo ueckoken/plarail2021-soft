@@ -40,7 +40,7 @@ jobs:
 
           cd $GITHUB_WORKSPACE/backend/
 
-          make all
+          make pb
       - name: Count changes
         id: changes
         run: |

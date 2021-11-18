@@ -1,0 +1,22 @@
+version: "3"
+services:
+  external:
+    build:
+      context: ./external
+      dockerfile: ./Dockerfile
+    links:
+      - internal
+    depends_on:
+      - internal
+    ports:
+      - "8080:8080"
+      - "9100:9100"
+    environment:
+      - "CLIENTSIDESERVER_PORT=8080"
+      - "INTERNALSERVER_ADDR=internal:54321"
+  internal:
+    build:
+      context: ./internal
+      dockerfile: ./Dockerfile
+    ports:
+      - "6060:6060"

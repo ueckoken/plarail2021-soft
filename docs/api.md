@@ -34,3 +34,26 @@ stateと共に送信される場合があります。このフィールドは度
 
 操作すべきピン番号情報です。情報はJSONの数値型で送信されます。もしそのピンを操作できないときはHTTP Response Status
 Code [404 Not Found](https://developer.mozilla.org/ja/docs/Web/HTTP/Status/404) を返答してください。
+
+# client <-> control external
+
+クライアントからexternal、externalからクライアントへは次のような形式のjsonをweb socketでやりとりします。
+
+クライアントは操作をしたときにexternalにデータを送信します。
+
+externalは何らかの変化があったときや定期的に情報を提供するためにクライアントに向けてデータを送信します。
+
+```json
+{
+  "station_name": "chofu_b1",
+  "state": "ON"
+}
+
+```
+
+station_nameは以下のgRPCのprotoファイルで定義されているものを使います。
+
+https://github.com/ueckoken/plarail2021-soft/blob/main/backend/proto/statesync.proto
+
+ONはストップレールの場合はレールを上げる(停止させる)状態です。
+分岐レールの場合はOFFがまっすぐの方向、ONがまっすぐでない方向です。

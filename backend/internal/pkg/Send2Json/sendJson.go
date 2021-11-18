@@ -4,12 +4,23 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
-	"time"
 )
 
-func SendJson(url string, json []byte, timeout time.Duration) error {
-	client := &http.Client{Timeout: timeout}
-	res, err := client.Post(url, "application/json", bytes.NewBuffer(json))
+type sendJson struct {
+	client *http.Client
+	url    string
+	json   []byte
+}
+
+func NewSendJson(client *http.Client, url string, json []byte) *sendJson {
+	return &sendJson{
+		client: client,
+		url:    url,
+		json:   json,
+	}
+}
+func (sj *sendJson) Send() error {
+	res, err := sj.client.Post(sj.url, "application/json", bytes.NewBuffer(sj.json))
 	if err != nil {
 		return err
 	}

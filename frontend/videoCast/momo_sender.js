@@ -29,6 +29,7 @@ window.onChangeVideoCodec = () => {
     videoCodec = null;
   }
 };
+let momoStream = null;
 window.connectMomo = async () => {
   options.video.codec = videoCodec;
   console.log(options.video.codec);
@@ -36,10 +37,12 @@ window.connectMomo = async () => {
   await conn.connect(null);
   conn.on("open", ({ authzMetadata }) => console.log(authzMetadata));
   conn.on("disconnect", (e) => {
+    momoStream = null;
     stopVideo(remoteVideo);
   });
   conn.on("addstream", (e) => {
     console.log("addstream");
+    momoStream = e.stream;
     playVideo(remoteVideo, e.stream);
   });
 };
@@ -56,7 +59,7 @@ const webSocket = new WebSocket(SW_WSURL);
 
 let skywayPeer = null;
 let roomId = null;
-
+let skywayRoom = null;
 window.connectReceiver = () => {
   skywayPeer = new SkywayPeer({
     key: SKYWAY_APIKEY,
@@ -64,34 +67,35 @@ window.connectReceiver = () => {
   });
   roomId = roomIdInput.value;
   skywayPeer.on("open", () => {
-    webSocket.send(
-      JSON.stringify({
-        msg_type: "connect_sender",
-        peer_id: skywayPeer.id,
-        room_id: roomIdInput.value,
-        sender_token: SENDER_TOKEN,
-      })
-    );
-  });
-
-  skywayPeer.on("call", (mediaConnection) => {
     const selector = document.getElementById("select_source");
     const selectedIdx = selector.selectedIndex;
     const selected = selector.options[selectedIdx].value;
-    console.log(selected);
+    let stream = null;
     if (selected == "momo") {
-      stream = momoConnecter.getStream();
+      stream = momoStream;
     } else {
       stream = cameraStream;
     }
-    console.log(stream);
-    console.log("on call");
-    mediaConnection.answer(stream);
+    skywayRoom = skywayPeer.joinRoom(roomId, {
+      mode: "sfu",
+      stream: stream,
+    });
+    skywayRoom.on("open", () => {
+      webSocket.send(
+        JSON.stringify({
+          msg_type: "connect_sender",
+          peer_id: skywayPeer.id,
+          room_id: roomId,
+          sender_token: SENDER_TOKEN,
+        })
+      );
+    });
   });
 };
 window.disconnectReceiver = () => {
   skywayPeer.destroy();
   skywayPeer = null;
+  skywayRoom = null;
   webSocket.send(
     JSON.stringify({
       msg_type: "exit_room",
