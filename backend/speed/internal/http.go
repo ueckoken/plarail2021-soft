@@ -22,7 +22,8 @@ func (s SpeedServer) StartSpeed() {
 	go s.HandleChange(change)
 	go s.UnregisterClient()
 
-	http.Handle("/speed", h)
+
+	http.Handle("/speed", s.ClientHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
