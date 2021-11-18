@@ -62,6 +62,9 @@ func (pos *PositionReceiver) HandleChange(cn chan trainState.State) {
 		select {
 		case c := <-cn:
 			pos.db.Store(c)
+			if !pos.status.HallSensorSpec.CanPredict(c.HallSensorName) {
+				continue
+			}
 			//this should be sorted from old to new
 			data := pos.db.FetchFromTrainId(c.TrainId)
 			var duration []time.Duration

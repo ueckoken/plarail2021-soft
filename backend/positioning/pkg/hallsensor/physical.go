@@ -33,6 +33,14 @@ func (p *PhysicalSensors) Nexts(name string) (ret []PhysicalSensor, err error) {
 	return ret, nil
 }
 
+func (p *PhysicalSensors) CanPredict(name string) bool {
+	s, ok := p.sensors[name]
+	if !ok {
+		return false
+	}
+	return s.predict
+}
+
 func NewPhysicalSensors() PhysicalSensors {
 	var y SensorYaml
 	yaml.Unmarshal(HallSensorSetting, &y)
