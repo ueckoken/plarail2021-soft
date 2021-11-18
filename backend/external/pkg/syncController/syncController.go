@@ -106,11 +106,17 @@ func (s *SyncController) initNode(e *envStore.Env, kvs *stationKVS) {
 
 func (s *SyncController) triggeredSync(e *envStore.Env, kvs *stationKVS) {
 	for c := range s.ClientHandler2syncController {
-		kvs.update(c)
-		//todo; handle update error
+		err := kvs.update(c)
+		if err != nil {
+			log.Println("syncController validator err: ", err)
+			continue
+		}
 		c2i := servo.NewCommand2Internal(c.StationState, e)
-		c2i.Send()
-    //todo error handling
+		err = c2i.Send()
+		if err != nil {
+			log.Println("syncController send err: ", err)
+			continue
+		}
 		s.SyncController2clientHandler <- c
 	}
 }
