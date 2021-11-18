@@ -1,9 +1,10 @@
 up:
 	docker-compose build
 	docker-compose up
+
 pb: statesync speedControl
 	
-statesync: statesync_internal statesync_external
+statesync: statesync_internal statesync_external statesync_positioning
 
 statesync_internal:
 	protoc \
@@ -23,31 +24,40 @@ statesync_external:
 	-I./ \
 	proto/statesync.proto
 
-speedControl: speedControl_internal speedControl_external speedControl_builtin
-
-speedControl_internal:
+statesync_positioning:
 	protoc \
-	--go_out=internal/spec \
-	--go_opt=Mproto/speedControl.proto=. \
-	--go-grpc_out=internal \
-	--go-grpc_opt=Mproto/speedControl.proto=. \
+	--go_out=positioning \
+	--go_opt=Mproto/statestnc.proto=. \
+	--go-grpc_out=positioning \
+	--go-grpc_opt=Mproto/statesync.proto=. \
 	-I./ \
-	proto/speedControl.proto
+	proto/statesync.proto
 
-speedControl_external:
-	protoc \
-	--go_out=external/spec \
-	--go_opt=Mproto/speedControl.proto=. \
-	--go-grpc_out=external \
-	--go-grpc_opt=Mproto/speedControl.proto=. \
-	-I./ \
-	proto/speedControl.proto
+speedControl: speedControl_builtin speedControlSpeed speedControlPositioning
 
 speedControl_builtin:
 	protoc \
 	--go_out=builtin/speed/spec \
 	--go_opt=Mproto/speedControl.proto=. \
 	--go-grpc_out=builtin/speed \
+	--go-grpc_opt=Mproto/speedControl.proto=. \
+	-I./ \
+	proto/speedControl.proto
+
+speedControlSpeed:
+	protoc \
+	--go_out=speed/spec \
+	--go_opt=Mproto/speedControl.proto=. \
+	--go-grpc_out=speed \
+	--go-grpc_opt=Mproto/speedControl.proto=. \
+	-I./ \
+	proto/speedControl.proto
+
+speedControlPositioning:
+	protoc \
+	--go_out=positioning/spec \
+	--go_opt=Mproto/speedControl.proto=. \
+	--go-grpc_out=positioning \
 	--go-grpc_opt=Mproto/speedControl.proto=. \
 	-I./ \
 	proto/speedControl.proto

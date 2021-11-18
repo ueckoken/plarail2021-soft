@@ -14,7 +14,7 @@ type State struct {
 	FetchedTimeStump time.Time
 }
 
-type TrainState interface {
-	Store(State) error
-	FetchLatest(trainId string) error
+type PositionAndSpeed struct {
+	State
+	Speed float64
 }

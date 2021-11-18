@@ -4,10 +4,9 @@ import { Point } from "../../types/svgPartsTypes"
 interface Props {
   name: string
   position: Point
-  isStop: boolean
 }
 
-const Station: FC<Props> = ({ name, position, isStop }) => {
+const Station: FC<Props> = ({ name, position }) => {
   return (
     <g>
       <rect
@@ -27,7 +26,6 @@ const Station: FC<Props> = ({ name, position, isStop }) => {
         fontSize={20}
         textAnchor="middle"
         dominantBaseline="central"
-        fill={isStop ? "black" : "gray"}
       >
         {name}
       </text>

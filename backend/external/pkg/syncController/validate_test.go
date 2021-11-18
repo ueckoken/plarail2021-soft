@@ -140,3 +140,60 @@ func TestValidator_Validate(t *testing.T) {
 		})
 	}
 }
+
+func Test_matchRule(t *testing.T) {
+	type args struct {
+		rules []string
+		ss    []StationState
+		state int32
+	}
+	tests := []struct {
+		name       string
+		args       args
+		wantStatus int
+		wantErr    bool
+	}{
+		{
+			name: "rule not found",
+			args: args{
+				rules: nil,
+				ss: []StationState{
+					{servo.StationState{StationID: CHOFU_B1, State: OFF}},
+					{servo.StationState{StationID: CHOFU_B2, State: OFF}},
+					{servo.StationState{StationID: CHOFU_S1, State: OFF}},
+					{servo.StationState{StationID: CHOFU_S2, State: OFF}},
+				},
+				state: OFF,
+			},
+			wantStatus: ALLOW,
+			wantErr:    false,
+		},
+		{
+			name: "異常系",
+			args: args{
+				rules: []string{"chofu_s1", "chofu_s2", "chofu_b1", "chofu_b2"},
+				ss: []StationState{
+					{servo.StationState{StationID: CHOFU_B1, State: OFF}},
+					{servo.StationState{StationID: CHOFU_B2, State: OFF}},
+					{servo.StationState{StationID: CHOFU_S1, State: ON}},
+					{servo.StationState{StationID: CHOFU_S2, State: OFF}},
+				},
+				state: OFF,
+			},
+			wantStatus: DENY,
+			wantErr:    false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotStatus, err := matchRule(tt.args.rules, tt.args.ss, tt.args.state)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("matchRule() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if gotStatus != tt.wantStatus {
+				t.Errorf("matchRule() gotStatus = %v, want %v", gotStatus, tt.wantStatus)
+			}
+		})
+	}
+}

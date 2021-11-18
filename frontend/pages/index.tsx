@@ -3,16 +3,125 @@ import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import RailroadMap from "../components/RailRoadMap"
 import { useEffect, useState } from "react"
+import {
+  bunkiRailId,
+  BunkiRailId,
+  Message,
+  stopRailId,
+  StopRailId,
+} from "../types/websocket-messages"
+
+// OFF: false, ON: trueと対応
+type StopPointState = Record<StopRailId, boolean>
+const INITIAL_STOP_POINT_STATE: StopPointState = {
+  motoyawata_s1: false,
+  motoyawata_s2: false,
+  motoyawata_s3: false,
+  motoyawata_s4: false,
+  motoyawata_s5: false,
+  motoyawata_s6: false,
+  iwamotocho_s1: false,
+  iwamotocho_s2: false,
+  iwamotocho_s4: false,
+  kudanshita_s5: false,
+  kudanshita_s6: false,
+  sasazuka_s1: false,
+  sasazuka_s2: false,
+  sasazuka_s3: false,
+  sasazuka_s4: false,
+  sasazuka_s5: false,
+  meidaimae_s1: false,
+  meidaimae_s2: false,
+  chofu_s1: false,
+  chofu_s2: false,
+  chofu_s3: false,
+  chofu_s4: false,
+  chofu_s5: false,
+  chofu_s6: false,
+  kitano_s1: false,
+  kitano_s2: false,
+  kitano_s3: false,
+  kitano_s4: false,
+  kitano_s5: false,
+  kitano_s6: false,
+  takao_s1: false,
+  takao_s2: false,
+}
+
+type SwitchPointState = Record<BunkiRailId, boolean>
+const INITIAL_SWITCH_POINT_STATE: SwitchPointState = {
+  iwamotocho_b1: false,
+  iwamotocho_b2: false,
+  iwamotocho_b3: false,
+  iwamotocho_b4: false,
+  sasazuka_b1: false,
+  sasazuka_b2: false,
+  chofu_b1: false,
+  chofu_b2: false,
+  chofu_b3: false,
+  chofu_b4: false,
+  chofu_b5: false,
+  kitano_b1: false,
+  kitano_b2: false,
+  kitano_b3: false,
+  kitano_b4: false,
+}
 
 const Home: NextPage = () => {
+  const [stopPointState, setStopPointState] = useState<StopPointState>(
+    INITIAL_STOP_POINT_STATE
+  )
   const [isStopPoint1, setIsStopPoint1] = useState<boolean>(true)
   const [isStopPoint2, setIsStopPoint2] = useState<boolean>(true)
+  const [isStopPoint3, setIsStopPoint3] = useState<boolean>(true)
+  const [isStopPoint4, setIsStopPoint4] = useState<boolean>(true)
+  const [switchPointState, setSwitchPointState] = useState<SwitchPointState>(
+    INITIAL_SWITCH_POINT_STATE
+  )
   const [isLeftSwichPoint1, setIsLeftSwitchPoint1] = useState<boolean>(true)
   const [isLeftSwichPoint2, setIsLeftSwitchPoint2] = useState<boolean>(true)
   const [trainPosition1, setTrainPosition1] = useState<number>(0.4)
-  const [isStopStation1, setIsStopStation1] = useState<boolean>(true)
-  const [isStopStation2, setIsStopStation2] = useState<boolean>(true)
-  const [isStopStation3, setIsStopStation3] = useState<boolean>(true)
+
+  useEffect(() => {
+    const ws = new WebSocket("wss://control.chofufes2021.gotti.dev/ws")
+    ws.addEventListener("open", (e) => {
+      console.log("opened")
+      console.log(e)
+    })
+    ws.addEventListener("message", (e) => {
+      console.log("recieved message")
+      console.log(e)
+      const message: Message = JSON.parse(e.data)
+      console.log(message)
+      if (message.station_name === "unknown" || message.state === "UNKNOWN") {
+        return
+      }
+      if (stopRailId.is(message.station_name)) {
+        setStopPointState((previousStopPointState) => ({
+          ...previousStopPointState,
+          [message.station_name]: message.state === "ON",
+        }))
+        return
+      }
+      if (bunkiRailId.is(message.station_name)) {
+        setSwitchPointState((previousSwitchPointState) => ({
+          ...previousSwitchPointState,
+          [message.station_name]: message.state === "ON",
+        }))
+      }
+    })
+    ws.addEventListener("error", (e) => {
+      console.log("error occured")
+      console.log(e)
+    })
+    ws.addEventListener("close", (e) => {
+      console.log("closed")
+      console.log(e)
+    })
+    return () => {
+      ws.close()
+    }
+  }, [])
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -46,17 +155,18 @@ const Home: NextPage = () => {
           <h2>地図部分</h2>
           <RailroadMap
             datas={{
+              stop: stopPointState,
               stop1: isStopPoint1,
               stop2: isStopPoint2,
+              stop3: isStopPoint3,
+              stop4: isStopPoint4,
+              switchState: switchPointState,
               switch1: isLeftSwichPoint1,
               switch2: isLeftSwichPoint2,
               train1: {
                 positionScale: trainPosition1,
                 id: "koken",
               },
-              station1: isStopStation1,
-              station2: isStopStation2,
-              station3: isStopStation3,
             }}
           />
         </section>
@@ -75,14 +185,11 @@ const Home: NextPage = () => {
           <button onClick={() => setIsStopPoint2(!isStopPoint2)}>
             ストップレール2切り替え
           </button>
-          <button onClick={() => setIsStopStation1(!isStopStation1)}>
-            東京駅切り替え
+          <button onClick={() => setIsStopPoint3(!isStopPoint3)}>
+            ストップレール3切り替え
           </button>
-          <button onClick={() => setIsStopStation2(!isStopStation2)}>
-            札幌駅切り替え
-          </button>
-          <button onClick={() => setIsStopStation3(!isStopStation3)}>
-            那覇駅切り替え
+          <button onClick={() => setIsStopPoint4(!isStopPoint4)}>
+            ストップレール4切り替え
           </button>
         </section>
       </main>

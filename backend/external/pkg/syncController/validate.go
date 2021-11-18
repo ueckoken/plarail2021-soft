@@ -29,6 +29,11 @@ type Rule struct {
 	Off []string `yaml:"off,omitempty"`
 }
 
+type RuleSuite struct {
+	On  int
+	Off int
+}
+
 const (
 	UNDEFINED = 0
 	ALLOW     = 1
@@ -46,93 +51,44 @@ func NewRouteValidator() IValidator {
 	}
 	return v
 }
+
 func (v *Validator) Validate(u StationState, ss []StationState) error {
 	targetSta, err := v.getValidateTarget(u)
 	if err != nil {
 		return err
 	}
-
-	// バリデート対象外
+	// getValidateTarget は引数に取った駅がvalidateの対象外のときに空の構造体を返す
 	if reflect.DeepEqual(targetSta, &Station{}) {
 		return nil
 	}
+	beforeAfter := struct {
+		before bool
+		after  bool
+	}{}
+	// 置き替え前
+	allRuleRes, err := searchAllRules(targetSta.Station.Rules, ss)
+	if err != nil {
+		return err
+	}
+	beforeAfter.before = allRuleOk(allRuleRes)
 
-	var ok [][]int
-	// 置き替え後に正常
+	// 置き替え後
 	id, err := searchIndex(u.StationID, ss)
 	if err != nil {
 		return err
 	}
-	ss[id] = StationState{servo.StationState{
-		StationID: u.StationID,
-		State:     u.State,
-	}}
-	for _, rule := range targetSta.Station.Rules {
-		isOnOk := UNDEFINED
-		isOffOk := UNDEFINED
-		if rule.On == nil {
-			isOnOk = ALLOW
-		}
-		for _, onRule := range rule.On {
-			onId, err := stationNameId.Name2Id(onRule)
-			if err != nil {
-				return err
-			}
-			for _, kvsSta := range ss {
-				if isOnOk == DENY {
-					break
-				}
-				if kvsSta.StationID != onId {
-					continue
-				}
-				// ルール合致
-				if kvsSta.State == int32(spec.RequestSync_ON) {
-					isOnOk = ALLOW
-				} else {
-					isOnOk = UNDEFINED
-				}
-			}
-		}
-		if rule.Off == nil {
-			isOffOk = ALLOW
-		}
-		for _, offRule := range rule.Off {
-			offId, err := stationNameId.Name2Id(offRule)
-			if err != nil {
-				return err
-			}
-			for _, kvsSta := range ss {
-				if isOffOk == DENY {
-					break
-				}
-				if kvsSta.StationID != offId {
-					continue
-				}
-				if kvsSta.State == int32(spec.RequestSync_OFF) {
-					isOffOk = ALLOW
-				} else if kvsSta.State != int32(spec.RequestSync_OFF) {
-					isOffOk = DENY
-				}
-			}
-		}
-		ok = append(ok, []int{isOnOk, isOffOk})
+	ss[id] = StationState{servo.StationState{StationID: u.StationID, State: u.State}}
+
+	allRuleRes, err = searchAllRules(targetSta.Station.Rules, ss)
+	if err != nil {
+		return err
 	}
-	if !isOk(ok) {
+	beforeAfter.after = allRuleOk(allRuleRes)
+	if beforeAfter.before == true && beforeAfter.after == false {
 		n, _ := stationNameId.Id2Name(u.StationID)
-		return fmt.Errorf("validation `%s` error\n", n)
+		return fmt.Errorf("validation %s error\n", n)
 	}
 	return nil
-}
-
-func isOk(b [][]int) bool {
-	for _, eachRule := range b {
-		on := eachRule[0]
-		off := eachRule[1]
-		if on == ALLOW && off == ALLOW {
-			return true
-		}
-	}
-	return false
 }
 func (v *Validator) getValidateTarget(u StationState) (*Station, error) {
 	targetSta := new(Station)
@@ -151,6 +107,17 @@ func (v *Validator) getValidateTarget(u StationState) (*Station, error) {
 	return targetSta, nil
 }
 
+func (r *RuleSuite) isOk() bool {
+	return r.On == ALLOW && r.Off == ALLOW
+}
+func allRuleOk(rules []RuleSuite) bool {
+	for _, r := range rules {
+		if r.isOk() {
+			return true
+		}
+	}
+	return false
+}
 func searchIndex(id int32, ss []StationState) (int, error) {
 	for i, s := range ss {
 		if s.StationID == id {
@@ -158,4 +125,51 @@ func searchIndex(id int32, ss []StationState) (int, error) {
 		}
 	}
 	return -1, fmt.Errorf("index error\n")
+}
+
+// matchRule
+func matchRule(rules []string, ss []StationState, state int32) (status int, err error) {
+	isSuiteRule := UNDEFINED
+	if rules == nil {
+		isSuiteRule = ALLOW
+	}
+	for _, rule := range rules {
+		id, err := stationNameId.Name2Id(rule)
+		if err != nil {
+			return -1, err
+		}
+		for _, kvsSta := range ss {
+			if isSuiteRule == DENY {
+				break
+			}
+			if kvsSta.StationID != id {
+				continue
+			}
+			// ルール合致
+			if kvsSta.State == state {
+				isSuiteRule = ALLOW
+			} else {
+				isSuiteRule = DENY
+			}
+			break
+		}
+	}
+	return isSuiteRule, nil
+}
+
+func searchAllRules(rules []Rule, ss []StationState) (ok []RuleSuite, err error) {
+	for _, rule := range rules {
+		isOnOk := UNDEFINED
+		isOffOk := UNDEFINED
+		isOnOk, err := matchRule(rule.On, ss, int32(spec.RequestSync_ON))
+		if err != nil {
+			return nil, err
+		}
+		isOffOk, err = matchRule(rule.Off, ss, int32(spec.RequestSync_OFF))
+		if err != nil {
+			return nil, err
+		}
+		ok = append(ok, RuleSuite{On: isOnOk, Off: isOffOk})
+	}
+	return ok, nil
 }

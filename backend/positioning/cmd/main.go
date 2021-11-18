@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 	"ueckoken/plarail2021-soft-positioning/internal"
 	"ueckoken/plarail2021-soft-positioning/pkg/gormHandler"
 	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
@@ -15,9 +16,17 @@ import (
 func main() {
 	dbenv := os.Getenv("DB")
 	fmt.Println("DB:", dbenv)
-	d, err := gorm.Open(postgres.Open(dbenv), &gorm.Config{})
-	if err != nil {
-		log.Fatalf("error when connecting to sql: %s", err)
+	var d *gorm.DB
+	var err error
+	for {
+		d, err = gorm.Open(postgres.Open(dbenv), &gorm.Config{})
+		if err != nil {
+			log.Printf("error when connecting to sql: %s", err)
+			time.Sleep(1 * time.Second)
+			log.Panicf("re-connecting to sql")
+			continue
+		}
+		break
 	}
 	db := gormHandler.SQLHandler{Db: d}
 	db.Db.AutoMigrate(&trainState.State{})

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"net/http"
+	"ueckoken/plarail2021-soft-positioning/pkg/addressChecker"
 	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
 
 	"context"
@@ -9,16 +10,25 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"time"
+	pb "ueckoken/plarail2021-soft-positioning/spec"
 )
 
 type ClientHandler struct {
 	upgrader           websocket.Upgrader
 	ClientNotification chan ClientNotifier
+	Checker            addressChecker.AddressChecker
 }
 
 type ClientNotifier struct {
-	Notifier   chan trainState.State
+	Notifier   chan trainState.PositionAndSpeed
 	Unregister chan struct{}
+}
+
+type ClientSendData struct {
+	TrainName string  `json:"train_name"`
+	HallName  string  `json:"hall_name"`
+	Duration  float64 `json:"duration"`
+	FetchedAt float64 `json:"fetched_at"`
 }
 
 func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -30,13 +40,12 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 
 	ctx, cancel := context.WithCancel(context.Background())
-	n := make(chan trainState.State)
+	n := make(chan trainState.PositionAndSpeed)
 	unregister := make(chan struct{})
 	notifier := ClientNotifier{n, unregister}
 	m.ClientNotification <- notifier
 	c.SetPongHandler(func(string) error {
 		c.SetReadDeadline(time.Now().Add(20 * time.Second))
-		cancel()
 		return nil
 	})
 	c.SetCloseHandler(func(code int, text string) error {
@@ -46,7 +55,8 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	})
 	go handleClientPing(ctx, c)
 	for notification := range notifier.Notifier {
-		err := c.WriteJSON(notification)
+		data := ClientSendData{TrainName: pb.SendSpeed_Train_name[int32(notification.TrainId)], HallName: notification.HallSensorName, Duration: notification.Speed, FetchedAt: float64(notification.FetchedTimeStump.UnixMilli()) / 1000}
+		err := c.WriteJSON(data)
 		if err != nil {
 			notifier.Unregister <- struct{}{}
 			cancel()
