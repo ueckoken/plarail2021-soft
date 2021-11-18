@@ -24,10 +24,6 @@ type ClientNotifier struct {
 }
 
 func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	ip := getClientIp(r)
-	if !m.Checker.CheckIfOk(ip) {
-		w.WriteHeader(http.StatusForbidden)
-	}
 	c, err := m.upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -59,14 +55,6 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-}
-
-func getClientIp(r *http.Request) string {
-	f := r.Header.Get("X-FORWARDED-FOR")
-	if f != "" {
-		return f
-	}
-	return r.RemoteAddr
 }
 
 func handleClientPing(ctx context.Context, c *websocket.Conn) {

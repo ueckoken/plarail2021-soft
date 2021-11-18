@@ -2,19 +2,27 @@ package positionReceiver
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
+	"ueckoken/plarail2021-soft-positioning/pkg/addressChecker"
 	"ueckoken/plarail2021-soft-positioning/pkg/hallsensor"
 	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
 )
 
 type PositionReceiveHandler struct {
 	registerReceivedPosition chan trainState.State
+	checker                  *addressChecker.AddressChecker
 }
 
 func NewPositionReceiverHandler(registerReceivedPosition chan trainState.State) PositionReceiveHandler {
+	checker, err := addressChecker.NewAddressChecker()
+	if err != nil {
+		log.Fatalln(err)
+	}
 	return PositionReceiveHandler{
 		registerReceivedPosition: registerReceivedPosition,
+		checker:                  checker,
 	}
 }
 
@@ -25,6 +33,10 @@ type ReceivedPosition struct {
 }
 
 func (p PositionReceiveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	ip := getClientIp(r)
+	if !p.checker.CheckIfOk(ip) {
+		w.WriteHeader(http.StatusForbidden)
+	}
 	if r.Method != "POST" {
 		w.Write([]byte("Use POST"))
 		w.WriteHeader(http.StatusBadRequest)
@@ -50,4 +62,12 @@ func (p PositionReceiveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	p.registerReceivedPosition <- dat
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("accepted"))
+}
+
+func getClientIp(r *http.Request) string {
+	f := r.Header.Get("X-FORWARDED-FOR")
+	if f != "" {
+		return f
+	}
+	return r.RemoteAddr
 }
