@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
-	var server internal.SpeedServer
+	handler := internal.ClientHandler{Clients: &internal.ClientSet{}}
+	server := internal.SpeedServer{ClientHandler: &handler}
 	server.StartSpeed()
 }

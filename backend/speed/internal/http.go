@@ -11,7 +11,7 @@ import (
 )
 
 type SpeedServer struct {
-	ClientHandler ClientHandler
+	ClientHandler *ClientHandler
 }
 
 func (s SpeedServer) StartSpeed() {
@@ -21,7 +21,6 @@ func (s SpeedServer) StartSpeed() {
 	go s.RegisterClient(reg)
 	go s.HandleChange(change)
 	go s.UnregisterClient()
-
 
 	http.Handle("/speed", s.ClientHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
