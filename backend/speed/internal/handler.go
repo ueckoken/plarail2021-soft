@@ -5,6 +5,7 @@ import (
 	"ueckoken/plarail2021-soft-speed/pkg/storeSpeed"
 
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -23,7 +24,7 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithCancel(context.Background())
 	n := make(chan storeSpeed.TrainConf)
 	unregister := make(chan struct{})
-	notifier := ClientNotifier{n, unregister}
+	notifier := Client{ClientNotifier{n, unregister}}
 	m.ClientNotification <- notifier
 	c.SetPongHandler(func(string) error {
 		c.SetReadDeadline(time.Now().Add(20 * time.Second))
@@ -35,12 +36,29 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return nil
 	})
 	go handleClientPing(ctx, c)
-	for notification := range notifier.Notifier {
+	go handleClientCommand(ctx, c, &m)
+	for notification := range notifier.notifier.Notifier {
 		err := c.WriteJSON(notification)
 		if err != nil {
-			notifier.Unregister <- struct{}{}
+			notifier.notifier.Unregister <- struct{}{}
 			cancel()
 			break
+		}
+	}
+}
+
+func handleClientCommand(ctx context.Context, c *websocket.Conn, m *ClientHandler) {
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			r, err := unpackClientSendData(c)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			m.ClientCommand <- *r
 		}
 	}
 }
@@ -59,4 +77,17 @@ func handleClientPing(ctx context.Context, c *websocket.Conn) {
 			return
 		}
 	}
+}
+
+func unpackClientSendData(c *websocket.Conn) (*storeSpeed.TrainConf, error) {
+	_, msg, err := c.ReadMessage()
+	if err != nil {
+		return nil, fmt.Errorf("websocket read failed: %e", err)
+	}
+	var ud storeSpeed.TrainConf
+	err = json.Unmarshal(msg, &ud)
+	if err != nil {
+		return nil, fmt.Errorf("bad json format: %e", err)
+	}
+	return &ud, nil
 }

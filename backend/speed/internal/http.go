@@ -17,11 +17,19 @@ type SpeedServer struct {
 func (s SpeedServer) StartSpeed() {
 	reg := make(chan Client)
 	change := make(chan storeSpeed.TrainConf)
-
+	var upgrader = websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	}
+	s.ClientHandler.upgrader = upgrader
+	s.ClientHandler.ClientNotification = reg
+	s.ClientHandler.ClientCommand = change
 	go s.RegisterClient(reg)
 	go s.HandleChange(change)
 	go s.UnregisterClient()
-
 	http.Handle("/speed", s.ClientHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
@@ -29,7 +37,8 @@ func (s SpeedServer) StartSpeed() {
 type ClientHandler struct {
 	Clients            *ClientSet
 	upgrader           websocket.Upgrader
-	ClientNotification chan ClientNotifier
+	ClientNotification chan Client
+	ClientCommand      chan storeSpeed.TrainConf
 }
 
 type ClientSet struct {
