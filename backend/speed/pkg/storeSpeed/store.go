@@ -31,7 +31,7 @@ func NewTrainConf(train Train) TrainConf {
 }
 
 func (t *trainConf) SetSpeed(speed int32) error {
-	if !(0 <= speed && speed <= 100) {
+	if !(-100 <= speed && speed <= 100) {
 		return errors.New("speed range error")
 	}
 	t.Speed = speed
