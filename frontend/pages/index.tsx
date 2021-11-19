@@ -2,6 +2,7 @@ import type { NextPage } from "next"
 import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import RailroadMap from "../components/RailRoadMap"
+import VideoCast from "../components/VideoCast"
 import { useEffect, useState } from "react"
 import {
   bunkiRailId,
@@ -149,6 +150,7 @@ const Home: NextPage = () => {
         <section>
           <h2>映像部分</h2>
           <div>(video予定地)</div>
+          <VideoCast/>
         </section>
 
         <section>
