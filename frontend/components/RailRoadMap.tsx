@@ -1,6 +1,6 @@
 import React, { FC } from "react"
 import Rail from "./svgParts/Rail"
-import Station from "./svgParts/Station"
+import Platform from "./svgParts/Platform"
 import SwitchPoint from "./svgParts/SwitchPoint"
 import StopPoint from "./svgParts/StopPoint"
 import { TrainData } from "../types/svgPartsTypes"
@@ -37,9 +37,9 @@ const RailroadMap: FC<Prop> = ({
     <svg width={640} height={480} viewBox="0 0 640 480">
       <rect x={0} y={0} width={640} height={480} fill="lightgray" />
 
-      <Station name="東京" position={{ x: 120, y: 120 }} />
-      <Station name="札幌" position={{ x: 520, y: 120 }} />
-      <Station name="那覇" position={{ x: 320, y: 360 }} />
+      <Platform name="東京" position={{ x: 120, y: 120 }} />
+      <Platform name="札幌" position={{ x: 520, y: 120 }} />
+      <Platform name="那覇" position={{ x: 320, y: 360 }} isHorizontal={false} />
 
       <SwitchPoint
         position={{ x: 320 + 20, y: 120 - 20 }}

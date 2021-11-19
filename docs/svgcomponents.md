@@ -5,17 +5,19 @@
 | positions | Point[] | 最低2つ |
 | trains | number[] | 値は0.0-1.0の範囲 |
 
-## Station
-横向き白四角に駅名表示。
-ストップレールが上がってる時はなんらかの表示。
-駅をコンポーネント化するには複雑過ぎたので解体予定。
+## Platform
+横向き白四角。
+Rail、StopPointと組み合わせて駅を構成する。
 | プロパティ名 | 型 | 備考 |
 | --- | --- | --- |
-| name | String |  |
+| name | String | 駅名と番線 |
 | position | Point |  |
+| isHorizontal? | boolean | falseなら縦向き |
+| size? | number | ホーム名がはみ出す場合に指定 |
 
 ## SwitchPoint
 白円の中に入車角と出車角の線を表示。
+アニメーションする。
 | プロパティ名 | 型 | 備考 |
 | --- | --- | --- |
 | position | Point |  |
@@ -27,6 +29,7 @@
 ## StopPoint
 ストップレール用。
 線路に重ねるのを想定。
+見た目について再考が必要か。
 | プロパティ名 | 型 | 備考 |
 | --- | --- | --- |
 | position | Point |  |
