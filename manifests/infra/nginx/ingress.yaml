@@ -16,6 +16,7 @@ spec:
     - "alert.chofufes2021.gotti.dev"
     - "webrtc-sender.chofufes2021.gotti.dev"
     - "receiver-test.chofufes2021.gotti.dev"
+    - "positioning.chofufes2021.gotti.dev"
     # This assumes tls-secret exists and the SSL
     # certificate contains a CN for foo.bar.com
     secretName: cloudflare-cert
