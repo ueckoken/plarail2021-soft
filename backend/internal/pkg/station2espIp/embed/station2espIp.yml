@@ -1,301 +1,301 @@
 stations:
   - station:
       name: motoyawata_s1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: motoyawata_s2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: iwamotocho_s1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: iwamotocho_s2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: iwamotocho_s4
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: iwamotocho_b1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: iwamotocho_b2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: iwamotocho_b3
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: iwamotocho_b4
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kudanshita_s5
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kudanshita_s6
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: sasazuka_b1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: sasazuka_b2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: sasazuka_s1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: sasazuka_s2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: sasazuka_s3
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: sasazuka_s4
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: sasazuka_s5
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: meidaimae_s1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: meidaimae_s2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_s1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_s2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_s3
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_s4
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_s5
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_s6
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_b1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_b2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_b3
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_b4
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: chofu_b5
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_b1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_b2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_b3
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_s1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_s2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_s3
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_s4
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_s5
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_s6
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: kitano_s7
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: takao_s1
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
       off_angle: 0
   - station:
       name: takao_s2
-      address: 'http://example.com:80'
+      address: 'http://192.168.100.8:9100'
       pin: 0
       set_angle: true
       on_angle: 90
