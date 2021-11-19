@@ -10,6 +10,7 @@ import {
   stopRailId,
   StopRailId,
 } from "../types/websocket-messages"
+import SpeedMeter from "../components/svgParts/SpeedMeter"
 
 // OFF: false, ON: trueと対応
 type StopPointState = Record<StopRailId, boolean>
@@ -173,6 +174,9 @@ const Home: NextPage = () => {
 
         <section>
           <h2>操作部分</h2>
+          <svg viewBox="0 0 100 100">
+            <SpeedMeter cx={50} cy={50} r={40} max={100} value={30} />
+          </svg>
           <button onClick={() => setIsLeftSwitchPoint1(!isLeftSwichPoint1)}>
             分岐点1切り替え
           </button>
