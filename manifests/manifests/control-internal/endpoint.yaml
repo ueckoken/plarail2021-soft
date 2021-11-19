@@ -7,8 +7,8 @@ metadata:
     app: plarail2021-test
 subsets:
 - addresses:
-  - ip: 164.70.126.185
+  - ip: 130.153.17.100
   ports:
   - name: prom
-    port: 9100
+    port: 443
     protocol: TCP
