@@ -74,7 +74,7 @@ func (c2i *Command2Internal) convert2pb() *pb.RequestSync {
 	}
 }
 func (c2i *Command2Internal) String() string {
-	return fmt.Sprintf("%s -> %s\n", pb.Stations_StationId_name[c2i.station.StationID], pb.RequestSync_State_name[c2i.station.State])
+	return fmt.Sprintf("%s -> %s", pb.Stations_StationId_name[c2i.station.StationID], pb.RequestSync_State_name[c2i.station.State])
 }
 func trapResponseGrpcErr(rs *pb.ResponseSync, grpcErr error) error {
 	// From Error will return true in ok if err is occurred by gRPC or nil
