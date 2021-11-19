@@ -21,7 +21,7 @@ const StopPoint: FC<Props> = ({ position, isStop }) => (
       cx={position.x}
       cy={position.y - 6}
       r={5}
-      fill={isStop ? "grey" : "green"}
+      fill={isStop ? "grey" : "limegreen"}
     />
     <circle
       cx={position.x}
