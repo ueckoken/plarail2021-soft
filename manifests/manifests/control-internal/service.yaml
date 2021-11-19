@@ -6,10 +6,10 @@ metadata:
   labels:
     app: plarail2021-test
 spec:
-  externalName: 10.56.14.94
+  externalName: internal.chofufes2021.gotti.dev
   ports:
-  - name: web
+  - name: prom
     port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 443
   type: ExternalName
