@@ -6,22 +6,30 @@ interface Props {
   isStop: boolean
 }
 
-const StopPoint: FC<Props> = ({ position, isStop }) => {
-  if (!isStop) {
-    return null
-  }
-  return (
-    <g>
-      <circle cx={position.x} cy={position.y} r={10} fill="red" />
-      <rect
-        x={position.x - 7}
-        y={position.y - 2}
-        width={14}
-        height={4}
-        fill="white"
-      />
-    </g>
-  )
-}
+const StopPoint: FC<Props> = ({ position, isStop }) => (
+  <g>
+    <line
+      x1={position.x}
+      y1={position.y - 5}
+      x2={position.x}
+      y2={position.y + 5}
+      stroke="black"
+      strokeWidth={20}
+      strokeLinecap="round"
+    />
+    <circle
+      cx={position.x}
+      cy={position.y - 6}
+      r={5}
+      fill={isStop ? "grey" : "green"}
+    />
+    <circle
+      cx={position.x}
+      cy={position.y + 6}
+      r={5}
+      fill={isStop ? "red" : "grey"}
+    />
+  </g>
+)
 
 export default StopPoint
