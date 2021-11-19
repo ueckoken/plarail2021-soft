@@ -48,10 +48,12 @@ const VideoCast: FC<Prop> = ({}) => {
     let isConnectWebSocket = false
     let isConnectSkywayPeer = false
     let roomId = "aaa"
-    let room: Room = { skyway_room: null, room_id: roomId }
-    const rooms_ = Object.assign({}, rooms)
-    rooms_[roomId] = room
-    setRooms(rooms_)
+    const room: Room = { skyway_room: null, room_id: roomId }
+    const nextRooms = {
+      ...rooms,
+      [roomId]: room,
+    }
+    setRooms(nextRooms)
     const sendFunc = () => {
       ws.send(
         JSON.stringify({
@@ -65,7 +67,7 @@ const VideoCast: FC<Prop> = ({}) => {
     } else {
       sendFuncs.push(sendFunc)
     }
-    ws.onopen = (event) => {
+    ws.addEventListener("open", (event) => {
       isConnectWebSocket = true
       if (!isConnectSkywayPeer) {
         return
@@ -74,7 +76,7 @@ const VideoCast: FC<Prop> = ({}) => {
         func()
       }
       sendFuncs = []
-    }
+    })
 
     peer.on("open", () => {
       isConnectSkywayPeer = true
@@ -86,20 +88,22 @@ const VideoCast: FC<Prop> = ({}) => {
       }
       sendFuncs = []
     })
-    ws.onmessage = (event) => {
+    ws.addEventListener("message", (event) => {
       const message = JSON.parse(event.data)
       console.log(message)
       const peerId = message["peer_id"]
       const roomId = message["room_id"]
       const skywayRoomId = message["skyway_room_id"]
 
-      const rooms_ = Object.assign({}, rooms)
       console.log("joinroom")
       const skywayRoom = peer.joinRoom(skywayRoomId, {
         mode: "sfu",
       })
-      let room: Room = { room_id: roomId, skyway_room: skywayRoom }
-      rooms_[roomId] = room
+      const room: Room = { room_id: roomId, skyway_room: skywayRoom }
+      const nextRooms = {
+        ...rooms,
+        [roomId]: room,
+      }
       if (skywayRoom) {
         skywayRoom.on("stream", (stream: MediaStream) => {
           //const streamPeerId = stream.peerId;
@@ -109,7 +113,10 @@ const VideoCast: FC<Prop> = ({}) => {
           //}
         })
       }
-      setRooms(rooms_)
+      setRooms(nextRooms)
+    })
+    return () => {
+      ws.close()
     }
   }, [])
 
