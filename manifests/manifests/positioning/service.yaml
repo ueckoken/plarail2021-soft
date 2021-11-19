@@ -6,7 +6,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: plarial2021-positioning
+    app: plarail2021-positioning
   ports:
   - port: 80
     protocol: TCP

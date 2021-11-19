@@ -3,6 +3,11 @@ up:
 	docker-compose build
 	docker-compose up -d
 
+pull:
+	git pull
+
+start: pull up
+
 pb: statesync speedControl
 	
 statesync: statesync_internal statesync_external statesync_positioning
