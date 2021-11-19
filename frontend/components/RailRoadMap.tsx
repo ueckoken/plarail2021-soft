@@ -110,16 +110,52 @@ const RailroadMap: FC<Prop> = ({
       <Platform name="笹塚2" position={{ x: 880, y: 100 }} />
       <Platform name="新宿" position={{ x: 1060, y: 70 }} />
 
-      <Platform name="高尾" position={{ x: 150, y: 200 }} isHorizontal={false} />
-      <Platform name="高尾山口" position={{ x: 150, y: 380 }} isHorizontal={false} />
-      <Platform name="若葉台1" position={{ x: 320, y: 260 }} isHorizontal={false} />
-      <Platform name="若葉台2" position={{ x: 380, y: 260 }} isHorizontal={false} />
-      <Platform name="橋本" position={{ x: 350, y: 380 }} isHorizontal={false} />
+      <Platform
+        name="高尾"
+        position={{ x: 150, y: 200 }}
+        isHorizontal={false}
+      />
+      <Platform
+        name="高尾山口"
+        position={{ x: 150, y: 380 }}
+        isHorizontal={false}
+      />
+      <Platform
+        name="若葉台1"
+        position={{ x: 320, y: 260 }}
+        isHorizontal={false}
+      />
+      <Platform
+        name="若葉台2"
+        position={{ x: 380, y: 260 }}
+        isHorizontal={false}
+      />
+      <Platform
+        name="橋本"
+        position={{ x: 350, y: 380 }}
+        isHorizontal={false}
+      />
 
-      <Platform name="九段下" position={{ x: 970, y: 180 }} isHorizontal={false} />
-      <Platform name="岩本町1" position={{ x: 910, y: 380 }} isHorizontal={false} />
-      <Platform name="岩本町2" position={{ x: 970, y: 380 }} isHorizontal={false} />
-      <Platform name="本八幡" position={{ x: 970, y: 560 }} isHorizontal={false} />
+      <Platform
+        name="九段下"
+        position={{ x: 970, y: 180 }}
+        isHorizontal={false}
+      />
+      <Platform
+        name="岩本町1"
+        position={{ x: 910, y: 380 }}
+        isHorizontal={false}
+      />
+      <Platform
+        name="岩本町2"
+        position={{ x: 970, y: 380 }}
+        isHorizontal={false}
+      />
+      <Platform
+        name="本八幡"
+        position={{ x: 970, y: 560 }}
+        isHorizontal={false}
+      />
 
       <Rail
         positions={[
