@@ -38,4 +38,5 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "9100:9100"
+      - "6060:6060"
       - "54321:54321"
