@@ -15,7 +15,7 @@ spec:
       serviceAccountName: "tailscale"
       containers:
         - name: plarail2021-soft-backend-external
-          image: ghcr.io/ueckoken/plarail2021-soft-external:888195d-1637314846 # {"$imagepolicy": "plarail2021:external"}
+          image: ghcr.io/ueckoken/plarail2021-soft-external:d6f8649-1637322223 # {"$imagepolicy": "plarail2021:external"}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -43,9 +43,9 @@ spec:
           securityContext:
             capabilities:
               add:
-              - NET_ADMIN
-              - CAP_NET_ADMIN
-              - CAP_NET_RAW
+                - NET_ADMIN
+                - CAP_NET_ADMIN
+                - CAP_NET_RAW
       volumes:
         - name: tailscale-config
           configMap:
