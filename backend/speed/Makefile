@@ -4,10 +4,10 @@ fetch:
 	git pull
 
 up:
-	docker-compose up
+	docker-compose up -d
 
 reload: build
-	docker-compose up
+	docker-compose up -d
 
 build: down
 	docker-compose build
