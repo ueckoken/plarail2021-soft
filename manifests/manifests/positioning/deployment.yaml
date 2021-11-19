@@ -14,7 +14,24 @@ spec:
     spec:
       containers:
         - name: plarail2021-positioning
-          image: ghcr.io/ueckoken/plarail2021-soft-receiver-test:d18a164-1637285004 # {"$imagepolicy": "plarail2021:webrtc-receiver"}
+          image: ghcr.io/ueckoken/plarail2021-soft-positioning:342e32a-1637293457 # {"$imagepolicy": "plarail2021:positioning"}
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+          env:
+            - name: CLIENTSIDESERVER_PORT
+              value: "8080"
+            - name: INTERNALSERVER_ADDR
+              value: "192.168.1.3:10000"
+            - name: DB
+              value: "host=127.0.0.1 user=gorm password=gorm dbname=gorm port=5432 sslmode=disable TimeZone=Asia/Tokyo"
+        - name: postgresql
+          image: postgres:11.12
+          imagePullPolicy: Always
+          env:
+            - name: POSTGRES_USER
+              value: "gorm"
+            - name: POSTGRES_PASSWORD
+              value: "gorm"
+            - name: POSTGRES_DB
+              value: "gorm"
