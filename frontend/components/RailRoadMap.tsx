@@ -39,7 +39,11 @@ const RailroadMap: FC<Prop> = ({
 
       <Platform name="東京" position={{ x: 120, y: 120 }} />
       <Platform name="札幌" position={{ x: 520, y: 120 }} />
-      <Platform name="那覇" position={{ x: 320, y: 360 }} isHorizontal={false} />
+      <Platform
+        name="那覇"
+        position={{ x: 320, y: 360 }}
+        isHorizontal={false}
+      />
 
       <SwitchPoint
         position={{ x: 320 + 20, y: 120 - 20 }}

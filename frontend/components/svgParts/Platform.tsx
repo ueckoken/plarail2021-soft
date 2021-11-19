@@ -9,9 +9,9 @@ interface Props {
 }
 
 const Platform: FC<Props> = ({ name, position, isHorizontal = true, size }) => {
-  const stationSize = size ? size : 100;
-  const width = isHorizontal ? stationSize : 20;
-  const height = isHorizontal ? 20 : stationSize;
+  const stationSize = size ? size : 100
+  const width = isHorizontal ? stationSize : 20
+  const height = isHorizontal ? 20 : stationSize
   return (
     <g>
       <rect
