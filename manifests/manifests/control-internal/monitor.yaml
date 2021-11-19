@@ -10,5 +10,5 @@ spec:
     matchLabels:
       app: plarail2021-test
   endpoints:
-    - port: web
+    - port: prom
       path: /metrics
