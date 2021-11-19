@@ -3,12 +3,24 @@ services:
   traefik:
     image: traefik:v2.5
     ports:
-      - "9100:80"
-      - "10443:443"
+      - "80:80"
+      - "443:443"
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker
+      - --log.level=ERROR
+      - --accessLog.filePath=os.Stdout
+      - --api.dashboard=false
+      - --certificatesresolvers.myresolver.acme.httpchallenge=true
+      - --certificatesresolvers.myresolver.acme.email=gotti@mail.gotti.dev #Set your email address here, is for the generation of SSL certificates with Let's Encrypt.
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.myresolver.acme.caServer="https://acme-v02.api.letsencrypt.org/directory"
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.yml:/etc/traefik/traefik.yml
+      #      - ./traefik.yml:/etc/traefik/traefik.yml
       - ./letsencrypt/acme.json:/letsencrypt/acme.json
   speed:
     build:
@@ -19,12 +31,3 @@ services:
       - "traefik.http.routers.speed.entrypoints=websecure"
       - "traefik.http.routers.speed.tls.certresolver=myresolver"
       - "traefik.http.services.speed.loadbalancer.server.port=8080"
-#  internal_control:
-#    build:
-#      context: ./internal
-#      dockerfile: ./Dockerfile
-#    labels:
-#      - "traefik.http.routers.internal_control.rule=Host(`internal.chofufes2021.gotti.dev`)"
-#      - "traefik.http.routers.internal_control.entrypoints=websecure"
-#      - "traefik.http.routers.internal_control.tls.certresolver=myresolver"
-#      - "traefik.http.services.internal_control.loadbalancer.server.port=9100"
