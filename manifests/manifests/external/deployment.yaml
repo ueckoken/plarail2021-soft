@@ -15,7 +15,7 @@ spec:
       serviceAccountName: "tailscale"
       containers:
         - name: plarail2021-soft-backend-external
-          image: ghcr.io/ueckoken/plarail2021-soft-external:8268c32-1637327188 # {"$imagepolicy": "plarail2021:external"}
+          image: ghcr.io/ueckoken/plarail2021-soft-external:3877cb9-1637332121 # {"$imagepolicy": "plarail2021:external"}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
