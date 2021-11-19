@@ -98,8 +98,8 @@ const VideoCast: FC<Prop> = ({}) => {
       const skywayRoom = peer.joinRoom(skywayRoomId, {
         mode: "sfu",
       })
-
-      rooms_[roomId]["skyway_room"] = skywayRoom
+      let room: Room = { room_id: roomId, skyway_room: skywayRoom }
+      rooms_[roomId] = room
       if (skywayRoom) {
         skywayRoom.on("stream", (stream: MediaStream) => {
           //const streamPeerId = stream.peerId;

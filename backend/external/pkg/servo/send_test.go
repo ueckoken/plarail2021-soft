@@ -16,23 +16,23 @@ func TestSend_trapResponseGrpcErr(t *testing.T) {
 		{
 			grpcErr:        errors.New("TEST ERROR"),
 			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(0)},
-			expectErrMsg:   "gRPC Err: TEST ERROR; gRPC Response status is UNKNOWN",
+			expectErrMsg:   "gRPC Err: `TEST ERROR`; gRPC Response status is `UNKNOWN`",
 		}, {
 			grpcErr:        errors.New("TEST ERROR"),
 			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(1)},
-			expectErrMsg:   "gRPC Err: TEST ERROR; gRPC Response status is SUCCESS",
+			expectErrMsg:   "gRPC Err: `TEST ERROR`; gRPC Response status is `SUCCESS`",
 		}, {
 			grpcErr:        errors.New("TEST ERROR"),
 			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(2)},
-			expectErrMsg:   "gRPC Err: TEST ERROR; gRPC Response status is FAILED",
+			expectErrMsg:   "gRPC Err: `TEST ERROR`; gRPC Response status is `FAILED`",
 		}, {
 			grpcErr:        nil,
 			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(0)},
-			expectErrMsg:   "gRPC Err: %!w(<nil>); gRPC Response status is UNKNOWN",
+			expectErrMsg:   "gRPC Err: `%!w(<nil>)`; gRPC Response status is `UNKNOWN`",
 		}, {
 			grpcErr:        nil,
 			inResponseSync: &pb.ResponseSync{Response: pb.ResponseSync_Response(2)},
-			expectErrMsg:   "gRPC Err: %!w(<nil>); gRPC Response status is FAILED",
+			expectErrMsg:   "gRPC Err: `%!w(<nil>)`; gRPC Response status is `FAILED`",
 		},
 	}
 
