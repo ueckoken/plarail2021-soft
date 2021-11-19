@@ -1,4 +1,93 @@
+#分岐はoffで直進？ストップレールはoffでGo？
 stations:
+  - station:
+      name: motoyawata
+      points:
+        - motoyawata_s1
+        - motoyawata_s2
+      rules:
+        - on: #s1だけStopさせるとs2を通って来た2台目がぶつかるかも(このパターンはいらないかも)
+            - motoyawata_s2
+        - on:
+          off: #どっちもGoはOK
+            - motoyawata_s1
+            - motoyawata_s2
+  - station:
+      name: iwamotocho_kudari
+      points:
+        - iwamotocho_b1
+        - iwamotocho_b4
+        - iwamotocho_s1
+        - iwamotocho_s2
+      rules:
+        - on:
+            - iwamotocho_b1
+        - on:
+          off: #b4=ONだと2,3番線でぶつかる
+            - iwamotocho_b1
+            - iwamotocho_b4
+  - station:
+      name: iwamotocho_nobori
+      points:
+        - iwamotocho_b1
+        - iwamotocho_b4
+        - iwamotocho_s2
+        - iwamotocho_s4
+      rules:
+        - on: #b1=OFFだと2,3番線でぶつかる
+            - iwamotocho_b4
+            - iwamotocho_b1
+        - on:
+          off:
+            - iwamotocho_b4
+  - station:
+      name: kudanshita
+      points:
+        - kudanshita_s5
+        - kudanshita_s6
+      rules:
+        - on:
+  - station:
+      name: sasazuka_kudari
+      points:
+        - sasazuka_s1
+        - sasazuka_s2
+        - sasazuka_b1
+      rules:
+        - on:
+            - sasazuka_b1
+            - sasazuka_s1 #s1=offだと笹塚->明大前でぶつかる
+          off:
+            - sasazuka_s2
+        - on: #分岐b1をONにした意味はなくなるが、これもあり得る
+            - sasazuka_b1
+            - sasazuka_s2
+          off:
+            - sasazuka_s1
+        - on:
+          off:
+            - sasazuka_b1
+  - station:
+      name: sasazuka_nobori
+      points:
+        - sasazuka_s3
+        - sasazuka_s4
+        - sasazuka_s5
+        - sasazuka_b2
+      rules:
+        - on:
+            - sasazuka_b2
+            - sasazuka_s5 #s5=offだとぶつかる
+        - on:
+          off:
+            - sasazuka_b2
+  - station:
+      name: meidaimae
+      points:
+        - meidaimae_s1
+        - meidaimae_s2
+      rules:
+        - on:
   - station:
       name: chofu_kudari
       points:
@@ -6,33 +95,92 @@ stations:
         - chofu_s2
         - chofu_b1
         - chofu_b2
+        - chofu_b3
       rules:
         - on:
-          off:
-            - chofu_s1
-            - chofu_s2
-            - chofu_b1
             - chofu_b2
-        - on:
             - chofu_s1
         - on:
+            - chofu_b2
             - chofu_s2
+        - on:
+          off:
+            - chofu_b2
+            - chofu_b3
   - station:
       name: chofu_nobori
       points:
-        - chofu_s1
-        - chofu_s2
-        - chofu_b1
-        - chofu_b2
+        - chofu_s3
+        - chofu_s4
+        - chofu_s5
+        - chofu_s6
+        - chofu_b4
+        - chofu_b5
       rules:
         - on:
-          off:
-            - chofu_s1
-            - chofu_s2
-            - chofu_b1
-            - chofu_b2
+            - chofu_b5
+            - chofu_s5
         - on:
-            - chofu_s1
-          off:
+            - chofu_b5
+            - chofu_s6
         - on:
-            - chofu_s2
+            - chofu_b4
+            - chofu_s6
+          off:
+            - chofu_b5
+        - on:
+            - chofu_s4
+          off:
+            - chofu_b4
+            - chofu_b5
+            - chofu_s3
+        - on:
+            - chofu_s3
+          off:
+            - chofu_b4
+            - chofu_b5
+  - station:
+      name: kitano_kudari
+      points:
+        - kitano_s1
+        - kitano_s2
+        - kitano_s5
+        - kitano_b1
+      rules:
+        - on:
+            - kitano_s2
+          off:
+            - kitano_s5
+        - on:
+            - kitano_s5
+          off:
+            - kitano_s2
+  - station:
+      name: kitano_nobori
+      points:
+        - kitano_s3
+        - kitano_s4
+        - kitano_s5
+        - kitano_s6
+        - kitano_b2
+      rules:
+        - on:
+            - kitano_s5
+          off:
+            - kitano_s6
+        - on:
+            - kitano_s6
+          off:
+            - kitano_s5
+  - station:
+      name: takao
+      points:
+        - takao_s1
+      rules:
+        - on:
+  - station:
+    name: takaosanguchi
+    points:
+      - takaosanguchi_s2
+    rules:
+      - on:
