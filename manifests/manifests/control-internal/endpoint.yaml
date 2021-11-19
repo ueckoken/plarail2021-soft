@@ -10,5 +10,5 @@ subsets:
   - ip: 130.153.17.100
   ports:
   - name: prom
-    port: 443
+    port: 80
     protocol: TCP
