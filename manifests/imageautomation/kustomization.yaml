@@ -5,3 +5,4 @@ resources:
   - ./webrtc-sender
   - ./receiver
   - ./automation.yaml
+  - ./positioning
