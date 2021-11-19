@@ -1,0 +1,30 @@
+version: "3"
+services:
+  traefik:
+    image: traefik:v2.5
+    ports:
+      - "9100:80"
+      - "10443:443"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./letsencrypt/acme.json:/letsencrypt/acme.json
+  speed:
+    build:
+      context: ./speed
+      dockerfile: ./Dockerfile
+    labels:
+      - "traefik.http.routers.speed.rule=Host(`speed.chofufes2021.gotti.dev`)"
+      - "traefik.http.routers.speed.entrypoints=websecure"
+      - "traefik.http.routers.speed.tls.certresolver=myresolver"
+      - "traefik.http.services.speed.loadbalancer.server.port=8080"
+#  internal_control:
+#    build:
+#      context: ./internal
+#      dockerfile: ./Dockerfile
+#    labels:
+#      - "traefik.http.routers.internal_control.rule=Host(`internal.chofufes2021.gotti.dev`)"
+#      - "traefik.http.routers.internal_control.entrypoints=websecure"
+#      - "traefik.http.routers.internal_control.tls.certresolver=myresolver"
+#      - "traefik.http.services.internal_control.loadbalancer.server.port=9100"
