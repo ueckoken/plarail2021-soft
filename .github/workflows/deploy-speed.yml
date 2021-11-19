@@ -18,4 +18,4 @@ jobs:
         run: |-
           echo "$SECRET_KEY" > secret_key
           chmod 600 secret_key
-          ssh -oStrictHostKeyChecking=no  ${SSH_USER}@${SSH_HOST} -i secret_key "cd plarail2021-soft/backend/speed && make all"
+          ssh -oStrictHostKeyChecking=no  ${SSH_USER}@${SSH_HOST} -i secret_key "cd plarail2021-soft/backend/ && make up"
