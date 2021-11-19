@@ -94,13 +94,13 @@ func (s *SyncController) initNode(e *envStore.Env, kvs *stationKVS) {
 	for c := range s.InitServoRoute {
 		err := kvs.forceUpdate(c)
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 			return
 		}
 		c2i := servo.NewCommand2Internal(c.StationState, e)
 		err = c2i.Send()
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 			return
 		}
 	}
