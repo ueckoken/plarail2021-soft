@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: plarail2021-positioning
-          image: ghcr.io/ueckoken/plarail2021-soft-positioning:339e785-1637255679 # {"$imagepolicy": "plarail2021:webrtc-receiver"}
+          image: ghcr.io/ueckoken/plarail2021-soft-receiver-test:d18a164-1637285004 # {"$imagepolicy": "plarail2021:webrtc-receiver"}
           imagePullPolicy: Always
           ports:
             - containerPort: 80
