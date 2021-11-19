@@ -4,3 +4,4 @@ resources:
   - ./external
   - ./receiver-test
   - ./webrtc-sender
+  - ./positioning
