@@ -33,13 +33,19 @@ spec:
             - name: KUBE_SECRET
               value: "tailscale"
             - name: USERSPACE
-              value: "true"
+              value: "false"
             - name: AUTH_KEY
               valueFrom:
                 secretKeyRef:
                   name: tailscale-auth
                   key: AUTH_KEY
                   optional: false
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+              - CAP_NET_ADMIN
+              - CAP_NET_RAW
       volumes:
         - name: tailscale-config
           configMap:
