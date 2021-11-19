@@ -1,4 +1,4 @@
-const Peer = require("skyway-js");
+const SkywayPeer = require("skyway-js");
 navigator.getUserMedia =
   navigator.getUserMedia ||
   navigator.webkitGetUserMedia ||
@@ -34,37 +34,50 @@ function stopVideo(element) {
 const webSocket = new WebSocket(SW_WSURL);
 let sendFuncs = [];
 const rooms = {};
-
+const skywayPeer = new SkywayPeer({
+  key: SKYWAY_APIKEY,
+  debug: SKYWAY_DEBUG_LEVEL,
+});
+let isConnectWebSocket = false;
+let isConnectSkywayPeer = false;
 webSocket.onopen = (event) => {
+  isConnectWebSocket = true;
+  if (!isConnectSkywayPeer) {
+    return;
+  }
   for (const func of sendFuncs) {
     func();
   }
   sendFuncs = [];
 };
 
+skywayPeer.on("open", () => {
+  isConnectSkywayPeer = true;
+  if (!isConnectWebSocket) {
+    return;
+  }
+  for (const func of sendFuncs) {
+    func();
+  }
+  sendFuncs = [];
+});
 webSocket.onmessage = (event) => {
   const message = JSON.parse(event.data);
   console.log(message);
   const peerId = message["peer_id"];
   const roomId = message["room_id"];
+  const skywayRoomId = message["skyway_room_id"];
   const room = rooms[roomId];
-  room["peer"] = new Peer({
-    key: SKYWAY_APIKEY,
-    debug: SKYWAY_DEBUG_LEVEL,
+  console.log("joinroom");
+  room["skyway_room"] = skywayPeer.joinRoom(skywayRoomId, {
+    mode: "sfu",
   });
-  room["peer"].on("open", () => {
-    console.log("joinroom");
-    //room["media_connection"] = room["peer"].call(peerId);
-    room["skyway_room"] = room["peer"].joinRoom(roomId, {
-      mode: "sfu",
-    });
-    room["skyway_room"].on("stream", (stream) => {
-      const streamPeerId = stream.peerId;
-      console.log("on stream");
-      if (streamPeerId == peerId) {
-        playVideo(room["video_element"], stream);
-      }
-    });
+  room["skyway_room"].on("stream", (stream) => {
+    const streamPeerId = stream.peerId;
+    console.log("on stream");
+    if (streamPeerId == peerId) {
+      playVideo(room["video_element"], stream);
+    }
   });
 };
 
@@ -90,7 +103,7 @@ window.openVideoConnection = (id, roomId) => {
 window.closeVideoConnection = (roomId) => {
   const room = rooms[roomId];
   stopVideo(room["video_element"]);
-  room["peer"].destroy();
+  room["skyway_room"].close();
   delete rooms[roomId];
 
   webSocket.send(
