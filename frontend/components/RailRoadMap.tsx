@@ -4,7 +4,7 @@ import Platform from "./svgParts/Platform"
 import SwitchPoint from "./svgParts/SwitchPoint"
 import StopPoint from "./svgParts/StopPoint"
 import { TrainData } from "../types/svgPartsTypes"
-import { BunkiRailId, StopRailId } from "../types/websocket-messages"
+import { BunkiRailId, StopRailId } from "../types/control-messages"
 
 interface Prop {
   datas: {
