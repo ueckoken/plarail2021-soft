@@ -46,17 +46,16 @@ func (skvs *stationKVS) update(u StationState) error {
 }
 
 // forceUpdate differs from update for ignore route validation.
-func (skvs *stationKVS) forceUpdate(u StationState) error {
+func (skvs *stationKVS) forceUpdate(u StationState) {
 	skvs.mtx.Lock()
 	defer skvs.mtx.Unlock()
 	for i, s := range skvs.stations {
 		if s.StationID == u.StationID {
 			skvs.stations[i].State = u.State
-			return nil
+			return
 		}
 	}
 	skvs.stations = append(skvs.stations, u)
-	return nil
 }
 func (skvs *stationKVS) get(stationID int32) (station StationState, err error) {
 	skvs.mtx.Lock()
@@ -92,15 +91,11 @@ func (s *SyncController) StartSyncController() {
 
 func (s *SyncController) initNode(e *envStore.Env, kvs *stationKVS) {
 	for c := range s.InitServoRoute {
-		err := kvs.forceUpdate(c)
-		if err != nil {
-			log.Println(err)
-			return
-		}
+		kvs.forceUpdate(c)
 		c2i := servo.NewCommand2Internal(c.StationState, e)
-		err = c2i.Send()
+		err := c2i.Send()
 		if err != nil {
-			log.Println(err)
+			log.Fatalf("initNode Send err: `%v`\n", err)
 			return
 		}
 	}

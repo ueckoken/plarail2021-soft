@@ -74,26 +74,25 @@ func (c2i *Command2Internal) convert2pb() *pb.RequestSync {
 	}
 }
 
-
 func trapResponseGrpcErr(rs *pb.ResponseSync, grpcErr error) error {
 	// From Error will return true in ok if err is occurred by gRPC or nil
 	sta, ok := status.FromError(grpcErr)
 	if (sta != nil && ok) || rs == nil { // gRPC error occur
-		return fmt.Errorf("gRPC Err: %w", grpcErr)
+		return fmt.Errorf("gRPC Err: `%w`", grpcErr)
 	}
 	// check Response Status
 	switch rs.Response.String() {
 	case UNKNOWN:
-		return fmt.Errorf("gRPC Err: %w; gRPC Response status is %s", grpcErr, UNKNOWN)
+		return fmt.Errorf("gRPC Err: `%w`; gRPC Response status is `%s`", grpcErr, UNKNOWN)
 	case SUCCESS:
 		if grpcErr != nil {
-			return fmt.Errorf("gRPC Err: %w; gRPC Response status is %s", grpcErr, SUCCESS)
+			return fmt.Errorf("gRPC Err: `%w`; gRPC Response status is `%s`", grpcErr, SUCCESS)
 		} else {
 			return nil
 		}
 	case FAILED:
-		return fmt.Errorf("gRPC Err: %w; gRPC Response status is %s", grpcErr, FAILED)
+		return fmt.Errorf("gRPC Err: `%w`; gRPC Response status is `%s`", grpcErr, FAILED)
 	default:
-		return fmt.Errorf("gRPC Err: %w; Unknown error is occured", grpcErr)
+		return fmt.Errorf("gRPC Err: `%w`; Unknown error is occured", grpcErr)
 	}
 }
