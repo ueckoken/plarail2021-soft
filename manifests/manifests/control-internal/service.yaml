@@ -6,7 +6,7 @@ metadata:
   labels:
     app: plarail2021-test
 spec:
-  externalName: internal.chofufes2021.gotti.dev
+  externalName: 130.153.17.100
   ports:
   - name: prom
     port: 80
