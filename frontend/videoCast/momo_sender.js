@@ -8,6 +8,12 @@ async function getDeviceStream(option) {
     navigator.getUserMedia(option, resolve, reject);
   });
 }
+function createRandomString(num) {
+  const S = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  return Array.from(crypto.getRandomValues(new Uint8Array(num)))
+    .map((n) => S[n % S.length])
+    .join("");
+}
 remoteVideo.controls = true;
 localVideo.controls = true;
 
@@ -48,60 +54,76 @@ window.connectMomo = async () => {
 };
 
 function playVideo(element, stream) {
-  element.srcObject = stream;
+  if ("srcObject" in element) {
+    element.srcObject = stream;
+  } else {
+    element.src = window.URL.createObjectURL(stream);
+  }
+  element.play();
+  element.volume = 0;
 }
 function stopVideo(element) {
   element.pause();
-  element.srcObject = null;
+  if ("srcObject" in element) {
+    element.srcObject = null;
+  } else {
+    element.src = null;
+  }
 }
 const SkywayPeer = require("skyway-js");
 const webSocket = new WebSocket(SW_WSURL);
 
-let skywayPeer = null;
-let roomId = null;
-let skywayRoom = null;
+let room = {};
+const skywayPeer = new SkywayPeer({
+  key: SKYWAY_APIKEY,
+  debug: SKYWAY_DEBUG_LEVEL,
+});
+function connectRoom(roomId, stream) {
+  let room = {};
+  room["room_id"] = roomId;
+  room["stream"] = stream;
+  room["skyway_room_id"] = room["room_id"] + createRandomString(16);
+  room["skyway_room"] = skywayPeer.joinRoom(room["skyway_room_id"], {
+    mode: "sfu",
+    stream: room["stream"],
+  });
+  room["skyway_room"].on("open", () => {
+    console.log(room);
+    webSocket.send(
+      JSON.stringify({
+        msg_type: "connect_sender",
+        peer_id: skywayPeer.id,
+        room_id: room["room_id"],
+        skyway_room_id: room["skyway_room_id"],
+        sender_token: SENDER_TOKEN,
+      })
+    );
+  });
+  return room;
+}
+
 window.connectReceiver = () => {
-  skywayPeer = new SkywayPeer({
-    key: SKYWAY_APIKEY,
-    debug: SKYWAY_DEBUG_LEVEL,
-  });
-  roomId = roomIdInput.value;
-  skywayPeer.on("open", () => {
-    const selector = document.getElementById("select_source");
-    const selectedIdx = selector.selectedIndex;
-    const selected = selector.options[selectedIdx].value;
-    let stream = null;
-    if (selected == "momo") {
-      stream = momoStream;
-    } else {
-      stream = cameraStream;
-    }
-    skywayRoom = skywayPeer.joinRoom(roomId, {
-      mode: "sfu",
-      stream: stream,
-    });
-    skywayRoom.on("open", () => {
-      webSocket.send(
-        JSON.stringify({
-          msg_type: "connect_sender",
-          peer_id: skywayPeer.id,
-          room_id: roomId,
-          sender_token: SENDER_TOKEN,
-        })
-      );
-    });
-  });
+  let stream = null;
+  const selector = document.getElementById("select_source");
+  const selectedIdx = selector.selectedIndex;
+  const selected = selector.options[selectedIdx].value;
+  if (selected == "momo") {
+    stream = momoStream;
+  } else {
+    stream = cameraStream;
+  }
+  room = connectRoom(roomIdInput.value, stream);
 };
+
 window.disconnectReceiver = () => {
-  skywayPeer.destroy();
-  skywayPeer = null;
-  skywayRoom = null;
+  room["skyway_room"].close();
   webSocket.send(
     JSON.stringify({
       msg_type: "exit_room",
-      room_id: roomId,
+      room_id: room["room_id"],
     })
   );
+  room = {};
 };
 
 let cameraStream = null;
@@ -111,7 +133,22 @@ window.connectCamera = async () => {
 };
 window.disconnectCamera = () => {
   if (cameraStream) {
-    cameraStream.destroy();
+    cameraStream.getTracks().forEach((track) => track.stop());
+    cameraStream = null;
   }
   stopVideo(localVideo);
+};
+
+webSocket.onmessage = (event) => {
+  const message = JSON.parse(event.data);
+  console.log(message);
+  const msg_type = message["msg_type"];
+  if (msg_type == "request_reconnect_sender") {
+    const oldRoom = room;
+    setTimeout(() => {
+      oldRoom["skyway_room"].close();
+    }, 30000);
+    // 前の通信残すようにしてるけどあまり効果ない?
+    room = connectRoom(room["room_id"], room["stream"]);
+  }
 };

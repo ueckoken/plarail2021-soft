@@ -28,7 +28,7 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 
 	ctx, cancel := context.WithCancel(context.Background())
-	n := make(chan storeSpeed.TrainConf)
+	n := make(chan storeSpeed.TrainConf, 64)
 	unregister := make(chan struct{})
 	notifier := Client{ClientNotifier{n, unregister}}
 	m.ClientNotification <- notifier
