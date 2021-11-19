@@ -162,7 +162,7 @@ const RailroadMap: FC<Prop> = ({
           { x: 120, y: 120 },
           { x: 20, y: 120 },
           { x: 20, y: 20 },
-          { x: 140, y: 20 }
+          { x: 140, y: 20 },
         ]}
         trains={[]}
       />
@@ -171,28 +171,28 @@ const RailroadMap: FC<Prop> = ({
           { x: 120, y: 120 },
           { x: 20, y: 120 },
           { x: 20, y: 20 },
-          { x: 140, y: 20 }
+          { x: 140, y: 20 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 140, y: 20 },
-          { x: 160, y: 20 }
+          { x: 160, y: 20 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 140, y: 20 },
-          { x: 140, y: 100 }
+          { x: 140, y: 100 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 140, y: 100 },
-          { x: 120, y: 120 }
+          { x: 120, y: 120 },
         ]}
         trains={[]}
       />
@@ -200,14 +200,14 @@ const RailroadMap: FC<Prop> = ({
         positions={[
           { x: 120, y: 120 },
           { x: 120, y: 240 },
-          { x: 150, y: 270 }
+          { x: 150, y: 270 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 150, y: 270 },
-          { x: 150, y: 310 }
+          { x: 150, y: 310 },
         ]}
         trains={[]}
       />
@@ -218,7 +218,7 @@ const RailroadMap: FC<Prop> = ({
           { x: 120, y: 420 },
           { x: 180, y: 420 },
           { x: 180, y: 340 },
-          { x: 150, y: 310 }
+          { x: 150, y: 310 },
         ]}
         trains={[]}
       />
@@ -227,14 +227,14 @@ const RailroadMap: FC<Prop> = ({
           { x: 150, y: 270 },
           { x: 180, y: 240 },
           { x: 180, y: 120 },
-          { x: 320, y: 120 }
+          { x: 320, y: 120 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 160, y: 20 },
-          { x: 320, y: 20 }
+          { x: 320, y: 20 },
         ]}
         trains={[]}
       />
@@ -243,14 +243,14 @@ const RailroadMap: FC<Prop> = ({
           { x: 160, y: 20 },
           { x: 200, y: 60 },
           { x: 280, y: 60 },
-          { x: 320, y: 20 }
+          { x: 320, y: 20 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 320, y: 20 },
-          { x: 380, y: 20 }
+          { x: 380, y: 20 },
         ]}
         trains={[]}
       />
@@ -259,49 +259,49 @@ const RailroadMap: FC<Prop> = ({
           { x: 140, y: 100 },
           { x: 160, y: 80 },
           { x: 280, y: 80 },
-          { x: 320, y: 120 }
+          { x: 320, y: 120 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 320, y: 120 },
-          { x: 380, y: 120 }
+          { x: 380, y: 120 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 380, y: 120 },
-          { x: 420, y: 160 }
+          { x: 420, y: 160 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 420, y: 160 },
-          { x: 440, y: 160 }
+          { x: 440, y: 160 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 440, y: 160 },
-          { x: 480, y: 120 }
+          { x: 480, y: 120 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 380, y: 120 },
-          { x: 480, y: 120 }
+          { x: 480, y: 120 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 480, y: 120 },
-          { x: 600, y: 120 }
+          { x: 600, y: 120 },
         ]}
         trains={[]}
       />
@@ -309,42 +309,42 @@ const RailroadMap: FC<Prop> = ({
         positions={[
           { x: 440, y: 160 },
           { x: 560, y: 160 },
-          { x: 600, y: 120 }
+          { x: 600, y: 120 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 380, y: 20 },
-          { x: 480, y: 20 }
+          { x: 480, y: 20 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 380, y: 20 },
-          { x: 420, y: 60 }
+          { x: 420, y: 60 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 420, y: 60 },
-          { x: 440, y: 60 }
+          { x: 440, y: 60 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 440, y: 60 },
-          { x: 480, y: 20 }
+          { x: 480, y: 20 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 480, y: 20 },
-          { x: 600, y: 20 }
+          { x: 600, y: 20 },
         ]}
         trains={[]}
       />
@@ -352,7 +352,7 @@ const RailroadMap: FC<Prop> = ({
         positions={[
           { x: 440, y: 60 },
           { x: 560, y: 60 },
-          { x: 600, y: 20 }
+          { x: 600, y: 20 },
         ]}
         trains={[]}
       />
@@ -371,7 +371,7 @@ const RailroadMap: FC<Prop> = ({
           { x: 360, y: 220 },
           { x: 380, y: 200 },
           { x: 380, y: 160 },
-          { x: 420, y: 160 }
+          { x: 420, y: 160 },
         ]}
         trains={[]}
       />
@@ -382,7 +382,7 @@ const RailroadMap: FC<Prop> = ({
           { x: 660, y: 60 },
           { x: 740, y: 60 },
           { x: 780, y: 20 },
-          { x: 800, y: 20 }
+          { x: 800, y: 20 },
         ]}
         trains={[]}
       />
@@ -393,21 +393,21 @@ const RailroadMap: FC<Prop> = ({
           { x: 660, y: 80 },
           { x: 740, y: 80 },
           { x: 780, y: 120 },
-          { x: 800, y: 120 }
+          { x: 800, y: 120 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 800, y: 20 },
-          { x: 840, y: 60 }
+          { x: 840, y: 60 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 800, y: 120 },
-          { x: 840, y: 80 }
+          { x: 840, y: 80 },
         ]}
         trains={[]}
       />
@@ -416,7 +416,7 @@ const RailroadMap: FC<Prop> = ({
           { x: 800, y: 20 },
           { x: 1100, y: 20 },
           { x: 1100, y: 120 },
-          { x: 800, y: 120 }
+          { x: 800, y: 120 },
         ]}
         trains={[]}
       />
@@ -425,7 +425,7 @@ const RailroadMap: FC<Prop> = ({
           { x: 840, y: 60 },
           { x: 800, y: 60 },
           { x: 800, y: 80 },
-          { x: 840, y: 80 }
+          { x: 840, y: 80 },
         ]}
         trains={[]}
       />
@@ -433,7 +433,7 @@ const RailroadMap: FC<Prop> = ({
         positions={[
           { x: 840, y: 60 },
           { x: 1000, y: 60 },
-          { x: 1000, y: 280 }
+          { x: 1000, y: 280 },
         ]}
         trains={[]}
       />
@@ -441,7 +441,7 @@ const RailroadMap: FC<Prop> = ({
         positions={[
           { x: 840, y: 80 },
           { x: 940, y: 80 },
-          { x: 940, y: 280 }
+          { x: 940, y: 280 },
         ]}
         trains={[]}
       />
@@ -450,49 +450,49 @@ const RailroadMap: FC<Prop> = ({
           { x: 940, y: 280 },
           { x: 880, y: 340 },
           { x: 880, y: 420 },
-          { x: 940, y: 480 }
+          { x: 940, y: 480 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 940, y: 280 },
-          { x: 940, y: 340 }
+          { x: 940, y: 340 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 1000, y: 280 },
-          { x: 940, y: 340 }
+          { x: 940, y: 340 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 940, y: 340 },
-          { x: 940, y: 420 }
+          { x: 940, y: 420 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 940, y: 420 },
-          { x: 1000, y: 480 }
+          { x: 1000, y: 480 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 1000, y: 280 },
-          { x: 1000, y: 480 }
+          { x: 1000, y: 480 },
         ]}
         trains={[]}
       />
       <Rail
         positions={[
           { x: 940, y: 420 },
-          { x: 940, y: 480 }
+          { x: 940, y: 480 },
         ]}
         trains={[]}
       />
@@ -501,7 +501,7 @@ const RailroadMap: FC<Prop> = ({
           { x: 940, y: 480 },
           { x: 940, y: 600 },
           { x: 1000, y: 600 },
-          { x: 1000, y: 480 }
+          { x: 1000, y: 480 },
         ]}
         trains={[]}
       />
