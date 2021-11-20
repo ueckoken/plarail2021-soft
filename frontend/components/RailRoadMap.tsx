@@ -426,7 +426,7 @@ const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
         trains={[]}
       />
 
-      <StopPoint position={{ x: 120, y: 20 }} isStop={!stop.kitano_s1} />
+      <StopPoint position={{ x: 120, y: 20 }} isStop={!stop.kitano_s6} />
       <StopPoint position={{ x: 240, y: 20 }} isStop={!stop.kitano_s4} />
       <StopPoint position={{ x: 240, y: 60 }} isStop={!stop.kitano_s3} />
       <StopPoint position={{ x: 240, y: 80 }} isStop={!stop.kitano_s2} />
