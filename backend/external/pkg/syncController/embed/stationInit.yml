@@ -12,10 +12,6 @@ stations:
     state: ON
   - name: iwamotocho_b1
     state: ON
-  - name: iwamotocho_b2
-    state: ON
-  - name: iwamotocho_b3
-    state: ON
   - name: iwamotocho_b4
     state: ON
 
