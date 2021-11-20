@@ -16,7 +16,7 @@ interface Prop {
 
 const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
   return (
-    <svg width={1120} height={620} viewBox="0 0 1120 620">
+    <svg width="100%" viewBox="0 0 1120 620">
       <rect x={0} y={0} width={1120} height={620} fill="lightgray" />
 
       <Platform name="京王八王子" position={{ x: 60, y: 70 }} />
