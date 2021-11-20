@@ -20,10 +20,6 @@ type StopPointState = Record<StopRailId, boolean>
 const INITIAL_STOP_POINT_STATE: StopPointState = {
   motoyawata_s1: false,
   motoyawata_s2: false,
-  motoyawata_s3: false,
-  motoyawata_s4: false,
-  motoyawata_s5: false,
-  motoyawata_s6: false,
   iwamotocho_s1: false,
   iwamotocho_s2: false,
   iwamotocho_s4: false,
@@ -48,6 +44,7 @@ const INITIAL_STOP_POINT_STATE: StopPointState = {
   kitano_s4: false,
   kitano_s5: false,
   kitano_s6: false,
+  kitano_s7: false,
   takao_s1: false,
   takao_s2: false,
 }
@@ -68,7 +65,6 @@ const INITIAL_SWITCH_POINT_STATE: SwitchPointState = {
   kitano_b1: false,
   kitano_b2: false,
   kitano_b3: false,
-  kitano_b4: false,
 }
 
 type SpeedState = Record<TrainId, number>

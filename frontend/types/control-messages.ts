@@ -6,10 +6,6 @@ export const unknownId = t.literal("unknown")
 export const stopRailId = t.union([
   t.literal("motoyawata_s1"),
   t.literal("motoyawata_s2"),
-  t.literal("motoyawata_s3"),
-  t.literal("motoyawata_s4"),
-  t.literal("motoyawata_s5"),
-  t.literal("motoyawata_s6"),
   t.literal("iwamotocho_s1"),
   t.literal("iwamotocho_s2"),
   t.literal("iwamotocho_s4"),
@@ -34,6 +30,7 @@ export const stopRailId = t.union([
   t.literal("kitano_s4"),
   t.literal("kitano_s5"),
   t.literal("kitano_s6"),
+  t.literal("kitano_s7"),
   t.literal("takao_s1"),
   t.literal("takao_s2"),
 ])
@@ -54,7 +51,6 @@ export const bunkiRailId = t.union([
   t.literal("kitano_b1"),
   t.literal("kitano_b2"),
   t.literal("kitano_b3"),
-  t.literal("kitano_b4"),
 ])
 export type BunkiRailId = t.TypeOf<typeof bunkiRailId>
 
