@@ -26,8 +26,6 @@ func (p *PingHandler) Start() {
 					resp, err := client.Get(s.Station.Address + "/health")
 					if err != nil {
 						p.Esp32HealthCheck.With(prometheus.Labels{"esp32Addr": s.Station.Name}).Set(0)
-						ioutil.ReadAll(resp.Body)
-						resp.Body.Close()
 						continue
 					}
 					defer ioutil.ReadAll(resp.Body)
