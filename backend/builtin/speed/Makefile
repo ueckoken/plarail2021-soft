@@ -1,7 +1,7 @@
 start: startPy startGo
 
 startGo: 
-	./main
+	./main &
 
 startPy:
 	python3 control_pin.py
