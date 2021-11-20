@@ -2,18 +2,17 @@ package storeSpeed
 
 import (
 	"errors"
-	"net"
 	"sync"
 	pb "ueckoken/plarail2021-soft-speed/spec"
 )
 
 type Train struct {
 	Name pb.SendSpeed_Train
-	Addr net.Addr
+	Addr string
 }
 
-func NewTrain(name pb.SendSpeed_Train) Train {
-	return Train{Name: name}
+func NewTrain(name pb.SendSpeed_Train, addr string) Train {
+	return Train{Name: name, Addr: addr}
 }
 
 type TrainConf interface {

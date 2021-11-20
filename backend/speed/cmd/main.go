@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/prometheus/client_golang/prometheus"
 	"ueckoken/plarail2021-soft-speed/internal"
+	"ueckoken/plarail2021-soft-speed/pkg/train2IP"
 )
 
 const namespace = "plarail2021_speed"
@@ -35,7 +36,8 @@ func main() {
 		[]string{},
 	)
 
-	handler := internal.ClientHandler{Clients: &internal.ClientSet{}}
+	trainInfo := train2IP.GetTable()
+	handler := internal.ClientHandler{Clients: &internal.ClientSet{}, TrainName2Id: trainInfo}
 	server := internal.SpeedServer{ClientHandler: &handler, NumberOfClientConnection: clientConn, TotalCLientCommands: controlCommandTotal, Speed: speed}
 	server.StartSpeed()
 }

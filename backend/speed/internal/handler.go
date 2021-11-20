@@ -3,6 +3,7 @@ package internal
 import (
 	"net/http"
 	"ueckoken/plarail2021-soft-speed/pkg/storeSpeed"
+	"ueckoken/plarail2021-soft-speed/pkg/train2IP"
 
 	"context"
 	"encoding/json"
@@ -60,7 +61,7 @@ func handleClientCommand(ctx context.Context, c *websocket.Conn, m *ClientHandle
 		case <-ctx.Done():
 			return
 		default:
-			r, err := unpackClientSendData(c)
+			r, err := unpackClientSendData(c, m.TrainName2Id)
 			if err != nil {
 				log.Println(err)
 				return
@@ -86,7 +87,7 @@ func handleClientPing(ctx context.Context, c *websocket.Conn) {
 	}
 }
 
-func unpackClientSendData(c *websocket.Conn) (*storeSpeed.TrainConf, error) {
+func unpackClientSendData(c *websocket.Conn, nameDir train2IP.Name2Id) (*storeSpeed.TrainConf, error) {
 	_, msg, err := c.ReadMessage()
 	if err != nil {
 		return nil, fmt.Errorf("websocket read failed: %e", err)
@@ -96,7 +97,10 @@ func unpackClientSendData(c *websocket.Conn) (*storeSpeed.TrainConf, error) {
 	if err != nil {
 		return nil, fmt.Errorf("bad json format: %e", err)
 	}
-	speed := storeSpeed.NewTrainConf(storeSpeed.NewTrain(pb.SendSpeed_Train(pb.SendSpeed_Train_value[ud.TrainName])))
+	speed := storeSpeed.NewTrainConf(
+		storeSpeed.NewTrain(pb.SendSpeed_Train(pb.SendSpeed_Train_value[ud.TrainName]),
+			nameDir.SearchIp(ud.TrainName)),
+	)
 	speed.SetSpeed(int32(ud.Speed))
 	return &speed, nil
 }

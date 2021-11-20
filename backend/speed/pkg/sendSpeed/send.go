@@ -10,21 +10,21 @@ import (
 	pb "ueckoken/plarail2021-soft-speed/spec"
 )
 
-type sendSpeed struct {
+type SendSpeed struct {
 	Train storeSpeed.TrainConf
 }
 
-func (s *sendSpeed) Send() error {
+func (s *SendSpeed) Send() error {
 	return trapSendErr(s.sendRaw())
 }
 
-func (s *sendSpeed) sendRaw() (*pb.StatusCode, error) {
+func (s *SendSpeed) sendRaw() (*pb.StatusCode, error) {
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
 	conn, err := grpc.DialContext(
 		ctx,
-		s.Train.GetTrain().Addr.String(),
+		s.Train.GetTrain().Addr,
 		grpc.WithInsecure(), grpc.WithBlock(),
 		grpc.WithUnaryInterceptor(grpcPrometheus.UnaryClientInterceptor),
 	)
@@ -53,7 +53,7 @@ func trapSendErr(code *pb.StatusCode, err error) error {
 		return fmt.Errorf("gRPC error `%w`,status code is `%d`", err, code.GetCode())
 	}
 }
-func (s *sendSpeed) convert2pb() *pb.SendSpeed {
+func (s *SendSpeed) convert2pb() *pb.SendSpeed {
 	pss := pb.SendSpeed{
 		Speed: s.Train.GetSpeed(),
 		Train: s.Train.GetTrain().Name,
