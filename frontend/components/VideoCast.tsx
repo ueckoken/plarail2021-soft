@@ -2,8 +2,13 @@ import { string } from "fp-ts"
 import { NullType } from "io-ts"
 import React, { FC, useEffect, useState, useRef } from "react"
 import Peer, { MediaConnection, SfuRoom, MeshRoom } from "skyway-js"
-
-interface Prop {}
+interface PeerIdProp {
+  peerId: string
+}
+type MediaStreamWithPeerId = MediaStream & PeerIdProp
+interface Prop {
+  roomIds: string[]
+}
 const SW_WSURL = "wss://webrtc.chofufes2021.gotti.dev/"
 const SKYWAY_APIKEY =
   process.env.SKYWAY_APIKEY === undefined
@@ -29,12 +34,15 @@ interface Room {
   //video_ref: HTMLAnchorElement | null;
   room_id: string | null
 }
-const VideoCast: FC<Prop> = ({}) => {
-  const [castingStream, setCastingStream] = useState<MediaStream | null>(null)
+const VideoCast: FC<Prop> = ({ roomIds }) => {
+  const [castingStreams, setCastingStreams] = useState<{
+    [room_id: string]: MediaStream | null
+  }>({})
   const [webSocket, setWebSocket] = useState<WebSocket>()
   const [skywayPeer, setSkywayPeer] = useState<Peer>()
   const [rooms, setRooms] = useState<{ [room_id: string]: Room }>({})
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoRef = useRef<{ [room_id: string]: HTMLVideoElement }>({})
+  //const roomIds = ["aaa", "bbb"]
   useEffect(() => {
     const ws = new WebSocket(SW_WSURL)
     const peer = new Peer({
@@ -47,25 +55,29 @@ const VideoCast: FC<Prop> = ({}) => {
 
     let isConnectWebSocket = false
     let isConnectSkywayPeer = false
-    let roomId = "aaa"
-    let room: Room = { skyway_room: null, room_id: roomId }
-    const rooms_ = Object.assign({}, rooms)
-    rooms_[roomId] = room
-    setRooms(rooms_)
+    const nextRooms = {
+      ...rooms,
+    }
+    roomIds.forEach((roomId) => {
+      nextRooms[roomId] = { skyway_room: null, room_id: roomId }
+    })
+    setRooms(nextRooms)
     const sendFunc = () => {
-      ws.send(
-        JSON.stringify({
-          msg_type: "connect_receiver",
-          room_id: roomId,
-        })
-      )
+      roomIds.forEach((roomId) => {
+        ws.send(
+          JSON.stringify({
+            msg_type: "connect_receiver",
+            room_id: roomId,
+          })
+        )
+      })
     }
     if (ws.readyState == ws.OPEN) {
       sendFunc()
     } else {
       sendFuncs.push(sendFunc)
     }
-    ws.onopen = (event) => {
+    ws.addEventListener("open", (event) => {
       isConnectWebSocket = true
       if (!isConnectSkywayPeer) {
         return
@@ -74,7 +86,7 @@ const VideoCast: FC<Prop> = ({}) => {
         func()
       }
       sendFuncs = []
-    }
+    })
 
     peer.on("open", () => {
       isConnectSkywayPeer = true
@@ -86,53 +98,84 @@ const VideoCast: FC<Prop> = ({}) => {
       }
       sendFuncs = []
     })
-    ws.onmessage = (event) => {
+    ws.addEventListener("message", (event) => {
       const message = JSON.parse(event.data)
       console.log(message)
       const peerId = message["peer_id"]
       const roomId = message["room_id"]
       const skywayRoomId = message["skyway_room_id"]
 
-      const rooms_ = Object.assign({}, rooms)
       console.log("joinroom")
       const skywayRoom = peer.joinRoom(skywayRoomId, {
         mode: "sfu",
       })
-      let room: Room = { room_id: roomId, skyway_room: skywayRoom }
-      rooms_[roomId] = room
+      const room: Room = { room_id: roomId, skyway_room: skywayRoom }
+      const nextRooms = {
+        ...rooms,
+        [roomId]: room,
+      }
       if (skywayRoom) {
-        skywayRoom.on("stream", (stream: MediaStream) => {
-          //const streamPeerId = stream.peerId;
+        skywayRoom.on("stream", (stream: MediaStreamWithPeerId) => {
+          const streamPeerId = stream.peerId
           console.log("on stream")
-          //if (streamPeerId == peerId) {
-          setCastingStream(stream)
-          //}
+          if (streamPeerId == peerId) {
+            const nextStreams = {
+              ...castingStreams,
+              [roomId]: stream,
+            }
+            setCastingStreams(nextStreams)
+          }
         })
       }
-      setRooms(rooms_)
+      setRooms(nextRooms)
+    })
+    return () => {
+      ws.close()
+      peer.destroy()
     }
   }, [])
 
   useEffect(() => {
-    if (videoRef && videoRef.current) {
-      if ("srcObject" in videoRef.current) {
-        videoRef.current.srcObject = castingStream
-      } else {
-        //videoRef.current.src = castingStream; // window.URL.createObjectURL(castingStream);
+    roomIds.forEach((roomId) => {
+      if (
+        videoRef &&
+        videoRef.current &&
+        roomId in videoRef.current &&
+        videoRef.current[roomId] &&
+        roomId in castingStreams &&
+        castingStreams[roomId]
+      ) {
+        if ("srcObject" in videoRef.current[roomId]) {
+          if (videoRef.current[roomId].srcObject != castingStreams[roomId]) {
+            videoRef.current[roomId].srcObject = castingStreams[roomId]
+            try {
+              videoRef.current[roomId].play()
+            } catch (error) {}
+            videoRef.current[roomId].volume = 0
+          }
+        } else {
+          //videoRef.current.src = castingStreams["a"] // window.URL.createObjectURL(castingStream);
+        }
       }
-      videoRef.current.play()
-      videoRef.current.volume = 0
-    }
-  }, [castingStream])
+    })
+  }, [castingStreams])
   return (
     <React.Fragment>
-      <video
-        width={400}
-        height={400}
-        ref={videoRef}
-        autoPlay
-        playsInline
-      ></video>
+      {roomIds.map((roomId) => {
+        return (
+          <video
+            width={400}
+            ref={(el) => {
+              if (el != null) {
+                videoRef.current[roomId] = el
+              }
+            }}
+            autoPlay
+            playsInline
+            key={roomId}
+          ></video>
+        )
+      })}
     </React.Fragment>
   )
 }
