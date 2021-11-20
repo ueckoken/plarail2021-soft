@@ -32,8 +32,7 @@ def change_speed(speed: float):
 
 # start HTTP server
 def start_server():
-    server_addr = ("127.0.0.1", 8081)
-    
+    server_addr = ("0.0.0.0", 8081)
     with http.server.HTTPServer(server_addr, ControlPin) as httpd:
        httpd.serve_forever()
 

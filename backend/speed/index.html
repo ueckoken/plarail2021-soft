@@ -1,0 +1,36 @@
+
+<html>
+<head>
+    <title>Hello WebSocket</title>
+
+    <script type="text/javascript">
+        var sock = null;
+        var data = "";
+
+        function update() {
+            var p1 = document.getElementById("plot");
+            p1.innerHTML = data;
+        };
+        function send() {
+            sock.send(`{"train_name": "TAKAO", "speed": 100}`);
+        };
+        window.onload = function () {
+            sock = new WebSocket("wss://speed.chofufes2021.gotti.dev/speed");
+            setInterval("send()",1000);
+            sock.onmessage = function (event) {
+                var data = JSON.parse(event.data);
+                console.log(data);
+                update();
+            };
+        };
+    </script>
+</head>
+<body>
+<div id="header">
+    <h1>Hello WebSocket</h1>
+</div>
+<div id="content">
+    <div id="plot"></div>
+</div>
+</body>
+</html>
