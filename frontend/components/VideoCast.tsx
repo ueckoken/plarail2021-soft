@@ -1,4 +1,11 @@
-import React, { FC, useEffect, useState, useRef, useCallback } from "react"
+import React, {
+  FC,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  CSSProperties,
+} from "react"
 import Peer, { SfuRoom, MeshRoom } from "skyway-js"
 import { SendMessage, WebRTCMessage } from "../types/webrtc-message"
 interface PeerIdProp {
@@ -7,6 +14,7 @@ interface PeerIdProp {
 type MediaStreamWithPeerId = MediaStream & PeerIdProp
 interface Prop {
   roomIds: string[]
+  styles: CSSProperties[]
 }
 const SW_WSURL = "wss://webrtc.chofufes2021.gotti.dev/"
 const SKYWAY_APIKEY =
@@ -15,7 +23,7 @@ const SKYWAY_APIKEY =
     : process.env.SKYWAY_APIKEY
 const SKYWAY_DEBUG_LEVEL = 2
 
-const VideoCast: FC<Prop> = ({ roomIds }) => {
+const VideoCast: FC<Prop> = ({ roomIds, styles }) => {
   const webSocket = useRef<WebSocket>()
   const [isWebSocketAvailable, setIsWebSocketAvailable] =
     useState<boolean>(false)
@@ -57,7 +65,7 @@ const VideoCast: FC<Prop> = ({ roomIds }) => {
 
   return (
     <React.Fragment>
-      {roomIds.map((roomId) => {
+      {roomIds.map((roomId, index) => {
         if (
           webSocket.current === undefined ||
           skywayPeer.current === undefined ||
@@ -72,6 +80,7 @@ const VideoCast: FC<Prop> = ({ roomIds }) => {
             ws={webSocket.current}
             peer={skywayPeer.current}
             key={roomId}
+            style={styles[index]}
           />
         )
       })}
@@ -83,9 +92,10 @@ type RoomViewerProps = {
   roomId: string
   ws: WebSocket
   peer: Peer
+  style: CSSProperties
 }
 
-const RoomViewer: FC<RoomViewerProps> = ({ roomId, ws, peer }) => {
+const RoomViewer: FC<RoomViewerProps> = ({ roomId, ws, peer, style }) => {
   const [skywayRoom, setSkywayRoom] = useState<SfuRoom | MeshRoom | null>(null)
   const [peerId, setPeerId] = useState<string | null>(null)
 
@@ -132,15 +142,20 @@ const RoomViewer: FC<RoomViewerProps> = ({ roomId, ws, peer }) => {
   if (skywayRoom === null || peerId === null) {
     return <p>NO STREAM</p>
   }
-  return <SkywayRoomViewer room={skywayRoom} peerId={peerId} />
+  return <SkywayRoomViewer room={skywayRoom} peerId={peerId} style={style} />
 }
 
 type SkywayRoomViewerProps = {
   room: SfuRoom | MeshRoom
   peerId: string
+  style: CSSProperties
 }
 
-const SkywayRoomViewer: FC<SkywayRoomViewerProps> = ({ room, peerId }) => {
+const SkywayRoomViewer: FC<SkywayRoomViewerProps> = ({
+  room,
+  peerId,
+  style,
+}) => {
   const ref = useRef<HTMLVideoElement>(null)
   const [castingStream, setCastingStream] = useState<MediaStreamWithPeerId>()
   const onStream = useCallback(
@@ -175,7 +190,7 @@ const SkywayRoomViewer: FC<SkywayRoomViewerProps> = ({ room, peerId }) => {
       video.volume = 0
     }
   }, [castingStream])
-  return <video width={400} ref={ref} autoPlay playsInline></video>
+  return <video style={style} ref={ref} autoPlay playsInline></video>
 }
 
 export default VideoCast
