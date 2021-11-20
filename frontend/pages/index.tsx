@@ -151,7 +151,7 @@ const Home: NextPage = () => {
         <section>
           <h2>映像部分</h2>
           <div>(video予定地)</div>
-          <VideoCast />
+          <VideoCast roomIds={["aaa", "bbb"]} />
         </section>
 
         <section>
