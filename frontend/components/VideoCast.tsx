@@ -136,13 +136,7 @@ const VideoCast: FC<Prop> = ({}) => {
   }, [castingStream])
   return (
     <React.Fragment>
-      <video
-        width={400}
-        height={400}
-        ref={videoRef}
-        autoPlay
-        playsInline
-      ></video>
+      <video width="100%" ref={videoRef} autoPlay playsInline></video>
     </React.Fragment>
   )
 }
