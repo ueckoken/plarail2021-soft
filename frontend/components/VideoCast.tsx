@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef, memo } from "react"
+import React, { FC, useEffect, useState, useRef, useCallback } from "react"
 import Peer, { SfuRoom, MeshRoom } from "skyway-js"
 import { SendMessage, WebRTCMessage } from "../types/webrtc-message"
 interface PeerIdProp {
@@ -43,9 +43,15 @@ const VideoCast: FC<Prop> = ({ roomIds }) => {
       console.log("opened skyway peer")
       setIsPeerAvailable(true)
     })
+    skywayPeer.current.on("close", () => {
+      console.log("closed skyway peer")
+      setIsPeerAvailable(false)
+    })
     return () => {
       webSocket.current?.close()
       skywayPeer.current?.destroy()
+      setIsWebSocketAvailable(false)
+      setIsPeerAvailable(false)
     }
   }, [])
 
@@ -97,6 +103,9 @@ const RoomViewer: FC<RoomViewerProps> = ({ roomId, ws, peer }) => {
       const skywayRoom = peer.joinRoom(skywayRoomId, {
         mode: "sfu",
       })
+      skywayRoom.on("open", (e: any) => {
+        console.log("sfuroom onopen", e)
+      })
       setSkywayRoom(skywayRoom)
       setPeerId(peerId)
     }
@@ -116,11 +125,12 @@ const RoomViewer: FC<RoomViewerProps> = ({ roomId, ws, peer }) => {
         room_id: roomId,
       }
       ws.send(JSON.stringify(exitMessage))
+      skywayRoom?.close()
       console.log("ruu close send", roomId)
     }
-  }, [])
-  if (peerId === null) {
-    return <p>PREPARING VIDEO</p>
+  }, [roomId, ws, peer, skywayRoom, setSkywayRoom, setPeerId])
+  if (skywayRoom === null || peerId === null) {
+    return <p>NO STREAM</p>
   }
   return <SkywayRoomViewer room={skywayRoom} peerId={peerId} />
 }
@@ -133,16 +143,23 @@ type SkywayRoomViewerProps = {
 const SkywayRoomViewer: FC<SkywayRoomViewerProps> = ({ room, peerId }) => {
   const ref = useRef<HTMLVideoElement>(null)
   const [castingStream, setCastingStream] = useState<MediaStreamWithPeerId>()
-  useEffect(() => {
-    room.on("stream", (stream: MediaStreamWithPeerId) => {
+  const onStream = useCallback(
+    (stream: MediaStreamWithPeerId) => {
       const streamPeerId = stream.peerId
       console.log("ruu on stream", stream)
       if (streamPeerId !== peerId) {
         return
       }
       setCastingStream(stream)
-    })
-  }, [room, setCastingStream])
+    },
+    [peerId, setCastingStream]
+  )
+  useEffect(() => {
+    room.on("stream", onStream)
+    return () => {
+      room.off("stream", onStream)
+    }
+  }, [room, onStream])
   useEffect(() => {
     const video = ref.current
     if (video === null || castingStream === undefined) {
@@ -160,7 +177,5 @@ const SkywayRoomViewer: FC<SkywayRoomViewerProps> = ({ room, peerId }) => {
   }, [castingStream])
   return <video width={400} ref={ref} autoPlay playsInline></video>
 }
-
-const MemoizedSkywayRoomViewer = memo(SkywayRoomViewer)
 
 export default VideoCast
