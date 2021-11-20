@@ -10,39 +10,11 @@ interface Prop {
   datas: {
     stop: Record<StopRailId, boolean>
     switchState: Record<BunkiRailId, boolean>
-    switch1: boolean
-    switch2: boolean
-    switch3: boolean
-    switch4: boolean
-    switch5: boolean
-    switch6: boolean
-    switch7: boolean
-    switch8: boolean
-    switch9: boolean
-    switch10: boolean
-    switch11: boolean
     train1: TrainData
   }
 }
 
-const RailroadMap: FC<Prop> = ({
-  datas: {
-    stop,
-    switchState,
-    switch1,
-    switch2,
-    switch3,
-    switch4,
-    switch5,
-    switch6,
-    switch7,
-    switch8,
-    switch9,
-    switch10,
-    switch11,
-    train1,
-  },
-}) => {
+const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
   return (
     <svg width={1120} height={620} viewBox="0 0 1120 620">
       <rect x={0} y={0} width={1120} height={620} fill="lightgray" />
@@ -489,63 +461,63 @@ const RailroadMap: FC<Prop> = ({
         fromAngle={180}
         leftOutAngle={0}
         rightOutAngle={45}
-        isLeft={switch1}
+        isLeft={switchState.kitano_b2}
       />
       <SwitchPoint
         position={{ x: 320, y: 120 }}
         fromAngle={0}
         leftOutAngle={180}
         rightOutAngle={225}
-        isLeft={switch1}
+        isLeft={switchState.kitano_b1}
       />
       <SwitchPoint
         position={{ x: 380, y: 20 }}
         fromAngle={180}
         leftOutAngle={0}
         rightOutAngle={45}
-        isLeft={switch1}
+        isLeft={switchState.chofu_b5}
       />
       <SwitchPoint
         position={{ x: 440, y: 60 }}
         fromAngle={180}
         leftOutAngle={0}
         rightOutAngle={315}
-        isLeft={switch1}
+        isLeft={switchState.chofu_b4}
       />
       <SwitchPoint
         position={{ x: 420, y: 160 }}
         fromAngle={0}
         leftOutAngle={180}
         rightOutAngle={225}
-        isLeft={switch1}
+        isLeft={switchState.chofu_b3}
       />
       <SwitchPoint
         position={{ x: 480, y: 120 }}
         fromAngle={0}
         leftOutAngle={180}
         rightOutAngle={135}
-        isLeft={switch1}
+        isLeft={switchState.chofu_b2}
       />
       <SwitchPoint
         position={{ x: 600, y: 120 }}
         fromAngle={0}
         leftOutAngle={180}
         rightOutAngle={135}
-        isLeft={switch1}
+        isLeft={switchState.chofu_b1}
       />
       <SwitchPoint
         position={{ x: 800, y: 20 }}
         fromAngle={180}
         leftOutAngle={0}
         rightOutAngle={45}
-        isLeft={switch1}
+        isLeft={switchState.sasazuka_b2}
       />
       <SwitchPoint
         position={{ x: 840, y: 80 }}
         fromAngle={0}
         leftOutAngle={180}
         rightOutAngle={135}
-        isLeft={switch1}
+        isLeft={switchState.sasazuka_b1}
       />
 
       <SwitchPoint
@@ -553,14 +525,14 @@ const RailroadMap: FC<Prop> = ({
         fromAngle={270}
         leftOutAngle={90}
         rightOutAngle={135}
-        isLeft={switch1}
+        isLeft={switchState.iwamotocho_b4}
       />
       <SwitchPoint
         position={{ x: 940, y: 480 }}
         fromAngle={90}
         leftOutAngle={270}
         rightOutAngle={225}
-        isLeft={switch1}
+        isLeft={switchState.iwamotocho_b4}
       />
     </svg>
   )
