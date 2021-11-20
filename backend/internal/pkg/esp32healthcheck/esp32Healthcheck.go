@@ -19,7 +19,7 @@ func (p *PingHandler)Start(){
 		select {
 		case <- ticker.C:
 			for _, s := range p.Stations.Enumerate() {
-				resp, err := http.Get(s.Station.Address)
+        resp, err := http.Get(s.Station.Address+"/health")
 				if err != nil {
 					p.Esp32HealthCheck.With(prometheus.Labels{"esp32Addr": s.Station.Name}).Set(0)
 					continue
