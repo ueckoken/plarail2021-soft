@@ -41,6 +41,7 @@ def start_server():
 def main():
     global pwm
     pwm = setup_gpio()
+    pwm.start(0)
     start_server()
 
 main()
