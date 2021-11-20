@@ -79,8 +79,6 @@ stations:
     state: ON
   - name: kitano_s6
     state: ON
-  - name: kitano_s7
-    state: ON
 
   - name: takao_s1
     state: ON
