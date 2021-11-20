@@ -3,6 +3,8 @@ package internal
 import (
 	"fmt"
 	"github.com/gorilla/websocket"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"net/http"
 	"sync"
@@ -13,7 +15,10 @@ import (
 )
 
 type SpeedServer struct {
-	ClientHandler *ClientHandler
+	ClientHandler            *ClientHandler
+	NumberOfClientConnection *prometheus.GaugeVec
+	TotalCLientCommands      *prometheus.CounterVec
+	Speed                    *prometheus.GaugeVec
 }
 
 func (s SpeedServer) StartSpeed() {
@@ -32,7 +37,12 @@ func (s SpeedServer) StartSpeed() {
 	go s.RegisterClient(reg)
 	go s.HandleChange(change)
 	go s.UnregisterClient()
+
+	prometheus.MustRegister(s.NumberOfClientConnection)
+	prometheus.MustRegister(s.TotalCLientCommands)
+	prometheus.MustRegister(s.Speed)
 	http.Handle("/speed", s.ClientHandler)
+	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
@@ -72,7 +82,8 @@ func (s *SpeedServer) HandleChange(cn chan storeSpeed.TrainConf) {
 	for {
 		select {
 		case c := <-cn:
-			//this should be sorted from old to new
+			s.TotalCLientCommands.With(prometheus.Labels{}).Inc()
+			s.Speed.With(prometheus.Labels{}).Set(float64(c.GetSpeed()))
 			for _, client := range s.ClientHandler.Clients.clients {
 				select {
 				case client.notifier.Notifier <- c:
@@ -102,6 +113,7 @@ func (s *SpeedServer) UnregisterClient() {
 			}
 		}
 		s.ClientHandler.Clients.deleteClient(deletionList)
+		s.NumberOfClientConnection.With(prometheus.Labels{}).Set(float64(len(s.ClientHandler.Clients.clients)))
 		s.ClientHandler.Clients.mtx.Unlock()
 		time.Sleep(1 * time.Second)
 	}
