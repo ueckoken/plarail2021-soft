@@ -200,6 +200,7 @@ const Home: NextPage = () => {
         <section>
           <h2>映像部分</h2>
           <div>(video予定地)</div>
+          <VideoCast roomIds={["aaa", "bbb"]} />
         </section>
 
         <section>
@@ -255,7 +256,6 @@ const Home: NextPage = () => {
 
         <section>
           <h2>操作部分</h2>
-          <VideoCast />
           <svg width="100%" viewBox="0 0 200 100">
             <rect x={0} y={0} width={200} height={100} fill="dimgrey" />
             <SpeedMeter
