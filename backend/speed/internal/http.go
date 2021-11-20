@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"sync"
 	"time"
+	"ueckoken/plarail2021-soft-speed/pkg/sendSpeed"
 	"ueckoken/plarail2021-soft-speed/pkg/storeSpeed"
+	"ueckoken/plarail2021-soft-speed/pkg/train2IP"
 )
 
 type SpeedServer struct {
@@ -39,6 +41,7 @@ type ClientHandler struct {
 	upgrader           websocket.Upgrader
 	ClientNotification chan Client
 	ClientCommand      chan storeSpeed.TrainConf
+	TrainName2Id       train2IP.Name2Id
 }
 
 type ClientSet struct {
@@ -73,6 +76,11 @@ func (s *SpeedServer) HandleChange(cn chan storeSpeed.TrainConf) {
 			for _, client := range s.ClientHandler.Clients.clients {
 				select {
 				case client.notifier.Notifier <- c:
+					speed := sendSpeed.SendSpeed{Train: c}
+					err := speed.Send()
+					if err != nil {
+						log.Println(err)
+					}
 				default:
 					fmt.Println("buffer is full...")
 				}
