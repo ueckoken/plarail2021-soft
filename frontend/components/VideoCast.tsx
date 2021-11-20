@@ -2,7 +2,10 @@ import { string } from "fp-ts"
 import { NullType } from "io-ts"
 import React, { FC, useEffect, useState, useRef } from "react"
 import Peer, { MediaConnection, SfuRoom, MeshRoom } from "skyway-js"
-
+interface PeerIdProp {
+  peerId: string
+}
+type MediaStreamWithPeerId = MediaStream & PeerIdProp
 interface Prop {}
 const SW_WSURL = "wss://webrtc.chofufes2021.gotti.dev/"
 const SKYWAY_APIKEY =
@@ -105,12 +108,12 @@ const VideoCast: FC<Prop> = ({}) => {
         [roomId]: room,
       }
       if (skywayRoom) {
-        skywayRoom.on("stream", (stream: MediaStream) => {
-          //const streamPeerId = stream.peerId;
+        skywayRoom.on("stream", (stream: MediaStreamWithPeerId) => {
+          const streamPeerId = stream.peerId
           console.log("on stream")
-          //if (streamPeerId == peerId) {
-          setCastingStream(stream)
-          //}
+          if (streamPeerId == peerId) {
+            setCastingStream(stream)
+          }
         })
       }
       setRooms(nextRooms)
