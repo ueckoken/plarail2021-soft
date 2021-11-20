@@ -27,7 +27,7 @@ func (r *RaspberrySpeed) changeSpeed() error {
 	res, err := http.Get(u.String())
 
 	if !(200 <= res.StatusCode && res.StatusCode < 300) {
-		return fmt.Errorf("GET Err is \"%w\" ;status is not Success", err)
+		return fmt.Errorf("GET Err is `%w` ;HTTP status is `%s`", err, res.Status)
 	}
 	return err
 }
