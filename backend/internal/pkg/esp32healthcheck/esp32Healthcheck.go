@@ -21,22 +21,24 @@ func (p *PingHandler) Start() {
 	for {
 		select {
 		case <-ticker.C:
-			for _, s := range p.Stations.Enumerate() {
-				resp, err := client.Get(s.Station.Address + "/health")
-				if err != nil {
+			func() {
+				for _, s := range p.Stations.Enumerate() {
+					resp, err := client.Get(s.Station.Address + "/health")
+					if err != nil {
+						p.Esp32HealthCheck.With(prometheus.Labels{"esp32Addr": s.Station.Name}).Set(0)
+						ioutil.ReadAll(resp.Body)
+						resp.Body.Close()
+						continue
+					}
+					defer ioutil.ReadAll(resp.Body)
+					defer resp.Body.Close()
+					if 200 <= resp.StatusCode && resp.StatusCode < 300 {
+						p.Esp32HealthCheck.With(prometheus.Labels{"esp32Addr": s.Station.Name}).Set(1)
+						continue
+					}
 					p.Esp32HealthCheck.With(prometheus.Labels{"esp32Addr": s.Station.Name}).Set(0)
-					ioutil.ReadAll(resp.Body)
-					resp.Body.Close()
-					continue
 				}
-				defer ioutil.ReadAll(resp.Body)
-				defer resp.Body.Close()
-				if 200 <= resp.StatusCode && resp.StatusCode < 300 {
-					p.Esp32HealthCheck.With(prometheus.Labels{"esp32Addr": s.Station.Name}).Set(1)
-					continue
-				}
-				p.Esp32HealthCheck.With(prometheus.Labels{"esp32Addr": s.Station.Name}).Set(0)
-			}
+			}()
 		}
 	}
 }
