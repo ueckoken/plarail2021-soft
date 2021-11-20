@@ -67,8 +67,6 @@ stations:
     state: ON
   - name: kitano_b2
     state: ON
-  - name: kitano_b3
-    state: ON
   - name: kitano_s1
     state: ON
   - name: kitano_s2
