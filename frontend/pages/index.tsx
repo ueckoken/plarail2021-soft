@@ -81,13 +81,10 @@ const INITIAL_SPEED_STATE: SpeedState = {
 const INITIAL_SELECTED_TRAIN_ID: TrainId = "TAKAO"
 
 const Home: NextPage = () => {
+  const stationWs = useRef<WebSocket>()
   const [stopPointState, setStopPointState] = useState<StopPointState>(
     INITIAL_STOP_POINT_STATE
   )
-  const [isStopPoint1, setIsStopPoint1] = useState<boolean>(true)
-  const [isStopPoint2, setIsStopPoint2] = useState<boolean>(true)
-  const [isStopPoint3, setIsStopPoint3] = useState<boolean>(true)
-  const [isStopPoint4, setIsStopPoint4] = useState<boolean>(true)
   const [switchPointState, setSwitchPointState] = useState<SwitchPointState>(
     INITIAL_SWITCH_POINT_STATE
   )
@@ -131,6 +128,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const ws = new WebSocket("wss://control.chofufes2021.gotti.dev/ws")
+    stationWs.current = ws
     ws.addEventListener("open", (e) => {
       console.log("opened")
       console.log(e)
@@ -204,32 +202,6 @@ const Home: NextPage = () => {
           <RailroadMap
             datas={{
               stop: stopPointState,
-              stop1: isStopPoint1,
-              stop2: isStopPoint2,
-              stop3: isStopPoint3,
-              stop4: isStopPoint4,
-              stop5: true,
-              stop6: true,
-              stop7: true,
-              stop8: true,
-              stop9: true,
-              stop10: true,
-              stop11: true,
-              stop12: true,
-              stop13: true,
-              stop14: true,
-              stop15: true,
-              stop16: true,
-              stop17: true,
-              stop18: true,
-              stop19: true,
-              stop20: true,
-              stop21: true,
-              stop22: true,
-              stop23: true,
-              stop24: true,
-              stop25: true,
-              stop26: true,
               switchState: switchPointState,
               switch1: isLeftSwichPoint1,
               switch2: isLeftSwichPoint2,
@@ -292,17 +264,49 @@ const Home: NextPage = () => {
           <button onClick={() => setIsLeftSwitchPoint2(!isLeftSwichPoint2)}>
             分岐点2切り替え
           </button>
-          <button onClick={() => setIsStopPoint1(!isStopPoint1)}>
-            ストップレール1切り替え
+          <button
+            onClick={() => {
+              const message: Message = {
+                station_name: "chofu_s1",
+                state: stopPointState.chofu_s1 ? "OFF" : "ON",
+              }
+              stationWs.current?.send(JSON.stringify(message))
+            }}
+          >
+            chofu_s1切り替え
           </button>
-          <button onClick={() => setIsStopPoint2(!isStopPoint2)}>
-            ストップレール2切り替え
+          <button
+            onClick={() => {
+              const message: Message = {
+                station_name: "chofu_s2",
+                state: stopPointState.chofu_s2 ? "OFF" : "ON",
+              }
+              stationWs.current?.send(JSON.stringify(message))
+            }}
+          >
+            chofu_s2切り替え
           </button>
-          <button onClick={() => setIsStopPoint3(!isStopPoint3)}>
-            ストップレール3切り替え
+          <button
+            onClick={() => {
+              const message: Message = {
+                station_name: "chofu_s3",
+                state: stopPointState.chofu_s3 ? "OFF" : "ON",
+              }
+              stationWs.current?.send(JSON.stringify(message))
+            }}
+          >
+            chofu_s3切り替え
           </button>
-          <button onClick={() => setIsStopPoint4(!isStopPoint4)}>
-            ストップレール4切り替え
+          <button
+            onClick={() => {
+              const message: Message = {
+                station_name: "chofu_s4",
+                state: stopPointState.chofu_s4 ? "OFF" : "ON",
+              }
+              stationWs.current?.send(JSON.stringify(message))
+            }}
+          >
+            chofu_s4切り替え
           </button>
         </section>
       </main>
