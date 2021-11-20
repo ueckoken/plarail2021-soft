@@ -3,15 +3,17 @@ import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import RailroadMap from "../components/RailRoadMap"
 import VideoCast from "../components/VideoCast"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   bunkiRailId,
   BunkiRailId,
   Message,
   stopRailId,
   StopRailId,
-} from "../types/websocket-messages"
+} from "../types/control-messages"
 import SpeedMeter from "../components/svgParts/SpeedMeter"
+import { SpeedMessage, TrainId } from "../types/speed-messages"
+import ReverseHandle from "../components/svgParts/ReverseHandle"
 
 // OFF: false, ON: trueと対応
 type StopPointState = Record<StopRailId, boolean>
@@ -69,6 +71,19 @@ const INITIAL_SWITCH_POINT_STATE: SwitchPointState = {
   kitano_b4: false,
 }
 
+type SpeedState = Record<TrainId, number>
+const INITIAL_SPEED_STATE: SpeedState = {
+  TAKAO: 0,
+  CHICHIBU: 0,
+  HAKONE: 0,
+  OKUTAMA: 0,
+  NIKKO: 0,
+  ENOSHIMA: 0,
+  KAMAKURA: 0,
+  YOKOSUKA: 0,
+}
+const INITIAL_SELECTED_TRAIN_ID: TrainId = "TAKAO"
+
 const Home: NextPage = () => {
   const [stopPointState, setStopPointState] = useState<StopPointState>(
     INITIAL_STOP_POINT_STATE
@@ -83,6 +98,40 @@ const Home: NextPage = () => {
   const [isLeftSwichPoint1, setIsLeftSwitchPoint1] = useState<boolean>(true)
   const [isLeftSwichPoint2, setIsLeftSwitchPoint2] = useState<boolean>(true)
   const [trainPosition1, setTrainPosition1] = useState<number>(0.4)
+
+  const speedWs = useRef<WebSocket>()
+  const [speedState, setSpeedState] = useState<SpeedState>(INITIAL_SPEED_STATE)
+  const [selectedTrainId, setSelectedTrainId] = useState<TrainId>(
+    INITIAL_SELECTED_TRAIN_ID
+  )
+  const [isBack, setIsBack] = useState<boolean>(false)
+
+  useEffect(() => {
+    const ws = new WebSocket("wss://speed.chofufes2021.gotti.dev/speed")
+    speedWs.current = ws
+    ws.addEventListener("open", (e) => {
+      console.log("opened")
+    })
+    ws.addEventListener("message", (e) => {
+      const message: SpeedMessage = JSON.parse(e.data)
+      console.log(message)
+      setSpeedState((previousState) => ({
+        ...previousState,
+        [message.train_name]: message.speed,
+      }))
+    })
+    ws.addEventListener("error", (e) => {
+      console.log("error occured")
+      console.log(e)
+    })
+    ws.addEventListener("close", (e) => {
+      console.log("closed")
+      console.log(e)
+    })
+    return () => {
+      ws.close()
+    }
+  }, [])
 
   useEffect(() => {
     const ws = new WebSocket("wss://control.chofufes2021.gotti.dev/ws")
@@ -207,9 +256,41 @@ const Home: NextPage = () => {
 
         <section>
           <h2>操作部分</h2>
-          <svg viewBox="0 0 100 100">
-            <SpeedMeter cx={50} cy={50} r={40} max={100} value={30} />
+          <VideoCast />
+          <svg width="100%" viewBox="0 0 200 100">
+            <rect x={0} y={0} width={200} height={100} fill="dimgrey" />
+            <SpeedMeter
+              cx={80}
+              cy={40}
+              r={30}
+              max={100}
+              value={Math.abs(speedState[selectedTrainId])}
+            />
+            <ReverseHandle
+              cx={150}
+              cy={50}
+              r={3}
+              isBack={isBack}
+              onChange={(nextIsBack) => {
+                setIsBack(nextIsBack)
+              }}
+            />
           </svg>
+          <input
+            type="range"
+            min={0}
+            defaultValue={0}
+            max={100}
+            step={5}
+            onChange={(e) => {
+              const a = isBack ? -1 : 1 // 前進なら1、逆進なら-1になる係数
+              const message: SpeedMessage = {
+                train_name: selectedTrainId,
+                speed: a * Number.parseInt(e.target.value),
+              }
+              speedWs.current?.send(JSON.stringify(message))
+            }}
+          />
           <button onClick={() => setIsLeftSwitchPoint1(!isLeftSwichPoint1)}>
             分岐点1切り替え
           </button>
