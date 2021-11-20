@@ -12,8 +12,8 @@ class ControlPin(http.server.BaseHTTPRequestHandler):
             self.send_response(http.HTTPStatus.BAD_REQUEST)
             return
 
-        if not 0 <= float(query['speed']) <= 100:
-            change_speed(float(query["speed"]))
+        if not 0 <= float(query['speed'][0]) <= 100:
+            change_speed(float(query["speed"][0]))
         self.send_response(http.HTTPStatus.OK)
 
 
