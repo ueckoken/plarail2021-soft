@@ -1,27 +1,15 @@
 package train2IP
 
-import (
-	_ "embed"
-	"gopkg.in/yaml.v2"
-	"log"
-)
-
-//go:embed embed/train2IP.yml
-var confFile []byte
-
 type Name2Id struct {
-	Trains []struct {
-		Name string `yaml:"name"`
-		IP   string `yaml:"ip"`
-	} `yaml:"trains"`
+	Trains []Trains `yaml:"trains"`
+}
+type Trains struct {
+	Name string `yaml:"name"`
+	IP   string `yaml:"ip"`
 }
 
 func GetTable() Name2Id {
-	var n2i Name2Id
-	err := yaml.Unmarshal(confFile, n2i)
-	if err != nil {
-		log.Fatalln("train2IP parse failed", err)
-	}
+	n2i := Name2Id{Trains: []Trains{{Name: "TAKAO", IP: "192.168.100.150:1111"}}}
 	return n2i
 }
 func (t *Name2Id) changeForm2() {}
