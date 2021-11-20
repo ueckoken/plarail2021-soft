@@ -106,6 +106,8 @@ const Home: NextPage = () => {
   )
   const [isBack, setIsBack] = useState<boolean>(false)
 
+  const [roomIds, setRoomIds] = useState<string[]>(["aaa"])
+
   useEffect(() => {
     const ws = new WebSocket("wss://speed.chofufes2021.gotti.dev/speed")
     speedWs.current = ws
@@ -200,7 +202,28 @@ const Home: NextPage = () => {
         <section>
           <h2>映像部分</h2>
           <div>(video予定地)</div>
-          <VideoCast roomIds={["aaa", "bbb"]} />
+          <VideoCast roomIds={roomIds} />
+          <button
+            onClick={() => {
+              setRoomIds(["aaa", "bbb"])
+            }}
+          >
+            aaa
+          </button>
+          <button
+            onClick={() => {
+              setRoomIds(["bbb", "aaa"])
+            }}
+          >
+            bbb
+          </button>
+          <button
+            onClick={() => {
+              setRoomIds(["ccc", "bbb"])
+            }}
+          >
+            ccc
+          </button>
         </section>
 
         <section>
