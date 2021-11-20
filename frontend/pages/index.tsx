@@ -203,17 +203,6 @@ const Home: NextPage = () => {
             datas={{
               stop: stopPointState,
               switchState: switchPointState,
-              switch1: isLeftSwichPoint1,
-              switch2: isLeftSwichPoint2,
-              switch3: true,
-              switch4: true,
-              switch5: true,
-              switch6: true,
-              switch7: true,
-              switch8: true,
-              switch9: true,
-              switch10: true,
-              switch11: true,
               train1: {
                 positionScale: trainPosition1,
                 id: "koken",
@@ -258,11 +247,60 @@ const Home: NextPage = () => {
               speedWs.current?.send(JSON.stringify(message))
             }}
           />
-          <button onClick={() => setIsLeftSwitchPoint1(!isLeftSwichPoint1)}>
-            分岐点1切り替え
+          <button
+            onClick={() => {
+              const message: Message = {
+                station_name: "chofu_b1",
+                state: switchPointState.chofu_b1 ? "OFF" : "ON",
+              }
+              stationWs.current?.send(JSON.stringify(message))
+            }}
+          >
+            chofu_b1切り替え
           </button>
-          <button onClick={() => setIsLeftSwitchPoint2(!isLeftSwichPoint2)}>
-            分岐点2切り替え
+          <button
+            onClick={() => {
+              const message: Message = {
+                station_name: "chofu_b2",
+                state: switchPointState.chofu_b2 ? "OFF" : "ON",
+              }
+              stationWs.current?.send(JSON.stringify(message))
+            }}
+          >
+            chofu_b2切り替え
+          </button>
+          <button
+            onClick={() => {
+              const message: Message = {
+                station_name: "chofu_b3",
+                state: switchPointState.chofu_b3 ? "OFF" : "ON",
+              }
+              stationWs.current?.send(JSON.stringify(message))
+            }}
+          >
+            chofu_b3切り替え
+          </button>
+          <button
+            onClick={() => {
+              const message: Message = {
+                station_name: "chofu_b4",
+                state: switchPointState.chofu_b4 ? "OFF" : "ON",
+              }
+              stationWs.current?.send(JSON.stringify(message))
+            }}
+          >
+            chofu_b4切り替え
+          </button>
+          <button
+            onClick={() => {
+              const message: Message = {
+                station_name: "chofu_b5",
+                state: switchPointState.chofu_b5 ? "OFF" : "ON",
+              }
+              stationWs.current?.send(JSON.stringify(message))
+            }}
+          >
+            chofu_b5切り替え
           </button>
           <button
             onClick={() => {
