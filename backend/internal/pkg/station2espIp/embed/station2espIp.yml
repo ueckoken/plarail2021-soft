@@ -14,34 +14,6 @@ stations:
       on_angle: 30
       off_angle: 100
   - station:
-      name: motoyawata_s3
-      address: 'http://192.168.100.102:80'
-      pin: 0
-      set_angle: true
-      on_angle: 90
-      off_angle: 0
-  - station:
-      name: motoyawata_s4
-      address: 'http://192.168.100.102:80'
-      pin: 0
-      set_angle: true
-      on_angle: 90
-      off_angle: 0
-  - station:
-      name: motoyawata_s5
-      address: 'http://192.168.100.102:80'
-      pin: 0
-      set_angle: true
-      on_angle: 90
-      off_angle: 0
-  - station:
-      name: motoyawata_s6
-      address: 'http://192.168.100.102:80'
-      pin: 0
-      set_angle: true
-      on_angle: 90
-      off_angle: 0
-  - station:
       name: iwamotocho_s1
       address: 'http://192.168.100.102:80'
       pin: 16
@@ -69,20 +41,6 @@ stations:
       set_angle: true
       on_angle: 90
       off_angle: 30
-  - station:
-      name: iwamotocho_b2
-      address: 'http://192.168.100.102:80'
-      pin: 0
-      set_angle: true
-      on_angle: 90
-      off_angle: 0
-  - station:
-      name: iwamotocho_b3
-      address: 'http://192.168.100.102:80'
-      pin: 0
-      set_angle: true
-      on_angle: 90
-      off_angle: 0
   - station:
       name: iwamotocho_b4
       address: 'http://192.168.100.102:80'
