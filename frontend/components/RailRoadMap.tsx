@@ -9,32 +9,6 @@ import { BunkiRailId, StopRailId } from "../types/control-messages"
 interface Prop {
   datas: {
     stop: Record<StopRailId, boolean>
-    stop1: boolean
-    stop2: boolean
-    stop3: boolean
-    stop4: boolean
-    stop5: boolean
-    stop6: boolean
-    stop7: boolean
-    stop8: boolean
-    stop9: boolean
-    stop10: boolean
-    stop11: boolean
-    stop12: boolean
-    stop13: boolean
-    stop14: boolean
-    stop15: boolean
-    stop16: boolean
-    stop17: boolean
-    stop18: boolean
-    stop19: boolean
-    stop20: boolean
-    stop21: boolean
-    stop22: boolean
-    stop23: boolean
-    stop24: boolean
-    stop25: boolean
-    stop26: boolean
     switchState: Record<BunkiRailId, boolean>
     switch1: boolean
     switch2: boolean
@@ -54,32 +28,6 @@ interface Prop {
 const RailroadMap: FC<Prop> = ({
   datas: {
     stop,
-    stop1,
-    stop2,
-    stop3,
-    stop4,
-    stop5,
-    stop6,
-    stop7,
-    stop8,
-    stop9,
-    stop10,
-    stop11,
-    stop12,
-    stop13,
-    stop14,
-    stop15,
-    stop16,
-    stop17,
-    stop18,
-    stop19,
-    stop20,
-    stop21,
-    stop22,
-    stop23,
-    stop24,
-    stop25,
-    stop26,
     switchState,
     switch1,
     switch2,
@@ -506,35 +454,35 @@ const RailroadMap: FC<Prop> = ({
         trains={[]}
       />
 
-      <StopPoint position={{ x: 120, y: 20 }} isStop={stop1} />
-      <StopPoint position={{ x: 240, y: 20 }} isStop={stop1} />
-      <StopPoint position={{ x: 240, y: 60 }} isStop={stop1} />
-      <StopPoint position={{ x: 240, y: 80 }} isStop={stop1} />
-      <StopPoint position={{ x: 240, y: 120 }} isStop={stop1} />
-      <StopPoint position={{ x: 520, y: 20 }} isStop={stop1} />
-      <StopPoint position={{ x: 520, y: 60 }} isStop={stop1} />
-      <StopPoint position={{ x: 520, y: 120 }} isStop={stop1} />
-      <StopPoint position={{ x: 520, y: 160 }} isStop={stop1} />
-      <StopPoint position={{ x: 700, y: 60 }} isStop={stop1} />
-      <StopPoint position={{ x: 700, y: 80 }} isStop={stop1} />
-      <StopPoint position={{ x: 800, y: 70 }} isStop={stop1} />
-      <StopPoint position={{ x: 880, y: 20 }} isStop={stop1} />
-      <StopPoint position={{ x: 880, y: 60 }} isStop={stop1} />
-      <StopPoint position={{ x: 880, y: 80 }} isStop={stop1} />
-      <StopPoint position={{ x: 880, y: 120 }} isStop={stop1} />
+      <StopPoint position={{ x: 120, y: 20 }} isStop={!stop.kitano_s1} />
+      <StopPoint position={{ x: 240, y: 20 }} isStop={!stop.kitano_s4} />
+      <StopPoint position={{ x: 240, y: 60 }} isStop={!stop.kitano_s3} />
+      <StopPoint position={{ x: 240, y: 80 }} isStop={!stop.kitano_s2} />
+      <StopPoint position={{ x: 240, y: 120 }} isStop={!stop.kitano_s1} />
+      <StopPoint position={{ x: 520, y: 20 }} isStop={!stop.chofu_s4} />
+      <StopPoint position={{ x: 520, y: 60 }} isStop={!stop.chofu_s3} />
+      <StopPoint position={{ x: 520, y: 120 }} isStop={!stop.chofu_s2} />
+      <StopPoint position={{ x: 520, y: 160 }} isStop={!stop.chofu_s1} />
+      <StopPoint position={{ x: 700, y: 60 }} isStop={!stop.meidaimae_s2} />
+      <StopPoint position={{ x: 700, y: 80 }} isStop={!stop.meidaimae_s1} />
+      <StopPoint position={{ x: 800, y: 70 }} isStop={!stop.sasazuka_s5} />
+      <StopPoint position={{ x: 880, y: 20 }} isStop={!stop.sasazuka_s4} />
+      <StopPoint position={{ x: 880, y: 60 }} isStop={!stop.sasazuka_s3} />
+      <StopPoint position={{ x: 880, y: 80 }} isStop={!stop.sasazuka_s2} />
+      <StopPoint position={{ x: 880, y: 120 }} isStop={!stop.sasazuka_s1} />
 
-      <StopPoint position={{ x: 120, y: 140 }} isStop={stop1} />
-      <StopPoint position={{ x: 180, y: 200 }} isStop={stop1} />
-      <StopPoint position={{ x: 120, y: 380 }} isStop={stop1} />
+      <StopPoint position={{ x: 120, y: 140 }} isStop={!stop.kitano_s5} />
+      <StopPoint position={{ x: 180, y: 200 }} isStop={!stop.takao_s1} />
+      <StopPoint position={{ x: 120, y: 380 }} isStop={!stop.takao_s2} />
 
-      <StopPoint position={{ x: 320, y: 180 }} isStop={stop1} />
+      <StopPoint position={{ x: 320, y: 180 }} isStop={!stop.chofu_s5} />
 
-      <StopPoint position={{ x: 940, y: 180 }} isStop={stop1} />
-      <StopPoint position={{ x: 1000, y: 180 }} isStop={stop1} />
-      <StopPoint position={{ x: 1000, y: 240 }} isStop={stop1} />
-      <StopPoint position={{ x: 880, y: 380 }} isStop={stop1} />
-      <StopPoint position={{ x: 940, y: 380 }} isStop={stop1} />
-      <StopPoint position={{ x: 1000, y: 380 }} isStop={stop1} />
+      <StopPoint position={{ x: 940, y: 180 }} isStop={!stop.kudanshita_s5} />
+      <StopPoint position={{ x: 1000, y: 180 }} isStop={!stop.kudanshita_s6} />
+
+      <StopPoint position={{ x: 880, y: 380 }} isStop={!stop.iwamotocho_s1} />
+      <StopPoint position={{ x: 940, y: 380 }} isStop={!stop.iwamotocho_s2} />
+      <StopPoint position={{ x: 1000, y: 380 }} isStop={!stop.iwamotocho_s4} />
 
       <SwitchPoint
         position={{ x: 160, y: 20 }}
