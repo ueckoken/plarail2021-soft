@@ -18,9 +18,10 @@ class ControlPin(http.server.BaseHTTPRequestHandler):
 
 
 def setup_gpio():
-    pin_channel = 15
+    pin_channel = 10
     frequency_hz = 50
-
+    
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(pin_channel, GPIO.out)
     return GPIO.PWM(pin_channel, frequency_hz)
 
@@ -33,11 +34,14 @@ def change_speed(speed: float):
 # start HTTP server
 def start_server():
     server_addr = ("127.0.0.1", 8081)
-    httpd = http.server.HTTPServer(server_addr, ControlPin)
-    httpd.serve_forever()
+    
+    with http.server.HTTPServer(server_addr, ControlPin) as httpd:
+       httpd.serve_forever()
 
 
 def main():
     global pwm
     pwm = setup_gpio()
     start_server()
+
+main()
