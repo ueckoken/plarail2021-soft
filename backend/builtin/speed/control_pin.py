@@ -17,15 +17,14 @@ class ControlPin(http.server.BaseHTTPRequestHandler):
         self.create_msg()
 
     def create_msg(self):
-        # content_len = int(self.headers.get("content-length"))
+        # content_len  = int(self.headers.get("content-length"))
         # req_body = self.rfile.read(content_len).decode("utf-8")
         # body = "body: " + req_body + "\n"
         self.send_response(200)
         # self.send_header('Content-type', 'text/html; charset=utf-8')
-        # self.send_header('Content-length', len(body.encode()))
+        # self.send_header('Content-length', str(body.encode()))
         # self.end_headers()
         # self.wfile.write(body.encode())
-
 
 def setup_gpio():
     pin_channel = 10
