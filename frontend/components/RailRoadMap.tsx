@@ -1,10 +1,11 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import Rail from "./svgParts/Rail"
 import Platform from "./svgParts/Platform"
 import SwitchPoint from "./svgParts/SwitchPoint"
 import StopPoint from "./svgParts/StopPoint"
 import { Point, TrainData } from "../types/svgPartsTypes"
 import { BunkiRailId, StationId, StopRailId } from "../types/control-messages"
+import { string } from "fp-ts"
 
 interface Prop {
   datas: {
@@ -17,6 +18,17 @@ interface Prop {
 type StopPointPosition = {
   id: StopRailId
   position: Point
+}
+
+type Rectangle = {
+  leftUp: Point
+  rightDown: Point
+}
+
+type MapRange = {
+  range: Rectangle
+  id: string
+  name: string
 }
 
 const STOP_PONINTS: StopPointPosition[] = [
@@ -47,9 +59,126 @@ const STOP_PONINTS: StopPointPosition[] = [
   { position: { x: 1000, y: 380 }, id: "iwamotocho_s4" },
 ]
 
+const MAP_RANGES: MapRange[] = [
+  {
+    range: {
+      leftUp: {x: 0, y: 0},
+      rightDown: {x: 1120, y: 620},
+    },
+    id: "all",
+    name: "全体地図",
+  },
+  {
+    range: {
+      leftUp: {x: 0, y: 0},
+      rightDown: {x: 180, y: 140},
+    },
+    id: "keiohachioji",
+    name: "京王八王子付近",
+  },
+  {
+    range: {
+      leftUp: {x: 120, y: 0},
+      rightDown: {x: 360, y: 140},
+    },
+    id: "kitano",
+    name: "北野付近",
+  },
+  {
+    range: {
+      leftUp: {x: 360, y: 0},
+      rightDown: {x: 620, y: 180},
+    },
+    id: "chofu",
+    name: "調布付近",
+  },
+  {
+    range: {
+      leftUp: {x: 620, y: 0},
+      rightDown: {x: 800, y: 140},
+    },
+    id: "meidaimae",
+    name: "明大前付近",
+  },
+  {
+    range: {
+      leftUp: {x: 780, y: 0},
+      rightDown: {x: 1020, y: 140},
+    },
+    id: "sasazuka",
+    name: "笹塚付近",
+  },
+  {
+    range: {
+      leftUp: {x: 780, y: 0},
+      rightDown: {x: 1020, y: 140},
+    },
+    id: "shinjuku",
+    name: "新宿付近",
+  },
+  {
+    range: {
+      leftUp: {x: 100, y: 100},
+      rightDown: {x: 200, y: 280},
+    },
+    id: "takao",
+    name: "高尾付近",
+  },
+  {
+    range: {
+      leftUp: {x: 100, y: 300},
+      rightDown: {x: 200, y: 440},
+    },
+    id: "takaosanguchi",
+    name: "高尾山口付近",
+  },
+  {
+    range: {
+      leftUp: {x: 300, y: 140},
+      rightDown: {x: 400, y: 340},
+    },
+    id: "wakabadai",
+    name: "若葉台付近",
+  },
+  {
+    range: {
+      leftUp: {x: 300, y: 320},
+      rightDown: {x: 400, y: 440},
+    },
+    id: "hashimoto",
+    name: "橋本付近",
+  },
+  {
+    range: {
+      leftUp: {x: 920, y: 140},
+      rightDown: {x: 1020, y: 260},
+    },
+    id: "kudanshita",
+    name: "九段下付近",
+  },
+  {
+    range: {
+      leftUp: {x: 860, y: 260},
+      rightDown: {x: 1020, y: 500},
+    },
+    id: "iwamotocho",
+    name: "岩本町付近",
+  },
+  {
+    range: {
+      leftUp: {x: 920, y: 500},
+      rightDown: {x: 1020, y: 620},
+    },
+    id: "motoyawata",
+    name: "本八幡付近",
+  },
+]
+
 const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
+  const [mapRange, setMapRange] = useState<MapRange>(MAP_RANGES[0]);
   return (
-    <svg width="100%" viewBox="0 0 1120 620">
+    <>
+    <svg width="100%" viewBox={`${mapRange.range.leftUp.x} ${mapRange.range.leftUp.y} ${mapRange.range.rightDown.x - mapRange.range.leftUp.x} ${mapRange.range.rightDown.y - mapRange.range.leftUp.y}`}>
       <rect x={0} y={0} width={1120} height={620} fill="lightgray" />
 
       <Platform name="京王八王子" position={{ x: 60, y: 70 }} />
@@ -542,6 +671,8 @@ const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
         isLeft={switchState.iwamotocho_b4}
       />
     </svg>
+    {MAP_RANGES.map((map, i) => <button key={`mapchange-${map.id}`} onClick={() => setMapRange(MAP_RANGES[i])}>{map.name}</button>)}
+    </>
   )
 }
 
