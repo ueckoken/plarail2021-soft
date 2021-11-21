@@ -4,28 +4,24 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 )
 
 type RaspberrySpeed struct {
 	speed int32
 }
 
-//var endPoint = "http://localhost:8081"
-var endPoint = "http://192.168.100.8:8085"
+var endPoint = "http://localhost:8081"
+
+//var endPoint = "http://192.168.100.8:8085"
 
 func NewRaspberrySpeed(speed int32) *RaspberrySpeed {
 	return &RaspberrySpeed{speed: speed}
 }
 
 func (r *RaspberrySpeed) changeSpeed() error {
-	u, err := url.Parse(endPoint)
-	if err != nil {
-		log.Fatalln("URL Parse Err")
-	}
-	u.Query().Set("speed", string(r.speed))
-	log.Printf("changeSpeed try to send to %s", u.String())
-	res, err := http.Get(u.String())
+	url := fmt.Sprintf("%s/?speed=%d", endPoint, r.speed)
+	log.Printf("changeSpeed try to send to %s", url)
+	res, err := http.Get(url)
 	log.Println("changeSpeed: res,err", res, "\n", err)
 	if res == nil {
 		return err
