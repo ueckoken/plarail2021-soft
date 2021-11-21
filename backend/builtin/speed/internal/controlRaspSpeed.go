@@ -24,7 +24,7 @@ func (r *RaspberrySpeed) changeSpeed() error {
 		log.Fatalln("URL Parse Err")
 	}
 	u.Query().Set("speed", string(r.speed))
-
+	log.Printf("changeSpeed try to send to %s", u.String())
 	res, err := http.Get(u.String())
 	log.Println("changeSpeed: res,err", res, "\n", err)
 	if res == nil {
