@@ -4,7 +4,7 @@ import Platform from "./svgParts/Platform"
 import SwitchPoint from "./svgParts/SwitchPoint"
 import StopPoint from "./svgParts/StopPoint"
 import { Point, TrainData } from "../types/svgPartsTypes"
-import { BunkiRailId, StopRailId } from "../types/control-messages"
+import { BunkiRailId, StationId, StopRailId } from "../types/control-messages"
 
 interface Prop {
   datas: {
@@ -12,6 +12,7 @@ interface Prop {
     switchState: Record<BunkiRailId, boolean>
     train1: TrainData
   }
+  onStopPointOrSwitchPointClick?: (stationId: StationId) => any
 }
 
 type StopPointPosition = {
@@ -136,7 +137,10 @@ const SWITCH_POINTS: SwitchPointPotiionAndAngle[] = [
   },
 ]
 
-const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
+const RailroadMap: FC<Prop> = ({
+  datas: { stop, switchState, train1 },
+  onStopPointOrSwitchPointClick,
+}) => {
   return (
     <svg width="100%" viewBox="0 0 1120 620">
       <rect x={0} y={0} width={1120} height={620} fill="lightgray" />
@@ -549,7 +553,12 @@ const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
       />
 
       {STOP_PONINTS.map(({ position, id }) => (
-        <StopPoint position={position} isStop={stop[id]} key={id} />
+        <StopPoint
+          position={position}
+          isStop={stop[id]}
+          key={id}
+          onClick={() => onStopPointOrSwitchPointClick?.(id)}
+        />
       ))}
 
       {SWITCH_POINTS.map(
@@ -560,6 +569,7 @@ const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
             leftOutAngle={leftOutAngle}
             rightOutAngle={rightOutAngle}
             isLeft={switchState[id]}
+            onClick={() => onStopPointOrSwitchPointClick?.(id)}
             key={id}
           />
         )
