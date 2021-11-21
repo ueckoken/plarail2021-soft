@@ -325,6 +325,13 @@ const Home: NextPage = () => {
           >
             岩本町
           </button>
+          <button
+            onClick={() => {
+              setRoomIds(["train1"])
+            }}
+          >
+            車両前景
+          </button>
         </section>
 
         <section>
