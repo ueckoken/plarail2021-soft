@@ -267,18 +267,28 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <section>
           <h2>映像部分</h2>
-          <div style={{ margin: 0, padding: 0 }}>
+          <div
+            style={{
+              margin: 0,
+              padding: 0,
+              width: "100%",
+              position: "relative",
+            }}
+          >
             <VideoCast
               roomIds={roomIds}
               styles={[
-                { zIndex: 1, height: 400, display: "block" },
                 {
                   position: "relative",
+                  zIndex: 1,
+                  width: "100%",
+                },
+                {
+                  position: "absolute",
                   zIndex: 2,
-                  bottom: 100,
-                  height: 100,
-                  marginBottom: -100,
-                  display: "block",
+                  bottom: 4,
+                  right: 0,
+                  width: "25%",
                 },
               ]}
             />
