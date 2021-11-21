@@ -82,22 +82,22 @@ const SWITCH_POINTS: SwitchPointPotiionAndAngle[] = [
   {
     position: { x: 380, y: 20 },
     fromAngle: 180,
-    leftOutAngle: 0,
-    rightOutAngle: 45,
+    leftOutAngle: 45,
+    rightOutAngle: 0,
     id: "chofu_b5",
   },
   {
     position: { x: 440, y: 60 },
     fromAngle: 180,
-    leftOutAngle: 0,
-    rightOutAngle: 315,
+    leftOutAngle: -45,
+    rightOutAngle: 0,
     id: "chofu_b4",
   },
   {
     position: { x: 420, y: 160 },
     fromAngle: 0,
-    leftOutAngle: 180,
-    rightOutAngle: 225,
+    leftOutAngle: 225,
+    rightOutAngle: 180,
     id: "chofu_b3",
   },
   {
@@ -110,8 +110,8 @@ const SWITCH_POINTS: SwitchPointPotiionAndAngle[] = [
   {
     position: { x: 600, y: 120 },
     fromAngle: 0,
-    leftOutAngle: 180,
-    rightOutAngle: 135,
+    leftOutAngle: 135,
+    rightOutAngle: 180,
     id: "chofu_b1",
   },
   {
@@ -702,7 +702,7 @@ const RailroadMap: FC<Prop> = ({
               fromAngle={fromAngle}
               leftOutAngle={leftOutAngle}
               rightOutAngle={rightOutAngle}
-              isLeft={switchState[id]}
+              isLeft={!switchState[id]}
               onClick={() => onStopPointOrSwitchPointClick?.(id)}
               key={id}
             />
