@@ -1,19 +1,19 @@
 builtin:
   - any:
-      - 'backend/builtin/**/*'
-      - '!backend/builtin/**/spec/*'
+    - 'backend/builtin/**/*'
+    - '!backend/builtin/**/spec/*'
 external:
   - any:
-      - 'backend/external/**/*'
-      - '!backend/external/**/spec/*'
+    - 'backend/external/**/*'
+    - '!backend/external/**/spec/*'
 internal:
   - any:
-      - 'backend/internal/**/*'
-      - '!backend/internal/**/spec/*'
+    - 'backend/internal/**/*'
+    - '!backend/internal/**/spec/*'
 positioning:
   - any:
-      - "backend/positioning/**/*"
-      - '!backend/positioning/**/spec/*'
+    - "backend/positioning/**/*"
+    - '!backend/positioning/**/spec/*'
 speed:
   - "backend/speed/**/*"
 protocolBuffer:
@@ -22,10 +22,10 @@ frontend:
   - 'frontend/**/*'
 ci-cd:
   - any:
-      - '.github/**/*'
-      - 'manifests/**/*'
-      - '!manifests/**/deployment.yaml'
+    - '.github/**/*'
+    - 'manifests/**/*'
+    - '!manifests/**/deployment.yaml'
 documentation:
   - any:
-      - '**/docs/**/*'
-      - "**.md"
+    - '**/docs/**/*'
+    - "**.md"
