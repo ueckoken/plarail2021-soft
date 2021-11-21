@@ -7,8 +7,8 @@ defaults:
 on:
   push:
     paths:
-      - './backend/builtin/speed/**'
-      - './.github/workflows/**'
+      - 'backend/builtin/speed/**'
+      - '.github/workflows/**'
     branches-ignore:
       - main
       - deploytment
