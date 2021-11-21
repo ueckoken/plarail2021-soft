@@ -557,6 +557,7 @@ const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
             leftOutAngle={leftOutAngle}
             rightOutAngle={rightOutAngle}
             isLeft={switchState[id]}
+            key={id}
           />
         )
       )}
