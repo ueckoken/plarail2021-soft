@@ -3,8 +3,8 @@ import Rail from "./svgParts/Rail"
 import Platform from "./svgParts/Platform"
 import SwitchPoint from "./svgParts/SwitchPoint"
 import StopPoint from "./svgParts/StopPoint"
-import { TrainData } from "../types/svgPartsTypes"
-import { BunkiRailId, StopRailId } from "../types/control-messages"
+import { Point, TrainData } from "../types/svgPartsTypes"
+import { BunkiRailId, StationId, StopRailId } from "../types/control-messages"
 
 interface Prop {
   datas: {
@@ -13,6 +13,39 @@ interface Prop {
     train1: TrainData
   }
 }
+
+type StopPointPosition = {
+  id: StopRailId
+  position: Point
+}
+
+const STOP_PONINTS: StopPointPosition[] = [
+  { position: { x: 120, y: 20 }, id: "kitano_s6" },
+  { position: { x: 240, y: 20 }, id: "kitano_s4" },
+  { position: { x: 240, y: 60 }, id: "kitano_s3" },
+  { position: { x: 240, y: 80 }, id: "kitano_s2" },
+  { position: { x: 240, y: 120 }, id: "kitano_s1" },
+  { position: { x: 520, y: 20 }, id: "chofu_s4" },
+  { position: { x: 520, y: 60 }, id: "chofu_s3" },
+  { position: { x: 520, y: 120 }, id: "chofu_s2" },
+  { position: { x: 520, y: 160 }, id: "chofu_s1" },
+  { position: { x: 700, y: 60 }, id: "meidaimae_s2" },
+  { position: { x: 700, y: 80 }, id: "meidaimae_s1" },
+  { position: { x: 800, y: 70 }, id: "sasazuka_s5" },
+  { position: { x: 880, y: 20 }, id: "sasazuka_s4" },
+  { position: { x: 880, y: 60 }, id: "sasazuka_s3" },
+  { position: { x: 880, y: 80 }, id: "sasazuka_s2" },
+  { position: { x: 880, y: 120 }, id: "sasazuka_s1" },
+  { position: { x: 120, y: 140 }, id: "kitano_s5" },
+  { position: { x: 180, y: 200 }, id: "takao_s1" },
+  { position: { x: 120, y: 380 }, id: "takao_s2" },
+  { position: { x: 320, y: 180 }, id: "chofu_s5" },
+  { position: { x: 940, y: 180 }, id: "kudanshita_s5" },
+  { position: { x: 1000, y: 180 }, id: "kudanshita_s6" },
+  { position: { x: 880, y: 380 }, id: "iwamotocho_s1" },
+  { position: { x: 940, y: 380 }, id: "iwamotocho_s2" },
+  { position: { x: 1000, y: 380 }, id: "iwamotocho_s4" },
+]
 
 const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
   return (
@@ -426,35 +459,9 @@ const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
         trains={[]}
       />
 
-      <StopPoint position={{ x: 120, y: 20 }} isStop={!stop.kitano_s6} />
-      <StopPoint position={{ x: 240, y: 20 }} isStop={!stop.kitano_s4} />
-      <StopPoint position={{ x: 240, y: 60 }} isStop={!stop.kitano_s3} />
-      <StopPoint position={{ x: 240, y: 80 }} isStop={!stop.kitano_s2} />
-      <StopPoint position={{ x: 240, y: 120 }} isStop={!stop.kitano_s1} />
-      <StopPoint position={{ x: 520, y: 20 }} isStop={!stop.chofu_s4} />
-      <StopPoint position={{ x: 520, y: 60 }} isStop={!stop.chofu_s3} />
-      <StopPoint position={{ x: 520, y: 120 }} isStop={!stop.chofu_s2} />
-      <StopPoint position={{ x: 520, y: 160 }} isStop={!stop.chofu_s1} />
-      <StopPoint position={{ x: 700, y: 60 }} isStop={!stop.meidaimae_s2} />
-      <StopPoint position={{ x: 700, y: 80 }} isStop={!stop.meidaimae_s1} />
-      <StopPoint position={{ x: 800, y: 70 }} isStop={!stop.sasazuka_s5} />
-      <StopPoint position={{ x: 880, y: 20 }} isStop={!stop.sasazuka_s4} />
-      <StopPoint position={{ x: 880, y: 60 }} isStop={!stop.sasazuka_s3} />
-      <StopPoint position={{ x: 880, y: 80 }} isStop={!stop.sasazuka_s2} />
-      <StopPoint position={{ x: 880, y: 120 }} isStop={!stop.sasazuka_s1} />
-
-      <StopPoint position={{ x: 120, y: 140 }} isStop={!stop.kitano_s5} />
-      <StopPoint position={{ x: 180, y: 200 }} isStop={!stop.takao_s1} />
-      <StopPoint position={{ x: 120, y: 380 }} isStop={!stop.takao_s2} />
-
-      <StopPoint position={{ x: 320, y: 180 }} isStop={!stop.chofu_s5} />
-
-      <StopPoint position={{ x: 940, y: 180 }} isStop={!stop.kudanshita_s5} />
-      <StopPoint position={{ x: 1000, y: 180 }} isStop={!stop.kudanshita_s6} />
-
-      <StopPoint position={{ x: 880, y: 380 }} isStop={!stop.iwamotocho_s1} />
-      <StopPoint position={{ x: 940, y: 380 }} isStop={!stop.iwamotocho_s2} />
-      <StopPoint position={{ x: 1000, y: 380 }} isStop={!stop.iwamotocho_s4} />
+      {STOP_PONINTS.map(({ position, id }) => (
+        <StopPoint position={position} isStop={stop[id]} key={id} />
+      ))}
 
       <SwitchPoint
         position={{ x: 160, y: 20 }}
