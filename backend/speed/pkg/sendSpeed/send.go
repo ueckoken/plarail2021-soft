@@ -43,7 +43,7 @@ func (s *SendSpeed) sendRaw() (*pb.StatusCode, error) {
 }
 func trapSendErr(code *pb.StatusCode, err error) error {
 	switch code.GetCode() {
-	case pb.StatusCode_SUCCESS:
+	case pb.StatusCode_SUCCESS, pb.StatusCode_UNKNOWN:
 		if err != nil {
 			return nil
 		} else {
