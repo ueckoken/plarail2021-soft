@@ -460,7 +460,7 @@ const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
       />
 
       {STOP_PONINTS.map(({ position, id }) => (
-        <StopPoint position={position} isStop={stop[id]} />
+        <StopPoint position={position} isStop={stop[id]} key={id} />
       ))}
 
       <SwitchPoint
