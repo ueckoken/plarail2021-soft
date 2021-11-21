@@ -1,12 +1,25 @@
-internal:
-  - backend/internal/**/*
+builtin:
+  - 'backend/builtin/**/*'
+  - '!backend/builtin/**/spec/*'
 external:
-  - backend/external/**/*
+  - 'backend/external/**/*'
+  - '!backend/external/**/spec/*'
+internal:
+  - 'backend/internal/**/*'
+  - '!backend/internal/**/spec/*'
+positioning:
+  - "backend/positioning/**/*"
+  - '!backend/positioning/**/spec/*'
+speed:
+  - "backend/speed/**/*"
+proto:
+  - "proto/**/*"
 frontend:
-  - frontend/**/*
+  - 'frontend/**/*'
 ci-cd:
-  - .github/**/*
-  - manifests/**/*
+  - '.github/**/*'
+  - 'manifests/**/*'
+  - '!manifests/**/deployment.yaml'
 documentation:
-  - README.md
-  - '**/docs/**/*.md'
+  - '**/docs/**/*'
+  - "**.md"
