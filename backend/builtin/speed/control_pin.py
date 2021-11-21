@@ -13,9 +13,8 @@ class ControlPin(http.server.BaseHTTPRequestHandler):
             return
 
         if 0 <= float(query['speed'][0]) <= 100:
-            change_speed(float(query["speed"][0]))
+            change_speed(float(query["speed"][0]) / 100 * 35)
         self.create_msg()
-
 
     def create_msg(self):
         # content_len  = int(self.headers.get("content-length"))
@@ -44,7 +43,7 @@ def change_speed(speed: float):
 def start_server():
     server_addr = ("0.0.0.0", 8081)
     with http.server.HTTPServer(server_addr, ControlPin) as httpd:
-       httpd.serve_forever()
+        httpd.serve_forever()
 
 
 def main():
@@ -52,5 +51,6 @@ def main():
     pwm = setup_gpio()
     pwm.start(0)
     start_server()
+
 
 main()
