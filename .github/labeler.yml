@@ -12,7 +12,7 @@ positioning:
   - '!backend/positioning/**/spec/*'
 speed:
   - "backend/speed/**/*"
-proto:
+protocolBuffer:
   - "proto/**/*"
 frontend:
   - 'frontend/**/*'
