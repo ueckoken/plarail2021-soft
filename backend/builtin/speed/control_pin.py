@@ -13,19 +13,19 @@ class ControlPin(http.server.BaseHTTPRequestHandler):
             return
 
         if 0 <= float(query['speed'][0]) <= 100:
-            change_speed(float(query["speed"][0]))
+            change_speed(float(query["speed"][0]) / 100 * 35)
         self.create_msg()
 
-
     def create_msg(self):
-        content_len  = int(self.headers.get("content-length"))
-        req_body = self.rfile.read(content_len).decode("utf-8")
-        body = "body: " + req_body + "\n"
+        # content_len = int(self.headers.get("content-length"))
+        # req_body = self.rfile.read(content_len).decode("utf-8")
+        # body = "body: " + req_body + "\n"
         self.send_response(200)
-        self.send_header('Content-type', 'text/html; charset=utf-8')
-        self.send_header('Content-length', len(body.encode()))
-        self.end_headers()
-        self.wfile.write(body.encode())
+        # self.send_header('Content-type', 'text/html; charset=utf-8')
+        # self.send_header('Content-length', len(body.encode()))
+        # self.end_headers()
+        # self.wfile.write(body.encode())
+
 
 def setup_gpio():
     pin_channel = 10
@@ -44,7 +44,7 @@ def change_speed(speed: float):
 def start_server():
     server_addr = ("0.0.0.0", 8081)
     with http.server.HTTPServer(server_addr, ControlPin) as httpd:
-       httpd.serve_forever()
+        httpd.serve_forever()
 
 
 def main():
@@ -52,5 +52,6 @@ def main():
     pwm = setup_gpio()
     pwm.start(0)
     start_server()
+
 
 main()
