@@ -102,7 +102,7 @@ const stationIdAndTextMap: Record<StationId, string> = {
   chofu_s3: "調布3番線",
   chofu_s4: "調布4番線",
   chofu_s5: "調布-若葉台",
-  chofu_s6: "調布-北野",
+  chofu_s6: "unknown",
   kitano_s1: "北野1番線",
   kitano_s2: "北野2番線",
   kitano_s3: "北野3番線",
