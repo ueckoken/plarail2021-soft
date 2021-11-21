@@ -40,7 +40,7 @@ func NewSend2Node(c *http.Client, sta *station2espIp.StationDetail, state string
 			Station: sta,
 			client:  c,
 			sendData: &sendData{
-				State: state,
+				State: "ANGLE",
 				Pin:   sta.Pin,
 				Angle: angle,
 			},
