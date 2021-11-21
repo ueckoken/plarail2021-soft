@@ -7,7 +7,12 @@ defaults:
 on:
   push:
     paths:
-      - ./backend/builtin/speed/**
+      - './backend/builtin/speed/**'
+      - './.github/workflows/**'
+    branches-ignore:
+      - main
+      - deploytment
+
 jobs:
   build:
     runs-on: ubuntu-latest
