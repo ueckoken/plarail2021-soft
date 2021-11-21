@@ -165,15 +165,4 @@ stations:
             - kitano_s6
           off:
             - kitano_s5
-  - station:
-      name: takao
-      points:
-        - takao_s1
-      rules:
-        - on:
-  - station:
-    name: takaosanguchi
-    points:
-      - takao_s2
-    rules:
-      - on:
+
