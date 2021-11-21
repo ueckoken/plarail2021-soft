@@ -28,7 +28,7 @@ type MapRange = {
 
 const STOP_PONINTS: StopPointPosition[] = [
   { position: { x: 940, y: 560 }, id: "motoyawata_s1" },
-  { position: { x: 1000, y: 560 }, id: "motoyawata_s1" },
+  { position: { x: 1000, y: 560 }, id: "motoyawata_s2" },
   { position: { x: 120, y: 20 }, id: "kitano_s6" },
   { position: { x: 240, y: 20 }, id: "kitano_s4" },
   { position: { x: 240, y: 60 }, id: "kitano_s3" },
@@ -140,7 +140,7 @@ const SWITCH_POINTS: SwitchPointPotiionAndAngle[] = [
     fromAngle: 90,
     leftOutAngle: 270,
     rightOutAngle: 225,
-    id: "iwamotocho_b4",
+    id: "iwamotocho_b1",
   },
 ]
 
