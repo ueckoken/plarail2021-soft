@@ -52,7 +52,7 @@ const SwitchPoint: FC<Props> = ({
         style={{
           transform: `rotate(${outAngle}deg)`,
           transformOrigin: `${position.x}px ${position.y}px`,
-          transition: "transform 0.5s linear 0s",
+          transition: "transform 0.3s linear 0s",
         }}
       />
     </g>
