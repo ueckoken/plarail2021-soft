@@ -125,6 +125,7 @@ const stationIdAndTextMap: Record<StationId, string> = {
   kitano_b1: "北野-高尾分岐",
   kitano_b2: "北野3-4番線分岐",
   kitano_b3: "unknown",
+  unknown: "unknown",
 }
 
 const Home: NextPage = () => {
