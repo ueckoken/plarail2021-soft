@@ -82,13 +82,6 @@ stations:
           off:
             - sasazuka_b2
   - station:
-      name: meidaimae
-      points:
-        - meidaimae_s1
-        - meidaimae_s2
-      rules:
-        - on:
-  - station:
       name: chofu_kudari
       points:
         - chofu_s1
