@@ -11,7 +11,8 @@ type RaspberrySpeed struct {
 	speed int32
 }
 
-var endPoint = "http://localhost:8081"
+//var endPoint = "http://localhost:8081"
+var endPoint = "http://192.168.100.8:8085"
 
 func NewRaspberrySpeed(speed int32) *RaspberrySpeed {
 	return &RaspberrySpeed{speed: speed}
