@@ -11,7 +11,6 @@ import {
   StationId,
   StationState,
   stopRailId,
-  StopRailId as StationId,
 } from "../types/control-messages"
 import SpeedMeter from "../components/svgParts/SpeedMeter"
 import { SpeedMessage, TrainId } from "../types/speed-messages"
