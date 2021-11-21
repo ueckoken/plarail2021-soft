@@ -4,10 +4,16 @@ import { Point } from "../../types/svgPartsTypes"
 interface Props {
   position: Point
   isStop: boolean
+  onClick?: () => void
 }
 
-const StopPoint: FC<Props> = ({ position, isStop }) => (
-  <g>
+const StopPoint: FC<Props> = ({ position, isStop, onClick }) => (
+  <g
+    onClick={onClick}
+    style={{
+      cursor: onClick ? "pointer" : "initial",
+    }}
+  >
     <line
       x1={position.x}
       y1={position.y - 5}

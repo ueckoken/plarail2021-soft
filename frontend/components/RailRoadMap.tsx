@@ -5,7 +5,6 @@ import SwitchPoint from "./svgParts/SwitchPoint"
 import StopPoint from "./svgParts/StopPoint"
 import { Point, TrainData } from "../types/svgPartsTypes"
 import { BunkiRailId, StationId, StopRailId } from "../types/control-messages"
-import { string } from "fp-ts"
 
 interface Prop {
   datas: {
@@ -13,16 +12,12 @@ interface Prop {
     switchState: Record<BunkiRailId, boolean>
     train1: TrainData
   }
+  onStopPointOrSwitchPointClick?: (stationId: StationId) => any
 }
 
 type StopPointPosition = {
   id: StopRailId
   position: Point
-}
-
-type Rectangle = {
-  leftUp: Point
-  rightDown: Point
 }
 
 type MapRange = {
@@ -32,6 +27,8 @@ type MapRange = {
 }
 
 const STOP_PONINTS: StopPointPosition[] = [
+  { position: { x: 940, y: 560 }, id: "motoyawata_s1" },
+  { position: { x: 1000, y: 560 }, id: "motoyawata_s1" },
   { position: { x: 120, y: 20 }, id: "kitano_s6" },
   { position: { x: 240, y: 20 }, id: "kitano_s4" },
   { position: { x: 240, y: 60 }, id: "kitano_s3" },
@@ -52,12 +49,105 @@ const STOP_PONINTS: StopPointPosition[] = [
   { position: { x: 180, y: 200 }, id: "takao_s1" },
   { position: { x: 120, y: 380 }, id: "takao_s2" },
   { position: { x: 320, y: 180 }, id: "chofu_s5" },
+  { position: { x: 350, y: 20 }, id: "chofu_s6" },
   { position: { x: 940, y: 180 }, id: "kudanshita_s5" },
   { position: { x: 1000, y: 180 }, id: "kudanshita_s6" },
   { position: { x: 880, y: 380 }, id: "iwamotocho_s1" },
   { position: { x: 940, y: 380 }, id: "iwamotocho_s2" },
   { position: { x: 1000, y: 380 }, id: "iwamotocho_s4" },
 ]
+
+type SwitchPointPotiionAndAngle = {
+  id: BunkiRailId
+  position: Point
+  fromAngle: number
+  leftOutAngle: number
+  rightOutAngle: number
+}
+const SWITCH_POINTS: SwitchPointPotiionAndAngle[] = [
+  {
+    position: { x: 160, y: 20 },
+    fromAngle: 180,
+    leftOutAngle: 0,
+    rightOutAngle: 45,
+    id: "kitano_b2",
+  },
+  {
+    position: { x: 320, y: 120 },
+    fromAngle: 0,
+    leftOutAngle: 180,
+    rightOutAngle: 225,
+    id: "kitano_b1",
+  },
+  {
+    position: { x: 380, y: 20 },
+    fromAngle: 180,
+    leftOutAngle: 0,
+    rightOutAngle: 45,
+    id: "chofu_b5",
+  },
+  {
+    position: { x: 440, y: 60 },
+    fromAngle: 180,
+    leftOutAngle: 0,
+    rightOutAngle: 315,
+    id: "chofu_b4",
+  },
+  {
+    position: { x: 420, y: 160 },
+    fromAngle: 0,
+    leftOutAngle: 180,
+    rightOutAngle: 225,
+    id: "chofu_b3",
+  },
+  {
+    position: { x: 480, y: 120 },
+    fromAngle: 0,
+    leftOutAngle: 180,
+    rightOutAngle: 135,
+    id: "chofu_b2",
+  },
+  {
+    position: { x: 600, y: 120 },
+    fromAngle: 0,
+    leftOutAngle: 180,
+    rightOutAngle: 135,
+    id: "chofu_b1",
+  },
+  {
+    position: { x: 800, y: 20 },
+    fromAngle: 180,
+    leftOutAngle: 0,
+    rightOutAngle: 45,
+    id: "sasazuka_b2",
+  },
+  {
+    position: { x: 840, y: 80 },
+    fromAngle: 0,
+    leftOutAngle: 180,
+    rightOutAngle: 135,
+    id: "sasazuka_b1",
+  },
+  {
+    position: { x: 1000, y: 280 },
+    fromAngle: 270,
+    leftOutAngle: 90,
+    rightOutAngle: 135,
+    id: "iwamotocho_b4",
+  },
+  {
+    position: { x: 940, y: 480 },
+    fromAngle: 90,
+    leftOutAngle: 270,
+    rightOutAngle: 225,
+    id: "iwamotocho_b4",
+  },
+]
+
+type Rectangle = {
+  leftUp: Point
+  rightDown: Point
+}
 
 const MAP_RANGES: MapRange[] = [
   {
@@ -174,7 +264,10 @@ const MAP_RANGES: MapRange[] = [
   },
 ]
 
-const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
+const RailroadMap: FC<Prop> = ({
+  datas: { stop, switchState, train1 },
+  onStopPointOrSwitchPointClick,
+}) => {
   const [mapRange, setMapRange] = useState<MapRange>(MAP_RANGES[0])
   return (
     <>
@@ -597,84 +690,28 @@ const RailroadMap: FC<Prop> = ({ datas: { stop, switchState, train1 } }) => {
           <StopPoint position={position} isStop={stop[id]} key={id} />
         ))}
 
-        <SwitchPoint
-          position={{ x: 160, y: 20 }}
-          fromAngle={180}
-          leftOutAngle={0}
-          rightOutAngle={45}
-          isLeft={switchState.kitano_b2}
-        />
-        <SwitchPoint
-          position={{ x: 320, y: 120 }}
-          fromAngle={0}
-          leftOutAngle={180}
-          rightOutAngle={225}
-          isLeft={switchState.kitano_b1}
-        />
-        <SwitchPoint
-          position={{ x: 380, y: 20 }}
-          fromAngle={180}
-          leftOutAngle={0}
-          rightOutAngle={45}
-          isLeft={switchState.chofu_b5}
-        />
-        <SwitchPoint
-          position={{ x: 440, y: 60 }}
-          fromAngle={180}
-          leftOutAngle={0}
-          rightOutAngle={315}
-          isLeft={switchState.chofu_b4}
-        />
-        <SwitchPoint
-          position={{ x: 420, y: 160 }}
-          fromAngle={0}
-          leftOutAngle={180}
-          rightOutAngle={225}
-          isLeft={switchState.chofu_b3}
-        />
-        <SwitchPoint
-          position={{ x: 480, y: 120 }}
-          fromAngle={0}
-          leftOutAngle={180}
-          rightOutAngle={135}
-          isLeft={switchState.chofu_b2}
-        />
-        <SwitchPoint
-          position={{ x: 600, y: 120 }}
-          fromAngle={0}
-          leftOutAngle={180}
-          rightOutAngle={135}
-          isLeft={switchState.chofu_b1}
-        />
-        <SwitchPoint
-          position={{ x: 800, y: 20 }}
-          fromAngle={180}
-          leftOutAngle={0}
-          rightOutAngle={45}
-          isLeft={switchState.sasazuka_b2}
-        />
-        <SwitchPoint
-          position={{ x: 840, y: 80 }}
-          fromAngle={0}
-          leftOutAngle={180}
-          rightOutAngle={135}
-          isLeft={switchState.sasazuka_b1}
-        />
+        {STOP_PONINTS.map(({ position, id }) => (
+          <StopPoint
+            position={position}
+            isStop={stop[id]}
+            key={id}
+            onClick={() => onStopPointOrSwitchPointClick?.(id)}
+          />
+        ))}
 
-        <SwitchPoint
-          position={{ x: 1000, y: 280 }}
-          fromAngle={270}
-          leftOutAngle={90}
-          rightOutAngle={135}
-          isLeft={switchState.iwamotocho_b4}
-        />
-        <SwitchPoint
-          position={{ x: 940, y: 480 }}
-          fromAngle={90}
-          leftOutAngle={270}
-          rightOutAngle={225}
-          isLeft={switchState.iwamotocho_b4}
-        />
+        {SWITCH_POINTS.map(
+          ({ id, position, fromAngle, leftOutAngle, rightOutAngle }) => (
+            <SwitchPoint
+              position={position}
+              fromAngle={fromAngle}
+              leftOutAngle={leftOutAngle}
+              rightOutAngle={rightOutAngle}
+              isLeft={switchState[id]}
+              onClick={() => onStopPointOrSwitchPointClick?.(id)}
+              key={id}
+            />
+          )
+        )}
       </svg>
       {MAP_RANGES.map((map, i) => (
         <button

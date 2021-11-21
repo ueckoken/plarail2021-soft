@@ -8,8 +8,10 @@ import {
   bunkiRailId,
   BunkiRailId,
   Message,
-  stopRailId,
+  StationId,
+  StationState,
   StopRailId,
+  stopRailId,
 } from "../types/control-messages"
 import SpeedMeter from "../components/svgParts/SpeedMeter"
 import { SpeedMessage, TrainId } from "../types/speed-messages"
@@ -80,6 +82,53 @@ const INITIAL_SPEED_STATE: SpeedState = {
 }
 const INITIAL_SELECTED_TRAIN_ID: TrainId = "TAKAO"
 
+const stationIdAndTextMap: Record<StationId, string> = {
+  motoyawata_s1: "本八幡1番線",
+  motoyawata_s2: "本八幡2番線",
+  iwamotocho_s1: "岩本町1番線",
+  iwamotocho_s2: "岩本町2, 3番線",
+  iwamotocho_s4: "岩本町4番線",
+  kudanshita_s5: "九段下1番線",
+  kudanshita_s6: "九段下2番線",
+  sasazuka_s1: "笹塚1番線",
+  sasazuka_s2: "笹塚2番線",
+  sasazuka_s3: "笹塚3番線",
+  sasazuka_s4: "笹塚4番線",
+  sasazuka_s5: "笹塚新線",
+  meidaimae_s1: "明大前1番線",
+  meidaimae_s2: "明大前2番線",
+  chofu_s1: "調布1番線",
+  chofu_s2: "調布2番線",
+  chofu_s3: "調布3番線",
+  chofu_s4: "調布4番線",
+  chofu_s5: "調布-若葉台",
+  chofu_s6: "調布-北野",
+  kitano_s1: "北野1番線",
+  kitano_s2: "北野2番線",
+  kitano_s3: "北野3番線",
+  kitano_s4: "北野4番線",
+  kitano_s5: "北野-高尾",
+  kitano_s6: "北野-京王八王子",
+  kitano_s7: "unknown",
+  takao_s1: "高尾",
+  takao_s2: "高尾山口",
+  iwamotocho_b1: "岩本町1-2,3番線分岐",
+  iwamotocho_b2: "unknown",
+  iwamotocho_b3: "unknown",
+  iwamotocho_b4: "岩本町2,3-4番線分岐",
+  sasazuka_b1: "笹塚新線-明大前分岐",
+  sasazuka_b2: "笹塚3-4番線分岐",
+  chofu_b1: "調布1-2番線分岐",
+  chofu_b2: "調布2番線若葉台-北野分岐",
+  chofu_b3: "若葉台-北野分岐",
+  chofu_b4: "調布3-4番線分岐2",
+  chofu_b5: "調布3-4番線分岐1",
+  kitano_b1: "北野-高尾分岐",
+  kitano_b2: "北野3-4番線分岐",
+  kitano_b3: "unknown",
+  unknown: "unknown",
+}
+
 const Home: NextPage = () => {
   const stationWs = useRef<WebSocket>()
   const [stopPointState, setStopPointState] = useState<StopPointState>(
@@ -88,8 +137,8 @@ const Home: NextPage = () => {
   const [switchPointState, setSwitchPointState] = useState<SwitchPointState>(
     INITIAL_SWITCH_POINT_STATE
   )
-  const [isLeftSwichPoint1, setIsLeftSwitchPoint1] = useState<boolean>(true)
-  const [isLeftSwichPoint2, setIsLeftSwitchPoint2] = useState<boolean>(true)
+  const [selectedStationId, setSelectedStationId] =
+    useState<StationId>("unknown")
   const [trainPosition1, setTrainPosition1] = useState<number>(0.4)
 
   const speedWs = useRef<WebSocket>()
@@ -100,6 +149,29 @@ const Home: NextPage = () => {
   const [isBack, setIsBack] = useState<boolean>(false)
 
   const [roomIds, setRoomIds] = useState<string[]>(["chofu", "train"])
+
+  const changeStopPointOrSwtichPointState = (
+    stationId: StationId,
+    state: StationState
+  ) => {
+    const message: Message = {
+      station_name: stationId,
+      state: state,
+    }
+    stationWs.current?.send(JSON.stringify(message))
+  }
+  const toggleStopPointOrSwitchPointState = (stationId: StationId) => {
+    let state
+    if (stopRailId.is(stationId)) {
+      state = stopPointState[stationId]
+    } else if (bunkiRailId.is(stationId)) {
+      state = switchPointState[stationId]
+    } else {
+      return
+    }
+    const nextState = state ? "OFF" : "ON"
+    changeStopPointOrSwtichPointState(stationId, nextState)
+  }
 
   useEffect(() => {
     const ws = new WebSocket("wss://speed.chofufes2021.gotti.dev/speed")
@@ -266,11 +338,28 @@ const Home: NextPage = () => {
                 id: "koken",
               },
             }}
+            onStopPointOrSwitchPointClick={(stationId) =>
+              setSelectedStationId(stationId)
+            }
           />
         </section>
 
         <section>
           <h2>操作部分</h2>
+          <p>
+            選択中：
+            {stopRailId.is(selectedStationId)
+              ? stationIdAndTextMap[selectedStationId]
+              : selectedStationId}
+            <button
+              type="button"
+              onClick={() =>
+                toggleStopPointOrSwitchPointState(selectedStationId)
+              }
+            >
+              切り替え
+            </button>
+          </p>
           <svg width="100%" viewBox="0 0 200 100">
             <rect x={0} y={0} width={200} height={100} fill="dimgrey" />
             <SpeedMeter
@@ -305,105 +394,6 @@ const Home: NextPage = () => {
               speedWs.current?.send(JSON.stringify(message))
             }}
           />
-          <button
-            onClick={() => {
-              const message: Message = {
-                station_name: "chofu_b1",
-                state: switchPointState.chofu_b1 ? "OFF" : "ON",
-              }
-              stationWs.current?.send(JSON.stringify(message))
-            }}
-          >
-            chofu_b1切り替え
-          </button>
-          <button
-            onClick={() => {
-              const message: Message = {
-                station_name: "chofu_b2",
-                state: switchPointState.chofu_b2 ? "OFF" : "ON",
-              }
-              stationWs.current?.send(JSON.stringify(message))
-            }}
-          >
-            chofu_b2切り替え
-          </button>
-          <button
-            onClick={() => {
-              const message: Message = {
-                station_name: "chofu_b3",
-                state: switchPointState.chofu_b3 ? "OFF" : "ON",
-              }
-              stationWs.current?.send(JSON.stringify(message))
-            }}
-          >
-            chofu_b3切り替え
-          </button>
-          <button
-            onClick={() => {
-              const message: Message = {
-                station_name: "chofu_b4",
-                state: switchPointState.chofu_b4 ? "OFF" : "ON",
-              }
-              stationWs.current?.send(JSON.stringify(message))
-            }}
-          >
-            chofu_b4切り替え
-          </button>
-          <button
-            onClick={() => {
-              const message: Message = {
-                station_name: "chofu_b5",
-                state: switchPointState.chofu_b5 ? "OFF" : "ON",
-              }
-              stationWs.current?.send(JSON.stringify(message))
-            }}
-          >
-            chofu_b5切り替え
-          </button>
-          <button
-            onClick={() => {
-              const message: Message = {
-                station_name: "chofu_s1",
-                state: stopPointState.chofu_s1 ? "OFF" : "ON",
-              }
-              stationWs.current?.send(JSON.stringify(message))
-            }}
-          >
-            chofu_s1切り替え
-          </button>
-          <button
-            onClick={() => {
-              const message: Message = {
-                station_name: "chofu_s2",
-                state: stopPointState.chofu_s2 ? "OFF" : "ON",
-              }
-              stationWs.current?.send(JSON.stringify(message))
-            }}
-          >
-            chofu_s2切り替え
-          </button>
-          <button
-            onClick={() => {
-              const message: Message = {
-                station_name: "chofu_s3",
-                state: stopPointState.chofu_s3 ? "OFF" : "ON",
-              }
-              stationWs.current?.send(JSON.stringify(message))
-            }}
-          >
-            chofu_s3切り替え
-          </button>
-          <button
-            onClick={() => {
-              const message: Message = {
-                station_name: "chofu_s4",
-                state: stopPointState.chofu_s4 ? "OFF" : "ON",
-              }
-              stationWs.current?.send(JSON.stringify(message))
-            }}
-          >
-            chofu_s4切り替え
-          </button>
         </section>
       </main>
 

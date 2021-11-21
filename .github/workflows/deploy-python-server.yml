@@ -7,6 +7,7 @@ defaults:
 on:
   push:
     branches: [ deployment ]
+    paths: [ './frontend/videoCast/**' ]
 
 jobs:
   build:
