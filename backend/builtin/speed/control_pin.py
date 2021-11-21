@@ -14,7 +14,7 @@ class ControlPin(http.server.BaseHTTPRequestHandler):
 
         user_speed = float(query['speed'][0])
         if user_speed == 0.0:
-            change_speed(17.5)
+            change_speed(0)
         elif 0 < user_speed <= 100:
             change_speed(user_speed / 100 * 17.5 + 17.5)
         self.create_msg()
