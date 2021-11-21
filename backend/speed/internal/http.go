@@ -84,14 +84,14 @@ func (s *SpeedServer) HandleChange(cn chan storeSpeed.TrainConf) {
 		case c := <-cn:
 			s.TotalCLientCommands.With(prometheus.Labels{}).Inc()
 			s.Speed.With(prometheus.Labels{}).Set(float64(c.GetSpeed()))
+			speed := sendSpeed.SendSpeed{Train: c}
+			err := speed.Send()
+			if err != nil {
+				log.Println(err)
+			}
 			for _, client := range s.ClientHandler.Clients.clients {
 				select {
 				case client.notifier.Notifier <- c:
-					speed := sendSpeed.SendSpeed{Train: c}
-					err := speed.Send()
-					if err != nil {
-						log.Println(err)
-					}
 				default:
 					fmt.Println("buffer is full...")
 				}
