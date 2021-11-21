@@ -12,8 +12,11 @@ class ControlPin(http.server.BaseHTTPRequestHandler):
             self.send_response(http.HTTPStatus.BAD_REQUEST)
             return
 
-        if 0 <= float(query['speed'][0]) <= 100:
-            change_speed(float(query["speed"][0]) / 100 * 35)
+        user_speed = float(query['speed'][0])
+        if user_speed == 0.0:
+            change_speed(0)
+        elif 0 < user_speed <= 100:
+            change_speed(user_speed / 100 * 17.5 + 17.5)
         self.create_msg()
 
     def create_msg(self):
@@ -25,6 +28,7 @@ class ControlPin(http.server.BaseHTTPRequestHandler):
         # self.send_header('Content-length', str(body.encode()))
         # self.end_headers()
         # self.wfile.write(body.encode())
+
 
 def setup_gpio():
     pin_channel = 10
