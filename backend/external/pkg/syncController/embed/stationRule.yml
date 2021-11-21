@@ -181,6 +181,6 @@ stations:
   - station:
     name: takaosanguchi
     points:
-      - takaosanguchi_s2
+      - takao_s2
     rules:
       - on:
