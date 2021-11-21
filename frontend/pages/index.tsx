@@ -10,6 +10,7 @@ import {
   Message,
   StationId,
   StationState,
+  StopRailId,
   stopRailId,
 } from "../types/control-messages"
 import SpeedMeter from "../components/svgParts/SpeedMeter"
@@ -17,7 +18,7 @@ import { SpeedMessage, TrainId } from "../types/speed-messages"
 import ReverseHandle from "../components/svgParts/ReverseHandle"
 
 // OFF: false, ON: trueと対応
-type StopPointState = Record<StationId, boolean>
+type StopPointState = Record<StopRailId, boolean>
 const INITIAL_STOP_POINT_STATE: StopPointState = {
   motoyawata_s1: false,
   motoyawata_s2: false,
