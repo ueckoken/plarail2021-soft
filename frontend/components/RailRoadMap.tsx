@@ -19,6 +19,8 @@ type StopPointPosition = {
   position: Point
 }
 const STOP_PONINTS: StopPointPosition[] = [
+  { position: { x: 940, y: 560 }, id: "motoyawata_s1" },
+  { position: { x: 1000, y: 560 }, id: "motoyawata_s1" },
   { position: { x: 120, y: 20 }, id: "kitano_s6" },
   { position: { x: 240, y: 20 }, id: "kitano_s4" },
   { position: { x: 240, y: 60 }, id: "kitano_s3" },
@@ -39,6 +41,7 @@ const STOP_PONINTS: StopPointPosition[] = [
   { position: { x: 180, y: 200 }, id: "takao_s1" },
   { position: { x: 120, y: 380 }, id: "takao_s2" },
   { position: { x: 320, y: 180 }, id: "chofu_s5" },
+  { position: { x: 350, y: 20 }, id: "chofu_s6" },
   { position: { x: 940, y: 180 }, id: "kudanshita_s5" },
   { position: { x: 1000, y: 180 }, id: "kudanshita_s6" },
   { position: { x: 880, y: 380 }, id: "iwamotocho_s1" },
