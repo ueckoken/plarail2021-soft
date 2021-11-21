@@ -99,7 +99,7 @@ const Home: NextPage = () => {
   )
   const [isBack, setIsBack] = useState<boolean>(false)
 
-  const [roomIds, setRoomIds] = useState<string[]>(["aaa"])
+  const [roomIds, setRoomIds] = useState<string[]>(["chofu", "train"])
 
   useEffect(() => {
     const ws = new WebSocket("wss://speed.chofufes2021.gotti.dev/speed")
@@ -213,24 +213,45 @@ const Home: NextPage = () => {
           </div>
           <button
             onClick={() => {
-              setRoomIds(["aaa", "bbb"])
+              setRoomIds(["hachioji", "train1"])
             }}
           >
-            aaa
+            京王八王子
           </button>
           <button
             onClick={() => {
-              setRoomIds(["bbb", "aaa"])
+              setRoomIds(["kitano", "train1"])
             }}
           >
-            bbb
+            北野
           </button>
           <button
             onClick={() => {
-              setRoomIds(["ccc", "bbb"])
+              setRoomIds(["chofu", "train1"])
             }}
           >
-            ccc
+            調布
+          </button>
+          <button
+            onClick={() => {
+              setRoomIds(["meidaimae", "train1"])
+            }}
+          >
+            明大前
+          </button>
+          <button
+            onClick={() => {
+              setRoomIds(["sasazuka", "train1"])
+            }}
+          >
+            笹塚
+          </button>
+          <button
+            onClick={() => {
+              setRoomIds(["iwamotocho", "train1"])
+            }}
+          >
+            岩本町
           </button>
         </section>
 
