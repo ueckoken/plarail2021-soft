@@ -348,9 +348,7 @@ const Home: NextPage = () => {
           <h2>操作部分</h2>
           <p>
             選択中：
-            {stopRailId.is(selectedStationId)
-              ? stationIdAndTextMap[selectedStationId]
-              : selectedStationId}
+            {stationIdAndTextMap[selectedStationId]}
             <button
               type="button"
               onClick={() =>
