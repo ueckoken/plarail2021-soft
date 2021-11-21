@@ -8,6 +8,7 @@ interface Props {
   leftOutAngle: number
   rightOutAngle: number
   isLeft: boolean
+  onClick?: () => void
 }
 
 const SwitchPoint: FC<Props> = ({
@@ -16,12 +17,18 @@ const SwitchPoint: FC<Props> = ({
   leftOutAngle,
   rightOutAngle,
   isLeft,
+  onClick,
 }) => {
   const fromAnglePointX = position.x + Math.cos(degToRad(fromAngle)) * 10
   const fromAnglePointY = position.y + Math.sin(degToRad(fromAngle)) * 10
   const outAngle = isLeft ? leftOutAngle : rightOutAngle
   return (
-    <g>
+    <g
+      onClick={onClick}
+      style={{
+        cursor: onClick ? "pointer" : "initial",
+      }}
+    >
       <circle
         cx={position.x}
         cy={position.y}
@@ -45,7 +52,7 @@ const SwitchPoint: FC<Props> = ({
         style={{
           transform: `rotate(${outAngle}deg)`,
           transformOrigin: `${position.x}px ${position.y}px`,
-          transition: "transform 0.5s linear 0s",
+          transition: "transform 0.3s linear 0s",
         }}
       />
     </g>

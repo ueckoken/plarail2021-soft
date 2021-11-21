@@ -1,0 +1,38 @@
+name: build speed control proxy
+
+defaults:
+  run:
+    working-directory: ./backend/builtin/speed
+
+on:
+  push:
+    paths:
+      - ./backend/builtin/speed/**
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Build Go binary
+        run: |-
+          make build_arm
+
+      - name: Count changes
+        id: changes
+        run: |
+          git add -N .
+          echo "::set-output name=count::$(git diff --name-only |wc -l)"
+      - name: commit and push
+        run: |
+          git config --global user.name 'GO builder'
+          git config --global user.email 'bot@example.com'
+          git add .
+          git commit -m 'built by github actions'
+          git push
+        if: steps.changes.outputs.count > 0
