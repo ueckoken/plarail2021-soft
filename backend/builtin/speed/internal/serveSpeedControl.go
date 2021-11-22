@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"log"
 	pb "ueckoken/plarail2021-soft-builtin/spec"
 )
 
@@ -14,6 +15,7 @@ func NewServeSpeedControl() *ServeSpeedControl {
 }
 func (s *ServeSpeedControl) ControlSpeed(ctx context.Context, ss *pb.SendSpeed) (*pb.StatusCode, error) {
 	rs := NewRaspberrySpeed(ss.Speed)
+	log.Printf("gRPC received...speed: `%v`, train: `%v`", ss.Speed, ss.Train)
 	_ = rs.changeSpeed()
 	//if err != nil {
 	//	return nil,
