@@ -7,17 +7,5 @@
   },
   "flux": {
     "fileMatch": ["./manifests/.+.ya?ml"]
-  },
-  "packageRules": [
-    {
-      "matchPackagePatterns": ["^@types/"],
-      "automerge": true,
-      "major": {
-        "automerge": false
-      }
-    }
-  ],
-  "pin": {
-    "automerge": true
   }
 }
