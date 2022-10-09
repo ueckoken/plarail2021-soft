@@ -4,5 +4,5 @@ metadata:
   name: external
   namespace: plarail2021
 spec:
-  image: ghcr.io/ueckoken/plarail2021-soft-external
+  image: ghcr.io/ueckoken/plarail2022-external
   interval: 1m0s

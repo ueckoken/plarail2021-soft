@@ -38,4 +38,4 @@ jobs:
           context: ./backend/internal
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/ueckoken/plarail2021-soft-internal:latest
+          tags: ghcr.io/ueckoken/plarail2022-internal:latest
