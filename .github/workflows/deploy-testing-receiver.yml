@@ -42,4 +42,4 @@ jobs:
           file: ./frontend/videoCast/Dockerfile.receiver
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/ueckoken/plarail2021-soft-receiver-test:${{ env.IMAGE_TAG }}
+          tags: ghcr.io/ueckoken/plarail2022-receiver-test:${{ env.IMAGE_TAG }}
