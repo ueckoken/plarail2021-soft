@@ -20,19 +20,5 @@ jobs:
         run: yarn install --frozen-lockfile --immutable
       - name: lint
         run: yarn lint
-  buildTest:
-    runs-on: ubuntu-22.04
-    needs: lint
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-buildx-action@v2
-      - name: Build
-        uses: docker/build-push-action@v3
-        with:
-          context: ./frontend/
-          file: ./frontend/Dockerfile
-          platforms: linux/amd64
-          push: false
-          tags: ghcr.io/ueckoken/plarail2022-frontend:${{ env.IMAGE_TAG }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: build
+        run: yarn build
