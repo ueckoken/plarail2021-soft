@@ -1,14 +1,15 @@
-FROM golang:1.17-bullseye as builder
+FROM golang:1.19-bullseye as builder
 
 WORKDIR /speed
-ADD . /speed
+ENV CGO_ENABLED=0
+COPY go.mod go.sum /speed/
+RUN go mod download
 
-RUN go mod tidy
-
+COPY . /speed
 RUN go build -o /speed/app ./cmd/main.go
 
-FROM ubuntu:20.10 as runner
+FROM gcr.io/distroless/static-debian11:nonroot as runner
 
-COPY --from=builder /speed/app /app/app
+COPY --from=builder --chown=nonroot:nonroot /speed/app /speed-app
 
-CMD ["/app/app"]
+CMD ["/speed-app"]
