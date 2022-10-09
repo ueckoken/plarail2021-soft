@@ -22,7 +22,7 @@ jobs:
         run: yarn lint
   buildTest:
     runs-on: ubuntu-22.04
-    needs: test
+    needs: lint
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-buildx-action@v2
