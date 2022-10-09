@@ -1,6 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ]
+  "extends": ["config:base", ":timezone(Asia/Tokyo)", ":prHourlyLimitNone"],
+  "labels": ["renovate"],
+  "kubernetes": {
+    "fileMatch": ["./manifests/.+.ya?ml"]
+  },
+  "flux": {
+    "fileMatch": ["./manifests/.+.ya?ml"]
+  },
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^@types/"],
+      "automerge": true,
+      "major": {
+        "automerge": false
+      }
+    }
+  ],
+  "pin": {
+    "automerge": true
+  }
 }
