@@ -6,7 +6,7 @@ defaults:
 
 on:
   push:
-    branches: [ deployment ]
+    branches: [deployment]
 
 jobs:
   build:
@@ -14,30 +14,26 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.17
-
+          go-version-file: ./backend/external/go.mod
       - name: Build Go binary
         run: |-
           make build
-
       - name: set tag
         run: |-
           export TIMESTUMP=$(date +%s)
           export SHA=$(echo ${{ github.sha }} | cut -c1-7)
           echo "IMAGE_TAG=$SHA-$TIMESTUMP" >> $GITHUB_ENV
-
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1 
+        uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build
         uses: docker/build-push-action@v2
         with:
