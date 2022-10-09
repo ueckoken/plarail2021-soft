@@ -20,6 +20,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: ./backend/external/go.mod
+          cache: true
+          cache-dependency-path: ./backend/external/go.sum
       - name: Build Go binary
         run: |-
           make build

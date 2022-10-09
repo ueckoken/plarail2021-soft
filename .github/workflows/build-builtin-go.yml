@@ -18,6 +18,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: ./backend/builtin/speed/go.mod
+          cache: true
+          cache-dependency-path: ./backend/builtin/speed/go.sum
       - name: Build Go binary
         run: |-
           make build_arm
