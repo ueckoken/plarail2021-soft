@@ -7,6 +7,6 @@ RUN npm ci
 COPY *.js /app/
 RUN npx webpack
 
-FROM nginx:1.20.1-alpine
+FROM nginx:1.23.1-alpine
 COPY --from=builder /app/momo_sender_.js /usr/share/nginx/html/
 COPY ./momo_sender.html /usr/share/nginx/html/index.html
