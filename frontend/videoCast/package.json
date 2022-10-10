@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "webpack": "5.59.1",
-    "webpack-dev-server": "4.3.1"
+    "webpack-dev-server": "4.11.1"
   },
   "scripts": {
     "install": "npx webpack",
