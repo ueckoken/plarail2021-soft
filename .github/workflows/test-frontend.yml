@@ -1,4 +1,4 @@
-name: WebRTC test
+name: Frontend build and test
 
 defaults:
   run:
