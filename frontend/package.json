@@ -11,7 +11,7 @@
   "dependencies": {
     "fp-ts": "^2.11.5",
     "io-ts": "^2.2.16",
-    "next": "12.1.0",
+    "next": "12.3.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "skyway-js": "^4.4.3"
