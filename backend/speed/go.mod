@@ -3,7 +3,7 @@ module ueckoken/plarail2021-soft-speed
 go 1.17
 
 require (
-	github.com/gorilla/websocket v1.4.2
+	github.com/gorilla/websocket v1.5.0
 	github.com/prometheus/client_golang v1.11.0
 	github.com/stretchr/testify v1.8.0
 	google.golang.org/grpc v1.42.0
