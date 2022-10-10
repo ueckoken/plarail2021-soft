@@ -4,5 +4,5 @@ metadata:
   name: webrtc-receiver
   namespace: plarail2021
 spec:
-  image: ghcr.io/ueckoken/plarail2021-soft-receiver-test
+  image: ghcr.io/ueckoken/plarail2022-receiver-test
   interval: 1m0s

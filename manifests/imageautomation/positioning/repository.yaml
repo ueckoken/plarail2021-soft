@@ -4,5 +4,5 @@ metadata:
   name: positioning
   namespace: plarail2021
 spec:
-  image: ghcr.io/ueckoken/plarail2021-soft-positioning
+  image: ghcr.io/ueckoken/plarail2022-positioning
   interval: 1m0s

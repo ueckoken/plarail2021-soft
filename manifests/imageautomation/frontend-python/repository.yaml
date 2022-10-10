@@ -4,5 +4,5 @@ metadata:
   name: frontend-python
   namespace: plarail2021
 spec:
-  image: ghcr.io/ueckoken/plarail2021-soft-frontend-python
+  image: ghcr.io/ueckoken/plarail2022-frontend-python
   interval: 1m0s

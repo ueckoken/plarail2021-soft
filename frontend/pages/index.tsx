@@ -174,7 +174,7 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
-    const ws = new WebSocket("wss://speed.chofufes2021.gotti.dev/speed")
+    const ws = new WebSocket("wss://speed.chofufes2022.gotti.dev/speed")
     speedWs.current = ws
     ws.addEventListener("open", (e) => {
       console.log("opened")
@@ -201,7 +201,7 @@ const Home: NextPage = () => {
   }, [])
 
   useEffect(() => {
-    const ws = new WebSocket("wss://control.chofufes2021.gotti.dev/ws")
+    const ws = new WebSocket("wss://control.chofufes2022.gotti.dev/ws")
     stationWs.current = ws
     ws.addEventListener("open", (e) => {
       console.log("opened")

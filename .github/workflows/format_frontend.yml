@@ -2,15 +2,14 @@ name: formatter
 on:
   push:
     paths:
-      - 'frontend/**/*'
+      - "frontend/**/*"
     branches-ignore:
-      - 'main'
-      - 'deployment'
+      - "main"
+      - "deployment"
 
 defaults:
   run:
-    working-directory: 'frontend/'
-
+    working-directory: "frontend/"
 
 jobs:
   prettier:
