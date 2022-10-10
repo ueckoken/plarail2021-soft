@@ -10,7 +10,7 @@
 設定ファイルなどで指定するときは以下のルールで指定します。
 
 ```text
-<station_name>_<s or b><number>
+<station_name>_<s or p><number>
 ```
 
 例えば調布駅にあるストップレール `s1`を指定するときは `chofu_s1`と指定します。
