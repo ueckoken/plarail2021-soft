@@ -43,6 +43,7 @@ func (s SpeedServer) StartSpeed() {
 	prometheus.MustRegister(s.Speed)
 	http.Handle("/speed", s.ClientHandler)
 	http.Handle("/metrics", promhttp.Handler())
+	log.Println("listening on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
