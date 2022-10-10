@@ -1,26 +1,14 @@
-FROM node:16.13.0-buster AS deps
+# Build the source code
+FROM node:16.13.0-buster-slim AS builder
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --immutable
-
-FROM node:16.17 as builder
-WORKDIR /app
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN yarn next build
-
-FROM gcr.io/distroless/nodejs:16 AS runner
+ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+RUN yarn next build
+RUN yarn next export
 
-COPY --from=builder --chown=nonroot:nonroot /app/public ./public
-COPY --from=builder --chown=nonroot:nonroot /app/.next/standalone ./
-COPY --from=builder --chown=nonroot:nonroot /app/.next/static ./.next/static
-
-EXPOSE 3000
-
-ENV PORT 3000
-USER nonroot
-CMD ["server.js"]
+# Production image, copy all the files and run nginx
+FROM nginxinc/nginx-unprivileged:1.20.1-alpine AS runner
+COPY --from=builder --chown=nginx:nginx /app/out/ /usr/share/nginx/html/
