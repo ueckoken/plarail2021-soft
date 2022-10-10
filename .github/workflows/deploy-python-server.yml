@@ -28,7 +28,7 @@ jobs:
           export SHA=$(echo ${{ github.sha }} | cut -c1-7)
           echo "IMAGE_TAG=$SHA-$TIMESTUMP" >> $GITHUB_ENV
       - name: Build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./frontend/videoCast
           file: ./frontend/videoCast/Dockerfile.python
