@@ -28,7 +28,7 @@ jobs:
           echo "IMAGE_TAG=$SHA-$TIMESTUMP" >> $GITHUB_ENV
 
       - name: Build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./backend/positioning
           file: ./backend/positioning/Dockerfile
