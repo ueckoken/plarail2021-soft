@@ -73,8 +73,7 @@ async def server(websocket, path):
         # 現在の通信のwebsocketが入ったroom_idのroomが存在することを保証
 
         if msg_type == "connect_sender":
-            if sender_token is None or\
-                    sender_token == dictionary["sender_token"]:
+            if sender_token is None or sender_token == dictionary["sender_token"]:
                 async with lock:  # if room["sender_socket"] is None:
                     print("sender_connect")
                     room["sender_socket"] = websocket
@@ -87,12 +86,15 @@ async def server(websocket, path):
                             continue
                         print("send")
                         promise = connection.send(
-                            json.dumps({
-                                "msg_type": "connect_receiver",
-                                "room_id": room_id,
-                                "skyway_room_id": room["skyway_room_id"],
-                                "peer_id": room["peer_id"]
-                            }))
+                            json.dumps(
+                                {
+                                    "msg_type": "connect_receiver",
+                                    "room_id": room_id,
+                                    "skyway_room_id": room["skyway_room_id"],
+                                    "peer_id": room["peer_id"],
+                                }
+                            )
+                        )
                         room["connect_num"] += 1
                         promises.append(promise)
         elif msg_type == "connect_receiver":
@@ -101,12 +103,15 @@ async def server(websocket, path):
                 print("send")
                 if room["connect_num"] < MAX_CONNECT_NUM:
                     promise = websocket.send(
-                        json.dumps({
-                            "msg_type": "connect_receiver",
-                            "room_id": room_id,
-                            "skyway_room_id": room["skyway_room_id"],
-                            "peer_id": room["peer_id"]
-                        }))
+                        json.dumps(
+                            {
+                                "msg_type": "connect_receiver",
+                                "room_id": room_id,
+                                "skyway_room_id": room["skyway_room_id"],
+                                "peer_id": room["peer_id"],
+                            }
+                        )
+                    )
 
                     async with lock:
                         room["connect_num"] += 1
@@ -114,10 +119,10 @@ async def server(websocket, path):
                 else:
                     # ルームの累積接続数が溢れそうだったら新しい部屋をsenderに作ってもらう
                     promise = room["sender_socket"].send(
-                        json.dumps({
-                            "msg_type": "request_reconnect_sender",
-                            "room_id": room_id
-                        }))
+                        json.dumps(
+                            {"msg_type": "request_reconnect_sender", "room_id": room_id}
+                        )
+                    )
                     promises.append(promise)
                     async with lock:
                         room["connect_num"] = 0
@@ -150,8 +155,11 @@ async def server(websocket, path):
                 room["peer_id"] = None
 
     async with lock:
-        rooms = {room_id: room for room_id,
-                 room in rooms.items() if len(room["connections"]) != 0}
+        rooms = {
+            room_id: room
+            for room_id, room in rooms.items()
+            if len(room["connections"]) != 0
+        }
     # ルームに人がいなくなったら削除
 
     async with lock:
