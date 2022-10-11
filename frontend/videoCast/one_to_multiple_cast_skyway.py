@@ -35,7 +35,7 @@ print("a")
 lock = asyncio.Lock()
 
 
-async def server(websocket, path):
+async def handler(websocket, path):
     global connection_num, connections, rooms, lock
     remote_address = websocket.remote_address
     print(remote_address)
@@ -161,7 +161,11 @@ async def server(websocket, path):
 # ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 # ssl_context.load_cert_chain(CERT, keyfile=KEY)
 
-start_server = websockets.serve(server, ADDRESS, PORT)  # , ssl=ssl_context)
 # サーバー立ち上げ
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+async def main():
+    async with websockets.serve(handler, ADDRESS, PORT):  # , ssl=ssl_context)
+        await asyncio.Future()  # run forever
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
