@@ -7,13 +7,13 @@ on:
       - "main"
       - "deployment"
 
-defaults:
-  run:
-    working-directory: "frontend/"
 
 jobs:
   prettier:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "frontend/"
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -37,3 +37,24 @@ jobs:
           git commit -m 'format by prettier'
           git push
         if: steps.changes.outputs.count > 0
+
+  prettier-videocast:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "frontend/videoCast"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: npm
+          cache-dependency-path: ./frontend/videoCast/package-lock.json
+      - run: npm ci
+      - run: npm run fmt
+      - uses: EndBug/add-and-commit@v9
+        with:
+          author_name: format BOT
+          author_email: bot@example.com
+          message: format by prettier
