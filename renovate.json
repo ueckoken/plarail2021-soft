@@ -1,12 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base", ":timezone(Asia/Tokyo)", ":prHourlyLimitNone"],
-  "assignees": ["@Azuki-bar"],
   "labels": ["renovate"],
   "kubernetes": {
-    "fileMatch": ["./manifests/.+.ya?ml"]
+    "fileMatch": ["manifests/**/.+.ya?ml"]
   },
   "flux": {
-    "fileMatch": ["./manifests/.+.ya?ml"]
+    "fileMatch": ["manifest/**/.+.ya?ml"]
   }
 }
