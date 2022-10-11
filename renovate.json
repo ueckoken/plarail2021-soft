@@ -6,6 +6,6 @@
     "fileMatch": [".+\\.ya?ml$"]
   },
   "flux": {
-    "fileMatch": ["manifests/flux-system/gotk-components\\.yaml$", "manifests/manifests/.+.ya?ml$"]
+    "fileMatch": [".+\\.ya?ml$"]
   }
 }
