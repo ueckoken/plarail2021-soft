@@ -1,6 +1,6 @@
 module ueckoken/plarail2021-soft-speed
 
-go 1.17
+go 1.19
 
 require (
 	github.com/gorilla/websocket v1.5.0

@@ -1,6 +1,6 @@
 module ueckoken/plarail2021-soft-internal
 
-go 1.17
+go 1.19
 
 require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
