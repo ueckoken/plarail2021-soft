@@ -3,9 +3,9 @@
   "extends": ["config:base", ":timezone(Asia/Tokyo)", ":prHourlyLimitNone"],
   "labels": ["renovate"],
   "kubernetes": {
-    "fileMatch": ["manifests/**/.+.ya?ml"]
+    "fileMatch": [".+\\.ya?ml$"]
   },
   "flux": {
-    "fileMatch": ["manifest/**/.+.ya?ml"]
+    "fileMatch": ["manifests/flux-system/gotk-components\\.yaml$", "manifests/manifests/.+.ya?ml$"]
   }
 }
