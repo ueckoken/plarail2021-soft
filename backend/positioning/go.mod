@@ -1,6 +1,6 @@
 module ueckoken/plarail2021-soft-positioning
 
-go 1.17
+go 1.19
 
 require (
 	github.com/ghodss/yaml v1.0.0
