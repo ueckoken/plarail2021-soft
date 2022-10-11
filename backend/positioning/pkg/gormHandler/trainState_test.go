@@ -18,7 +18,11 @@ func TestUpdate(t *testing.T) {
 		t.Errorf("%s", err)
 	}
 	db := SQLHandler{Db: d}
-	db.Db.AutoMigrate(&trainState.State{})
+	err = db.Db.AutoMigrate(&trainState.State{})
+	if err != nil {
+		t.Errorf("db auto migrate failed, %s", err)
+		t.FailNow()
+	}
 	ts := trainState.State{
 		TrainId:          123,
 		HallSensorName:   "sdkaa",
