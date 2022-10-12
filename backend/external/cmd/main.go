@@ -44,7 +44,7 @@ func main() {
 		[]string{},
 	)
 
-	httpServer := internal.HttpServer{
+	httpServer := internal.HTTPServer{
 		ClientHandler2syncController: clientHandler2syncController,
 		SyncController2clientHandler: syncController2clientHandler,
 		Environment:                  envVal,

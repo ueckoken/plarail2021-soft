@@ -91,9 +91,8 @@ func trapResponseGrpcErr(rs *pb.ResponseSync, grpcErr error) error {
 	case SUCCESS:
 		if grpcErr != nil {
 			return fmt.Errorf("gRPC Err: `%w`; gRPC Response status is `%s`", grpcErr, SUCCESS)
-		} else {
-			return nil
 		}
+		return nil
 	case FAILED:
 		return fmt.Errorf("gRPC Err: `%w`; gRPC Response status is `%s`", grpcErr, FAILED)
 	default:

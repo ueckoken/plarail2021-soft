@@ -5,10 +5,10 @@ import (
 	"ueckoken/plarail2022-external/spec"
 )
 
-func Id2Name(id int32) (string, error) {
+func ID2Name(id int32) (string, error) {
 	name, ok := spec.Stations_StationId_name[id]
 	if !ok {
-		return "", fmt.Errorf("station ID `%d` not found\n", id)
+		return "", fmt.Errorf("station ID `%d` not found ", id)
 	}
 	return name, nil
 }

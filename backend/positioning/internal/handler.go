@@ -6,7 +6,6 @@ import (
 	"ueckoken/plarail2022-positioning/pkg/trainState"
 
 	"context"
-	"fmt"
 	"log"
 	"time"
 	pb "ueckoken/plarail2022-positioning/spec"
@@ -49,13 +48,13 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return c.SetReadDeadline(time.Now().Add(20 * time.Second))
 	})
 	c.SetCloseHandler(func(code int, text string) error {
-		fmt.Println("connection closed")
+		log.Println("connection closed")
 		cancel()
 		return nil
 	})
 	go handleClientPing(ctx, c)
 	for notification := range notifier.Notifier {
-		data := ClientSendData{TrainName: pb.SendSpeed_Train_name[int32(notification.TrainId)], HallName: notification.HallSensorName, Duration: notification.Speed, FetchedAt: float64(notification.FetchedTimeStump.UnixMilli()) / 1000}
+		data := ClientSendData{TrainName: pb.SendSpeed_Train_name[int32(notification.TrainID)], HallName: notification.HallSensorName, Duration: notification.Speed, FetchedAt: float64(notification.FetchedTimeStump.UnixMilli()) / 1000}
 		err := c.WriteJSON(data)
 		if err != nil {
 			notifier.Unregister <- struct{}{}
@@ -72,7 +71,7 @@ func handleClientPing(ctx context.Context, c *websocket.Conn) {
 		select {
 		case <-ticker.C:
 			if err := c.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(1*time.Second)); err != nil {
-				fmt.Println("ping:", err)
+				log.Println("ping:", err)
 			}
 		case <-ctx.Done():
 			ticker.Stop()

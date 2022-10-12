@@ -30,7 +30,7 @@ func TestGetJson(t *testing.T) {
 	tm := new(TrainMock)
 	tm.On("GetSpeed").Return(100)
 	s.Train = tm
-	b, err := s.getJson()
+	b, err := s.getJSON()
 	assert.NoError(t, err)
 	assert.JSONEq(t, `{"speed":100}`, string(b))
 }

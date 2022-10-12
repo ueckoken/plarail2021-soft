@@ -67,7 +67,7 @@ func (s *speedStore) Get(t *Train) (speed TrainConf, err error) {
 			return r, nil
 		}
 	}
-	return nil, errors.New("Speed Record Not Found\n")
+	return nil, errors.New("Speed Record Not Found ")
 }
 
 func (s *speedStore) Update(t TrainConf) {
