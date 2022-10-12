@@ -25,8 +25,8 @@ type sendDataNoAngle struct {
 }
 
 type send2nodeNoAngle struct {
-	sendData *sendDataNoAngle
 	Station  *station2espIp.StationDetail
+	sendData *sendDataNoAngle
 	client   *http.Client
 }
 
@@ -45,16 +45,14 @@ func NewSend2Node(c *http.Client, sta *station2espIp.StationDetail, state string
 				Angle: angle,
 			},
 		}
-	} else {
-		res := &send2nodeNoAngle{
-			Station: sta,
-			client:  c,
-			sendData: &sendDataNoAngle{
-				State: state,
-				Pin:   sta.Pin,
-			},
-		}
-		return res
+	}
+	return &send2nodeNoAngle{
+		Station: sta,
+		client:  c,
+		sendData: &sendDataNoAngle{
+			State: state,
+			Pin:   sta.Pin,
+		},
 	}
 }
 
@@ -67,14 +65,13 @@ func (s *send2nodeExistAngle) Send() error {
 	if err != nil {
 		return err
 	}
-	sender := Send2Json.NewSendJson(s.client, s.Station.Address, b)
+	sender := Send2Json.NewSendJSON(s.client, s.Station.Address, b)
 	err = sender.Send()
 	if err != nil {
 		return err
 	}
 	return nil
 }
-
 func (s *send2nodeNoAngle) Send() error {
 	if s.sendData == nil {
 		return errors.New("send data is nil")
@@ -83,7 +80,7 @@ func (s *send2nodeNoAngle) Send() error {
 	if err != nil {
 		return err
 	}
-	sender := Send2Json.NewSendJson(s.client, s.Station.Address, b)
+	sender := Send2Json.NewSendJSON(s.client, s.Station.Address, b)
 	err = sender.Send()
 	if err != nil {
 		return err
