@@ -11,6 +11,7 @@ import (
 	"ueckoken/plarail2022-internal/pkg/station2espIp"
 	pb "ueckoken/plarail2022-internal/spec"
 
+	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
