@@ -9,15 +9,9 @@ import (
 	"fmt"
 	"log"
 	"time"
-<<<<<<< HEAD
 	pb "ueckoken/plarail2022-positioning/spec"
-||||||| 605e248
-	pb "ueckoken/plarail2021-soft-positioning/spec"
-=======
-	pb "ueckoken/plarail2021-soft-positioning/spec"
 
 	"github.com/gorilla/websocket"
->>>>>>> origin/main
 )
 
 type ClientHandler struct {
