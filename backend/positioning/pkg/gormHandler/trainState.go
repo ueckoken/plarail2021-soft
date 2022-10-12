@@ -2,7 +2,7 @@ package gormHandler
 
 import (
 	"gorm.io/gorm"
-	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
+	"ueckoken/plarail2022-positioning/pkg/trainState"
 )
 
 type SQLHandler struct {

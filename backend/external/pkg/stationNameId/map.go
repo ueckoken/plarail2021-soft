@@ -2,7 +2,7 @@ package stationNameId
 
 import (
 	"fmt"
-	"ueckoken/plarail2021-soft-external/spec"
+	"ueckoken/plarail2022-external/spec"
 )
 
 func ID2Name(id int32) (string, error) {

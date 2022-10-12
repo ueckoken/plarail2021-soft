@@ -28,7 +28,8 @@ func (p *Port) String() string {
 
 type Env struct {
 	ExternalSideServer struct {
-		Port        Port `envconfig:"default=54321"`
+		Port Port `envconfig:"default=54321"`
+		// SslCertPath string
 		MetricsPort Port `envconfig:"default=9100"`
 	}
 	NodeConnection struct {

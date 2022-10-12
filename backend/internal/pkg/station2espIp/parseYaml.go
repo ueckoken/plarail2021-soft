@@ -3,7 +3,8 @@ package station2espIp
 import (
 	_ "embed"
 	"fmt"
-	pb "ueckoken/plarail2021-soft-internal/spec"
+
+	pb "ueckoken/plarail2022-internal/spec"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

@@ -2,8 +2,6 @@ package internal
 
 import (
 	"net/http"
-	"ueckoken/plarail2021-soft-speed/pkg/storeSpeed"
-	"ueckoken/plarail2021-soft-speed/pkg/train2IP"
 
 	"context"
 	"encoding/json"
@@ -11,7 +9,9 @@ import (
 	"log"
 	"time"
 
-	pb "ueckoken/plarail2021-soft-speed/spec"
+	"ueckoken/plarail2022-speed/pkg/storeSpeed"
+	"ueckoken/plarail2022-speed/pkg/train2IP"
+	pb "ueckoken/plarail2022-speed/spec"
 
 	"github.com/gorilla/websocket"
 )

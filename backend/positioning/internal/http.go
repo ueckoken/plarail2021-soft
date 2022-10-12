@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"sync"
 	"time"
-	"ueckoken/plarail2021-soft-positioning/pkg/gormHandler"
-	"ueckoken/plarail2021-soft-positioning/pkg/positionReceiver"
-	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
+	"ueckoken/plarail2022-positioning/pkg/gormHandler"
+	"ueckoken/plarail2022-positioning/pkg/positionReceiver"
+	"ueckoken/plarail2022-positioning/pkg/trainState"
 )
 
 type PositionReceiver struct {

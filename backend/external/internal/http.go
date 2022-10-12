@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"sync"
 	"time"
-	"ueckoken/plarail2021-soft-external/pkg/clientHandler"
-	"ueckoken/plarail2021-soft-external/pkg/envStore"
-	"ueckoken/plarail2021-soft-external/pkg/syncController"
+	"ueckoken/plarail2022-external/pkg/clientHandler"
+	"ueckoken/plarail2022-external/pkg/envStore"
+	"ueckoken/plarail2022-external/pkg/syncController"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"

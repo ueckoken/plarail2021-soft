@@ -2,7 +2,7 @@ package internal
 
 import (
 	"time"
-	"ueckoken/plarail2021-soft-positioning/pkg/hallsensor"
+	"ueckoken/plarail2022-positioning/pkg/hallsensor"
 )
 
 type ApplicationStatus struct {

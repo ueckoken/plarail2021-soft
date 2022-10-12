@@ -3,7 +3,7 @@ package storeSpeed
 import (
 	"errors"
 	"sync"
-	pb "ueckoken/plarail2021-soft-speed/spec"
+	pb "ueckoken/plarail2022-speed/spec"
 )
 
 type Train struct {

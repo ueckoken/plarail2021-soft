@@ -3,8 +3,8 @@ package sendSpeed
 import (
 	"net/http"
 	"testing"
-	"ueckoken/plarail2021-soft-speed/pkg/storeSpeed"
-	"ueckoken/plarail2021-soft-speed/spec"
+	"ueckoken/plarail2022-speed/pkg/storeSpeed"
+	"ueckoken/plarail2022-speed/spec"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

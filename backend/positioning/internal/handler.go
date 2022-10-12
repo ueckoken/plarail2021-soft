@@ -2,13 +2,13 @@ package internal
 
 import (
 	"net/http"
-	"ueckoken/plarail2021-soft-positioning/pkg/addressChecker"
-	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
+	"ueckoken/plarail2022-positioning/pkg/addressChecker"
+	"ueckoken/plarail2022-positioning/pkg/trainState"
 
 	"context"
 	"log"
 	"time"
-	pb "ueckoken/plarail2021-soft-positioning/spec"
+	pb "ueckoken/plarail2022-positioning/spec"
 
 	"github.com/gorilla/websocket"
 )

@@ -4,9 +4,9 @@ import (
 	_ "embed"
 	"fmt"
 	"reflect"
-	"ueckoken/plarail2021-soft-external/pkg/servo"
-	"ueckoken/plarail2021-soft-external/pkg/stationNameId"
-	"ueckoken/plarail2021-soft-external/spec"
+	"ueckoken/plarail2022-external/pkg/servo"
+	"ueckoken/plarail2022-external/pkg/stationNameId"
+	"ueckoken/plarail2022-external/spec"
 
 	"gopkg.in/yaml.v2"
 )

@@ -3,8 +3,8 @@ package serveGrpc
 import (
 	"fmt"
 	"testing"
-	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
-	pb "ueckoken/plarail2021-soft-internal/spec"
+	"ueckoken/plarail2022-internal/pkg/station2espIp"
+	pb "ueckoken/plarail2022-internal/spec"
 )
 
 type TestStations struct {
