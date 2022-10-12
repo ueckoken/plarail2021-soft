@@ -1,6 +1,6 @@
 package msg2Esp
 
-// func TestNewSend2Node(t *testing.T) {
+//func TestNewSend2Node(t *testing.T) {
 //	type args struct {
 //		sta   *station2espIp.StationDetail
 //		state string
