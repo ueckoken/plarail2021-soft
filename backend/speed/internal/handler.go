@@ -38,7 +38,7 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return c.SetReadDeadline(time.Now().Add(20 * time.Second))
 	})
 	c.SetCloseHandler(func(code int, text string) error {
-		fmt.Println("connection closed")
+		log.Println("connection closed")
 		cancel()
 		return nil
 	})
@@ -78,7 +78,7 @@ func handleClientPing(ctx context.Context, c *websocket.Conn) {
 		select {
 		case <-ticker.C:
 			if err := c.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(1*time.Second)); err != nil {
-				fmt.Println("ping:", err)
+				log.Println("ping:", err)
 			}
 		case <-ctx.Done():
 			ticker.Stop()
@@ -99,7 +99,7 @@ func unpackClientSendData(c *websocket.Conn, nameDir train2IP.Name2Id) (storeSpe
 	}
 	speed := storeSpeed.NewTrainConf(
 		storeSpeed.NewTrain(pb.SendSpeed_Train(pb.SendSpeed_Train_value[ud.TrainName]),
-			nameDir.SearchIp(ud.TrainName)),
+			nameDir.SearchIP(ud.TrainName)),
 	)
 	if err := speed.SetSpeed(int32(ud.Speed)); err != nil {
 		return nil, err

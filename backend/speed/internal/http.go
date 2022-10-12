@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -42,10 +41,18 @@ func (s SpeedServer) StartSpeed() {
 	prometheus.MustRegister(s.NumberOfClientConnection)
 	prometheus.MustRegister(s.TotalCLientCommands)
 	prometheus.MustRegister(s.Speed)
-	http.Handle("/speed", s.ClientHandler)
-	http.Handle("/metrics", promhttp.Handler())
+	mux := http.NewServeMux()
+	mux.Handle("/speed", s.ClientHandler)
+	mux.Handle("/metrics", promhttp.Handler())
 	log.Println("listening on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	srv := &http.Server{
+		Addr:              ":8080",
+		Handler:           mux,
+		ReadHeaderTimeout: 3 * time.Second,
+		ReadTimeout:       5 * time.Second,
+		WriteTimeout:      5 * time.Second,
+	}
+	log.Fatal(srv.ListenAndServe())
 }
 
 type ClientHandler struct {
@@ -91,7 +98,7 @@ func (s *SpeedServer) HandleChange(cn chan storeSpeed.TrainConf) {
 			select {
 			case client.notifier.Notifier <- c:
 			default:
-				fmt.Println("buffer is full...")
+				log.Println("buffer is full...")
 			}
 		}
 	}
