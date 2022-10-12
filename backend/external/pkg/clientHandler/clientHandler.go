@@ -8,9 +8,9 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"ueckoken/plarail2021-soft-external/pkg/servo"
-	"ueckoken/plarail2021-soft-external/pkg/syncController"
-	pb "ueckoken/plarail2021-soft-external/spec"
+	"ueckoken/plarail2022-external/pkg/servo"
+	"ueckoken/plarail2022-external/pkg/syncController"
+	pb "ueckoken/plarail2022-external/spec"
 
 	"github.com/gorilla/websocket"
 )

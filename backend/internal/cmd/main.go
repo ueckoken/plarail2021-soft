@@ -6,10 +6,10 @@ import (
 	"log"
 	"net/http"
 	_ "net/http/pprof"
-	"ueckoken/plarail2021-soft-internal/internal"
-	"ueckoken/plarail2021-soft-internal/pkg/esp32healthcheck"
-	"ueckoken/plarail2021-soft-internal/pkg/serveGrpc"
-	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
+	"ueckoken/plarail2022-internal/internal"
+	"ueckoken/plarail2022-internal/pkg/esp32healthcheck"
+	"ueckoken/plarail2022-internal/pkg/serveGrpc"
+	"ueckoken/plarail2022-internal/pkg/station2espIp"
 )
 
 const namespace = "plarailinternal"

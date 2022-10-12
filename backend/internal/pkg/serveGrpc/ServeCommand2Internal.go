@@ -6,9 +6,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"net/http"
-	"ueckoken/plarail2021-soft-internal/pkg/msg2Esp"
-	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
-	pb "ueckoken/plarail2021-soft-internal/spec"
+	"ueckoken/plarail2022-internal/pkg/msg2Esp"
+	"ueckoken/plarail2022-internal/pkg/station2espIp"
+	pb "ueckoken/plarail2022-internal/spec"
 )
 
 type ControlServer struct {

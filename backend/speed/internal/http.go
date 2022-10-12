@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"sync"
 	"time"
-	"ueckoken/plarail2021-soft-speed/pkg/sendSpeed"
-	"ueckoken/plarail2021-soft-speed/pkg/storeSpeed"
-	"ueckoken/plarail2021-soft-speed/pkg/train2IP"
+	"ueckoken/plarail2022-speed/pkg/sendSpeed"
+	"ueckoken/plarail2022-speed/pkg/storeSpeed"
+	"ueckoken/plarail2022-speed/pkg/train2IP"
 
 	"github.com/gorilla/websocket"
 	"github.com/prometheus/client_golang/prometheus"

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-	"ueckoken/plarail2021-soft-speed/pkg/storeSpeed"
+	"ueckoken/plarail2022-speed/pkg/storeSpeed"
 )
 
 type SendSpeed struct {

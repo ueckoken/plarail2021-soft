@@ -1,4 +1,4 @@
-module ueckoken/plarail2021-soft-positioning
+module ueckoken/plarail2022-positioning
 
 go 1.19
 

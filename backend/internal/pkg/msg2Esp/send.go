@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"ueckoken/plarail2021-soft-internal/pkg/Send2Json"
-	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
+	"ueckoken/plarail2022-internal/pkg/Send2Json"
+	"ueckoken/plarail2022-internal/pkg/station2espIp"
 )
 
 type sendData struct {

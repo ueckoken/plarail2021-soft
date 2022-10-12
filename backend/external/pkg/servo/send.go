@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
-	"ueckoken/plarail2021-soft-external/pkg/envStore"
-	pb "ueckoken/plarail2021-soft-external/spec"
+	"ueckoken/plarail2022-external/pkg/envStore"
+	pb "ueckoken/plarail2022-external/spec"
 
 	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"google.golang.org/grpc"

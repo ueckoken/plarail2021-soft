@@ -1,4 +1,4 @@
-module ueckoken/plarail2021-soft-speed
+module ueckoken/plarail2022-speed
 
 go 1.19
 

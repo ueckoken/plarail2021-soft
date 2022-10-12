@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"ueckoken/plarail2021-soft-positioning/pkg/addressChecker"
-	"ueckoken/plarail2021-soft-positioning/pkg/hallsensor"
-	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
+	"ueckoken/plarail2022-positioning/pkg/addressChecker"
+	"ueckoken/plarail2022-positioning/pkg/hallsensor"
+	"ueckoken/plarail2022-positioning/pkg/trainState"
 )
 
 type PositionReceiveHandler struct {
