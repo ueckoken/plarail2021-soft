@@ -70,34 +70,28 @@ type ClientNotifier struct {
 }
 
 func (s *SpeedServer) RegisterClient(cn chan Client) {
-	for {
-		select {
-		case n := <-cn:
-			s.ClientHandler.Clients.mtx.Lock()
-			s.ClientHandler.Clients.clients = append(s.ClientHandler.Clients.clients, n)
-			s.ClientHandler.Clients.mtx.Unlock()
-		}
+	for n := range cn {
+		s.ClientHandler.Clients.mtx.Lock()
+		s.ClientHandler.Clients.clients = append(s.ClientHandler.Clients.clients, n)
+		s.ClientHandler.Clients.mtx.Unlock()
 	}
 }
 
 func (s *SpeedServer) HandleChange(cn chan storeSpeed.TrainConf) {
 	speed := sendSpeed.NewSendSpeed(&http.Client{})
-	for {
-		select {
-		case c := <-cn:
-			s.TotalCLientCommands.With(prometheus.Labels{}).Inc()
-			speed.Train = c
-			s.Speed.With(prometheus.Labels{}).Set(float64(c.GetSpeed()))
-			err := speed.Send()
-			if err != nil {
-				log.Println(err)
-			}
-			for _, client := range s.ClientHandler.Clients.clients {
-				select {
-				case client.notifier.Notifier <- c:
-				default:
-					fmt.Println("buffer is full...")
-				}
+	for c := range cn {
+		s.TotalCLientCommands.With(prometheus.Labels{}).Inc()
+		speed.Train = c
+		s.Speed.With(prometheus.Labels{}).Set(float64(c.GetSpeed()))
+		err := speed.Send()
+		if err != nil {
+			log.Println(err)
+		}
+		for _, client := range s.ClientHandler.Clients.clients {
+			select {
+			case client.notifier.Notifier <- c:
+			default:
+				fmt.Println("buffer is full...")
 			}
 		}
 	}

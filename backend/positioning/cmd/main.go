@@ -29,7 +29,13 @@ func main() {
 		break
 	}
 	db := gormHandler.SQLHandler{Db: d}
-	db.Db.AutoMigrate(&trainState.State{})
-	r := internal.NewPositionReceiver(db, internal.NewApplicationStatus())
+	if err := db.Db.AutoMigrate(&trainState.State{}); err != nil {
+		log.Panicf("DB auto migrate failed, err=%s\n", err)
+	}
+	as, err := internal.NewApplicationStatus()
+	if err != nil {
+		log.Panicf("err=%s\n", err)
+	}
+	r := internal.NewPositionReceiver(db, as)
 	r.StartPositionReceiver()
 }

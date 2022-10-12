@@ -80,7 +80,6 @@ func (s *speedStore) Update(t TrainConf) {
 		}
 	}
 	s.speedList = append(s.speedList, t)
-	return
 }
 
 func (s *speedStore) GetAll() []TrainConf {

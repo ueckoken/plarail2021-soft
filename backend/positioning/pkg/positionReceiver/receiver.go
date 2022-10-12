@@ -38,19 +38,36 @@ func (p PositionReceiveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 		w.WriteHeader(http.StatusForbidden)
 	}
 	if r.Method != "POST" {
-		w.Write([]byte("Use POST"))
-		w.WriteHeader(http.StatusBadRequest)
+		if _, err := w.Write([]byte("Use POST")); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
 	var buf []byte
-	r.Body.Read(buf)
+	if _, err := r.Body.Read(buf); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer r.Body.Close()
 	var receivedPosition ReceivedPosition
-	json.Unmarshal(buf, &receivedPosition)
-	h := hallsensor.NewEsp32PinSetting()
+	if err := json.Unmarshal(buf, &receivedPosition); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	h, err := hallsensor.NewEsp32PinSetting()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	name, err := h.Search(receivedPosition.MacAddress, receivedPosition.Pin)
 	if err != nil {
+		if _, err := w.Write([]byte("not found such address or pin")); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("not found such address or pin"))
 		return
 	}
 	//TODO: validate trainId
@@ -60,8 +77,11 @@ func (p PositionReceiveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 		FetchedTimeStump: time.Now(),
 	}
 	p.registerReceivedPosition <- dat
+	if _, err := w.Write([]byte("accepted")); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("accepted"))
 }
 
 func getClientIp(r *http.Request) string {
