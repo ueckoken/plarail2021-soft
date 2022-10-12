@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 	"time"
-	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
+	"ueckoken/plarail2022-positioning/pkg/trainState"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

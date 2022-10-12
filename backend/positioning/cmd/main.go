@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 	"time"
-	"ueckoken/plarail2021-soft-positioning/internal"
-	"ueckoken/plarail2021-soft-positioning/pkg/gormHandler"
-	"ueckoken/plarail2021-soft-positioning/pkg/trainState"
+	"ueckoken/plarail2022-positioning/internal"
+	"ueckoken/plarail2022-positioning/pkg/gormHandler"
+	"ueckoken/plarail2022-positioning/pkg/trainState"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
