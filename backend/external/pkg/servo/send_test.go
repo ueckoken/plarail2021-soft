@@ -3,7 +3,7 @@ package servo
 import (
 	"errors"
 	"testing"
-	pb "ueckoken/plarail2021-soft-external/spec"
+	pb "ueckoken/plarail2022-external/spec"
 )
 
 func TestSend_trapResponseGrpcErr(t *testing.T) {
