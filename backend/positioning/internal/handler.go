@@ -7,10 +7,11 @@ import (
 
 	"context"
 	"fmt"
-	"github.com/gorilla/websocket"
 	"log"
 	"time"
 	pb "ueckoken/plarail2021-soft-positioning/spec"
+
+	"github.com/gorilla/websocket"
 )
 
 type ClientHandler struct {
@@ -45,8 +46,7 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	notifier := ClientNotifier{n, unregister}
 	m.ClientNotification <- notifier
 	c.SetPongHandler(func(string) error {
-		c.SetReadDeadline(time.Now().Add(20 * time.Second))
-		return nil
+		return c.SetReadDeadline(time.Now().Add(20 * time.Second))
 	})
 	c.SetCloseHandler(func(code int, text string) error {
 		fmt.Println("connection closed")
