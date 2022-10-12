@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"gopkg.in/yaml.v2"
-	pb "ueckoken/plarail2021-soft-internal/spec"
+	pb "ueckoken/plarail2022-internal/spec"
 )
 
 type Stations interface {

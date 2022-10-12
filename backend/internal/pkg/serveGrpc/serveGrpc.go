@@ -9,10 +9,10 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"ueckoken/plarail2021-soft-internal/internal"
-	"ueckoken/plarail2021-soft-internal/pkg/esp32healthcheck"
-	"ueckoken/plarail2021-soft-internal/pkg/station2espIp"
-	pb "ueckoken/plarail2021-soft-internal/spec"
+	"ueckoken/plarail2022-internal/internal"
+	"ueckoken/plarail2022-internal/pkg/esp32healthcheck"
+	"ueckoken/plarail2022-internal/pkg/station2espIp"
+	pb "ueckoken/plarail2022-internal/spec"
 )
 
 type GrpcServer struct {

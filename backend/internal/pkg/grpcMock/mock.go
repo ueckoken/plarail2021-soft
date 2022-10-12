@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/status"
 	"math/rand"
 	"time"
-	pb "ueckoken/plarail2021-soft-internal/spec"
+	pb "ueckoken/plarail2022-internal/spec"
 )
 
 type GrpcMock struct {

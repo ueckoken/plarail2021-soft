@@ -1,4 +1,4 @@
-module ueckoken/plarail2021-soft-internal
+module ueckoken/plarail2022-internal
 
 go 1.19
 
