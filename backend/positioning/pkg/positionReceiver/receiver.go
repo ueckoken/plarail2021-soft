@@ -29,11 +29,11 @@ func NewPositionReceiverHandler(registerReceivedPosition chan trainState.State) 
 type ReceivedPosition struct {
 	MacAddress string `json:"mac_address"`
 	Pin        int    `json:"pin"`
-	TrainId    int    `json:"train_id"`
+	TrainID    int    `json:"train_id"`
 }
 
 func (p PositionReceiveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	ip := getClientIp(r)
+	ip := getClientIP(r)
 	if !p.checker.CheckIfOk(ip) {
 		w.WriteHeader(http.StatusForbidden)
 	}
@@ -72,7 +72,7 @@ func (p PositionReceiveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	}
 	//TODO: validate trainId
 	dat := trainState.State{
-		TrainId:          receivedPosition.TrainId,
+		TrainID:          receivedPosition.TrainID,
 		HallSensorName:   name,
 		FetchedTimeStump: time.Now(),
 	}
@@ -84,7 +84,7 @@ func (p PositionReceiveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	w.WriteHeader(http.StatusOK)
 }
 
-func getClientIp(r *http.Request) string {
+func getClientIP(r *http.Request) string {
 	f := r.Header.Get("X-FORWARDED-FOR")
 	if f != "" {
 		return f

@@ -19,7 +19,7 @@ func NewApplicationStatus() (ApplicationStatus, error) {
 }
 
 type TrainStatus struct {
-	TrainId               int
+	TrainID               int
 	FetchedHallSensorName string
 	FetchedTimeStump      time.Time
 }

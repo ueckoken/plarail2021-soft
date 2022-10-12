@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -15,7 +14,7 @@ import (
 
 func main() {
 	dbenv := os.Getenv("DB")
-	fmt.Println("DB:", dbenv)
+	log.Println("DB:", dbenv)
 	var d *gorm.DB
 	var err error
 	for {
