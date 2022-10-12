@@ -128,7 +128,7 @@ func searchIndex(id int32, ss []StationState) (int, error) {
 	return -1, fmt.Errorf("index error\n")
 }
 
-// matchRule
+// matchRule.
 func matchRule(rules []string, ss []StationState, state int32) (status int, err error) {
 	isSuiteRule := UNDEFINED
 	if rules == nil {

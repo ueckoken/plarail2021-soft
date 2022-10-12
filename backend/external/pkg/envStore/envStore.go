@@ -42,7 +42,7 @@ type Env struct {
 		Addr        hostnamePort
 		TimeoutSec  time.Duration `envconfig:"default=1s"`
 		MetricsPort Port          `envconfig:"default=9100"`
-		//SslCertPath string
+		// SslCertPath string
 	}
 }
 
