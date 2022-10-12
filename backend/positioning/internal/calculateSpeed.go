@@ -10,8 +10,12 @@ type ApplicationStatus struct {
 	HallSensorSpec hallsensor.PhysicalSensors
 }
 
-func NewApplicationStatus() ApplicationStatus {
-	return ApplicationStatus{HallSensorSpec: hallsensor.NewPhysicalSensors()}
+func NewApplicationStatus() (ApplicationStatus, error) {
+	pss, err := hallsensor.NewPhysicalSensors()
+	if err != nil {
+		return ApplicationStatus{}, err
+	}
+	return ApplicationStatus{HallSensorSpec: pss}, nil
 }
 
 type TrainStatus struct {

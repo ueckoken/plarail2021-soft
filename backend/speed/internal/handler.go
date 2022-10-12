@@ -11,8 +11,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/gorilla/websocket"
 	pb "ueckoken/plarail2021-soft-speed/spec"
+
+	"github.com/gorilla/websocket"
 )
 
 type speedStruct struct {
@@ -34,8 +35,7 @@ func (m ClientHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	notifier := Client{ClientNotifier{n, unregister}}
 	m.ClientNotification <- notifier
 	c.SetPongHandler(func(string) error {
-		c.SetReadDeadline(time.Now().Add(20 * time.Second))
-		return nil
+		return c.SetReadDeadline(time.Now().Add(20 * time.Second))
 	})
 	c.SetCloseHandler(func(code int, text string) error {
 		fmt.Println("connection closed")
@@ -66,7 +66,7 @@ func handleClientCommand(ctx context.Context, c *websocket.Conn, m *ClientHandle
 				log.Println(err)
 				return
 			}
-			m.ClientCommand <- *r
+			m.ClientCommand <- r
 		}
 	}
 }
@@ -87,7 +87,7 @@ func handleClientPing(ctx context.Context, c *websocket.Conn) {
 	}
 }
 
-func unpackClientSendData(c *websocket.Conn, nameDir train2IP.Name2Id) (*storeSpeed.TrainConf, error) {
+func unpackClientSendData(c *websocket.Conn, nameDir train2IP.Name2Id) (storeSpeed.TrainConf, error) {
 	_, msg, err := c.ReadMessage()
 	if err != nil {
 		return nil, fmt.Errorf("websocket read failed: %e", err)
@@ -101,6 +101,8 @@ func unpackClientSendData(c *websocket.Conn, nameDir train2IP.Name2Id) (*storeSp
 		storeSpeed.NewTrain(pb.SendSpeed_Train(pb.SendSpeed_Train_value[ud.TrainName]),
 			nameDir.SearchIp(ud.TrainName)),
 	)
-	speed.SetSpeed(int32(ud.Speed))
-	return &speed, nil
+	if err := speed.SetSpeed(int32(ud.Speed)); err != nil {
+		return nil, err
+	}
+	return speed, err
 }
