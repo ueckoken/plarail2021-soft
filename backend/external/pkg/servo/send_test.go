@@ -50,7 +50,7 @@ func TestSend_trapResponseGrpcErr(t *testing.T) {
 	}
 
 	// Normal
-	var grpcErr error = nil
+	var grpcErr error
 	rs := &pb.ResponseSync{Response: pb.ResponseSync_Response(1)}
 	err := trapResponseGrpcErr(rs, grpcErr)
 	if err != nil {

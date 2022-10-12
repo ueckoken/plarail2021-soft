@@ -29,8 +29,8 @@ func newStationKvs() *stationKVS {
 func (skvs *stationKVS) update(u StationState) error {
 	skvs.mtx.Lock()
 	defer skvs.mtx.Unlock()
-	//err := skvs.validator.Validate(u, skvs.stations)
-	var err error = nil
+	// err := skvs.validator.Validate(u, skvs.stations)
+	var err error
 	if err != nil {
 		return err
 	}
