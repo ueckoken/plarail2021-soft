@@ -9,20 +9,11 @@ import (
 	"log"
 	"time"
 
-<<<<<<< HEAD
 	"ueckoken/plarail2022-speed/pkg/storeSpeed"
 	"ueckoken/plarail2022-speed/pkg/train2IP"
 	pb "ueckoken/plarail2022-speed/spec"
 
 	"github.com/gorilla/websocket"
-||||||| 605e248
-	"github.com/gorilla/websocket"
-	pb "ueckoken/plarail2021-soft-speed/spec"
-=======
-	pb "ueckoken/plarail2021-soft-speed/spec"
-
-	"github.com/gorilla/websocket"
->>>>>>> origin/main
 )
 
 type speedStruct struct {
