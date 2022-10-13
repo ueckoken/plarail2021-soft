@@ -2,12 +2,12 @@ name: Deploy WebRTC python server
 
 defaults:
   run:
-    working-directory: ./frontend/videoCast
+    working-directory: ./backend/multicaster
 
 on:
   push:
     branches: [deployment]
-    paths: ["./frontend/videoCast/**"]
+    paths: ["./frontend/multicaster/**"]
 
 jobs:
   build:
@@ -30,8 +30,8 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v3
         with:
-          context: ./frontend/videoCast
-          file: ./frontend/videoCast/Dockerfile.python
+          context: ./backend/multicaster
+          file: ./backend/multicaster/Dockerfile
           platforms: linux/amd64
           push: true
           tags: ghcr.io/ueckoken/plarail2022-frontend-python:${{ env.IMAGE_TAG }}

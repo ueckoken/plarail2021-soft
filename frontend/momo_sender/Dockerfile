@@ -8,5 +8,5 @@ COPY *.js /app/
 RUN npm run build
 
 FROM nginx:1.23.1-alpine
-COPY --from=builder /app/skyway_receiver_.js /usr/share/nginx/html/
-COPY ./skyway_receiver.html /usr/share/nginx/html/index.html
+COPY --from=builder /app/bundle.js /usr/share/nginx/html/
+COPY ./index.html /usr/share/nginx/html/
