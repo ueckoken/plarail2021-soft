@@ -41,13 +41,9 @@ async def handler(websocket, path):
     print(remote_address)
     async with lock:
         connections.append(websocket)
-    while True:
-        # 受信
-        try:
-            received_packet = await websocket.recv()
-        except:
-            break
-        dictionary = json.loads(received_packet)
+
+    async for message in websocket:  # 受信
+        dictionary = json.loads(message)
         # msg_type, room_idで構成
         # connect_senderの時のみ+peer_id
         promises = []
