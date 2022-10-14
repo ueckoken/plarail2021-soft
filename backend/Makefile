@@ -39,31 +39,7 @@ statesync_positioning:
 	-I./ \
 	proto/statesync.proto
 
-<<<<<<< HEAD
 speedControl: speedControlSpeed speedControlPositioning
-||||||| 5bca264
-speedControl: speedControl_builtin speedControlSpeed speedControlPositioning
-
-speedControl_builtin:
-	protoc \
-	--go_out=builtin/speed/spec \
-	--go_opt=Mproto/speedControl.proto=. \
-	--go-grpc_out=builtin/speed \
-	--go-grpc_opt=Mproto/speedControl.proto=. \
-	-I./ \
-	proto/speedControl.proto
-=======
-speedControl: speedControl_builtin speedControlSpeed speedControlPositioning
-
-speedControl_builtin:
-	protoc \
-	--go_out=builtin/speed/spec \
-	--go_opt=Mproto/speedControl.proto=. \
-	--go-grpc_out=builtin/speed/spec \
-	--go-grpc_opt=Mproto/speedControl.proto=. \
-	-I./ \
-	proto/speedControl.proto
->>>>>>> origin/main
 
 speedControlSpeed:
 	protoc \
