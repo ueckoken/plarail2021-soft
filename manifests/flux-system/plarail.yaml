@@ -18,7 +18,7 @@ metadata:
   namespace: plarail2021
 spec:
   interval: 1m
-  path: ./manifests/manifests
+  path: ./manifests
   prune: true
   sourceRef:
     kind: GitRepository
