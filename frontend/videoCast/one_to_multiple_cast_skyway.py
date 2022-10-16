@@ -12,15 +12,12 @@ PORT = 8081
 MAX_CONNECT_NUM = 980
 # CERT = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.cert.pem"
 # KEY = "C://Users/asika/OneDrive/ドキュメント/webRTC/vscode_live_server.key.pem"
+SENDER_TOKEN = os.environ.get("SENDER_TOKEN")  # ["127.0.0.1"]
+print(SENDER_TOKEN)
 
 
 connection_num = 0
 connections = []
-if "SENDER_TOKEN" in os.environ:
-    sender_token = os.environ["SENDER_TOKEN"]  # ["127.0.0.1"]
-else:
-    sender_token = None
-print(sender_token)
 
 rooms = {}
 # keyが部屋id, valueが{"sender_socket", "peer_id", "connections"}
@@ -69,7 +66,7 @@ async def handler(websocket, path):
         # 現在の通信のwebsocketが入ったroom_idのroomが存在することを保証
 
         if msg_type == "connect_sender":
-            if sender_token is None or sender_token == dictionary["sender_token"]:
+            if SENDER_TOKEN is None or SENDER_TOKEN == dictionary["sender_token"]:
                 async with lock:  # if room["sender_socket"] is None:
                     print("sender_connect")
                     room["sender_socket"] = websocket
