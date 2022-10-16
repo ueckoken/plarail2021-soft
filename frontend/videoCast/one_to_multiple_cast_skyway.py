@@ -118,7 +118,10 @@ async def handler(websocket, path):
                         # ルームの累積接続数が溢れそうだったら新しい部屋をsenderに作ってもらう
                         promise = room["sender_socket"].send(
                             json.dumps(
-                                {"msg_type": "request_reconnect_sender", "room_id": room_id}
+                                {
+                                    "msg_type": "request_reconnect_sender",
+                                    "room_id": room_id,
+                                }
                             )
                         )
                         promises.append(promise)
