@@ -17,7 +17,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-
+      - name: Set up Node in ats
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
@@ -27,7 +30,7 @@ jobs:
           echo "$RUNNER_TEMP/protoc/bin" >> $GITHUB_PATH
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
-      - name: run protoc
+      - name: prepare protoc
         run: |-
           curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.20.3/protoc-3.20.3-linux-x86_64.zip -o $RUNNER_TEMP/protoc.zip
           unzip -d $RUNNER_TEMP/protoc $RUNNER_TEMP/protoc.zip
@@ -35,8 +38,15 @@ jobs:
           go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
           mkdir -p $GITHUB_WORKSPACE/backend/internal/spec
           mkdir -p $GITHUB_WORKSPACE/backend/external/spec
-          cd $GITHUB_WORKSPACE/backend/
+          mkdir -p $GITHUB_WORKSPACE/backend/ats/spec
+      - name: prepare node protoc
+        run: |-
+          yarn install --frozen-lockfile
+        working-directory: backend/ats
+      - name: gen proto
+        run: |-
           make pb
+        working-directory: backend/
       - name: Add & Commit
         uses: EndBug/add-and-commit@v9.1.1
         with:
