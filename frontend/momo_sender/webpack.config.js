@@ -3,11 +3,10 @@ const webpack = require("webpack")
 
 module.exports = {
   entry: {
-    skyway_receiver: "./skyway_receiver.js",
-    momo_sender: "./momo_sender.js",
+    index: "./index.js",
   },
   output: {
-    filename: "[name]_.js",
+    filename: "bundle.js",
     path: path.resolve(__dirname),
   },
   plugins: [
