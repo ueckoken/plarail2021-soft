@@ -1,0 +1,14 @@
+{
+  "name": "ats",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.7.2",
+    "grpc-tools": "^1.11.3"
+  }
+}
