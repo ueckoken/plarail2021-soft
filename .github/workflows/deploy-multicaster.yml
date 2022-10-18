@@ -7,7 +7,7 @@ defaults:
 on:
   push:
     branches: [deployment]
-    paths: ["./frontend/multicaster/**"]
+    paths: ["./backend/multicaster/**"]
 
 jobs:
   build:
