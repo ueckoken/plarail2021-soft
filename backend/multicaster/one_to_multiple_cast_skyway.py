@@ -19,7 +19,6 @@ SENDER_TOKEN = os.environ.get("SENDER_TOKEN")  # ["127.0.0.1"]
 print(SENDER_TOKEN)
 
 
-connection_num = 0
 connections = []
 
 
@@ -88,7 +87,7 @@ lock = asyncio.Lock()
 
 
 async def handler(websocket: WebSocketServerProtocol, path: str) -> None:
-    global connection_num, connections, rooms, lock
+    global connections, rooms, lock
     remote_address = cast(RemoteAddress, websocket.remote_address)
     print(remote_address)
     async with lock:
