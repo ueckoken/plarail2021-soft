@@ -8,7 +8,7 @@ pull:
 
 start: pull up
 
-pb: statesync speedControl
+pb: statesync speedControl ats
 	
 statesync: statesync_internal statesync_external statesync_positioning
 
@@ -58,3 +58,8 @@ speedControlPositioning:
 	--go-grpc_opt=Mproto/speedControl.proto=. \
 	-I./ \
 	proto/speedControl.proto
+
+ats: ats-node
+ats-node:
+	cd ats && \
+	./protoc-gen.sh
